@@ -19,6 +19,7 @@ const initialState = {
             url: "/",
             marginRight: true,
             textColor: "text-slate-950",
+            bgColor: "bg-slate-100",
             pageKey: "home",
         },
         {
@@ -27,6 +28,7 @@ const initialState = {
             url: "/work",
             marginRight: true,
             textColor: "text-slate-100",
+            bgColor: "",
             pageKey: "work",
         },
         {
@@ -35,6 +37,7 @@ const initialState = {
             url: "/about",
             marginRight: true,
             textColor: "text-slate-100",
+            bgColor: "",
             pageKey: "about",
         },
         {
@@ -43,6 +46,7 @@ const initialState = {
             url: "/contact",
             marginRight: false,
             textColor: "text-slate-100",
+            bgColor: "",
             pageKey: "contact",
         },
     ],
@@ -55,8 +59,13 @@ export const tabs = createSlice({
     reducers: {
         updateTextColor: (state, action) => {
             state.tabs.map((obj, i) => {
-                if (i === action.payload) obj.textColor = "text-slate-950";
-                else obj.textColor = "text-slate-100";
+                if (i === action.payload) {
+                    obj.textColor = "text-slate-950";
+                    obj.bgColor = "bg-slate-100";
+                } else {
+                    obj.textColor = "text-slate-100";
+                    obj.bgColor = "";
+                }
             });
         },
         updateSelectedTab: (state, action) => {

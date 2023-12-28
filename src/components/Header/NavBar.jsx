@@ -1,21 +1,30 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateTextColor, updateSelectedTab } from "../../features/tabs";
 
 export default function NavBar() {
     const dispatch = useDispatch();
-    const { tabs } = useSelector((state) => state.tabs);
+    const { tabs, selectedTab } = useSelector((state) => state.tabs);
     const focusRef = useRef();
+    const menuRef = useRef();
+    const ulRef = useRef();
     const [isMenuActivated, setIsMenuActivated] = useState(false);
-    console.log(isMenuActivated);
+
+    function focusTab(target) {
+        const translate = target.offsetLeft - 9;
+        focusRef.current.style.transform = `translateX(${translate}px)`;
+        focusRef.current.style.width = target.clientWidth + "px";
+    }
 
     function handleClickNavBar(e, index) {
         dispatch(updateTextColor(index));
         dispatch(updateSelectedTab(index));
+        focusTab(e.target);
 
-        const translate = e.target.offsetLeft - 9;
-        focusRef.current.style.transform = `translateX(${translate}px)`;
-        focusRef.current.style.width = e.target.clientWidth + "px";
+        if (isMenuActivated) {
+            setIsMenuActivated(false);
+            menuRef.current.style.transform = "rotate(0deg)";
+        }
     }
 
     function handleClickArrow(e) {
@@ -29,9 +38,27 @@ export default function NavBar() {
         setIsMenuActivated(!isMenuActivated);
     }
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth > 767) {
+                setIsMenuActivated(false);
+                menuRef.current.style.transform = "rotate(0deg)";
+
+                focusTab(ulRef.current.children[selectedTab]);
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, [selectedTab]);
+
     return (
         <>
             <ul
+                ref={ulRef}
                 className={`${
                     isMenuActivated
                         ? "bg-gray-800 absolute top-16 left-1/2 -translate-x-2/4 w-1/2 h-[250px] flex flex-col items-center justify-center rounded shadow"
@@ -44,7 +71,7 @@ export default function NavBar() {
                         onClick={(e) => handleClickNavBar(e, index)}
                         className={`hover:bg-slate-100/70 hover:text-slate-950 rounded-full px-4 cursor-pointer flex justify-center items-center z-50 ${
                             obj.textColor
-                        } ${obj.marginRight ? "mr-1" : ""} ${
+                        } ${obj.bgColor} ${obj.marginRight ? "mr-1" : ""} ${
                             isMenuActivated ? "w-1/2 text-2xl mb-2" : "h-3/4"
                         }`}
                     >
@@ -64,7 +91,12 @@ export default function NavBar() {
                 onClick={handleClickArrow}
                 className="md:hidden absolute left-1/2 -translate-x-2/4"
             >
-                <img src="/chevron.svg" alt="" className="w-6 h-6" />
+                <img
+                    src="/chevron.svg"
+                    alt=""
+                    ref={menuRef}
+                    className="w-6 h-6"
+                />
             </button>
         </>
     );
