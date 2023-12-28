@@ -1,8 +1,16 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toggleDarkMode } from "../../features/darkMode";
 import NavBar from "./NavBar";
 
 export default function Header() {
+    const dispatch = useDispatch();
     const [toggle, setToggle] = useState(true);
+
+    function handleClick() {
+        setToggle(!toggle);
+        dispatch(toggleDarkMode());
+    }
 
     return (
         <header className="border-b h-20 fixed w-full">
@@ -33,7 +41,7 @@ export default function Header() {
                         </a>
                     </li>
                     <li
-                        onClick={() => setToggle(!toggle)}
+                        onClick={handleClick}
                         className={`${
                             toggle ? "bg-blue-400" : "bg-slate-200"
                         } border w-12 h-5 rounded-full relative cursor-pointer select-none`}
