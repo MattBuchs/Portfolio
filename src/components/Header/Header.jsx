@@ -15,7 +15,7 @@ export default function Header() {
     return (
         <header className="border-b h-20 fixed w-full">
             <nav className="flex justify-between items-center text-white h-full px-4">
-                <h1 className="text-3xl">Matt Buchs</h1>
+                <h1 className="text-2xl sm:text-3xl">Matt Buchs</h1>
 
                 <NavBar />
                 <ul className="flex items-center">
