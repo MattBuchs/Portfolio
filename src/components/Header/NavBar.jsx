@@ -61,9 +61,9 @@ export default function NavBar() {
                 ref={ulRef}
                 className={`${
                     isMenuActivated
-                        ? "bg-gray-800 absolute top-16 left-1/2 -translate-x-2/4 w-1/2 h-[250px] flex flex-col items-center justify-center rounded shadow"
-                        : "hidden md:flex justify-between items-center bg-gray-800 h-12 rounded-full px-2 relative"
-                }`}
+                        ? "absolute top-16 left-1/2 -translate-x-2/4 w-1/2 h-[250px] flex flex-col justify-center rounded shadow"
+                        : "hidden md:flex justify-between h-12 rounded-full px-2 relative border border-slate-100/10 shadow shadow-slate-100/5"
+                } items-center bg-gray-900`}
             >
                 {tabs.map((obj, index) => (
                     <li
@@ -78,14 +78,14 @@ export default function NavBar() {
                         {obj.name}
                     </li>
                 ))}
-                <div
+                <li
                     ref={focusRef}
                     className={`${
                         isMenuActivated
                             ? "hidden"
                             : "absolute bg-slate-100 w-[74.89px] h-3/4 rounded-full transition-transform ease-in-out"
                     }`}
-                ></div>
+                ></li>
             </ul>
             <button
                 onClick={handleClickArrow}
