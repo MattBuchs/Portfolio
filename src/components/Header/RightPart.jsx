@@ -39,9 +39,9 @@ export default function RightPart() {
                 } border w-12 h-5 rounded-full relative cursor-pointer select-none`}
             >
                 <div
-                    className={`w-7 h-7 rounded-full -mt-1 flex justify-center items-center transition translate-x-[68%] ${
+                    className={`w-7 h-7 rounded-full -mt-1 flex justify-center items-center transition ${
                         isDarkmode
-                            ? "bg-slate-900"
+                            ? "bg-slate-900 translate-x-[69%]"
                             : "bg-blue-500 translate-x-[-3%]"
                     }`}
                 >
