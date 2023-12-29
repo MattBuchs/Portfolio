@@ -1,17 +1,11 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleDarkMode } from "../../features/darkMode";
 import moon from "/lune.png";
 import sun from "/soleil.png";
 
 export default function RightPart() {
     const dispatch = useDispatch();
-    const [toggle, setToggle] = useState(true);
-
-    function handleClick() {
-        setToggle(!toggle);
-        dispatch(toggleDarkMode());
-    }
+    const { isDarkmode } = useSelector((state) => state.darkMode);
 
     return (
         <ul className="flex items-center">
@@ -37,20 +31,22 @@ export default function RightPart() {
                 </a>
             </li>
             <li
-                onClick={handleClick}
+                onClick={() => dispatch(toggleDarkMode())}
                 className={`${
-                    toggle
+                    isDarkmode
                         ? "bg-violet-900 border-slate-500"
                         : "bg-violet-400 border-slate-200"
                 } border w-12 h-5 rounded-full relative cursor-pointer select-none`}
             >
                 <div
-                    className={`w-7 h-7 rounded-full -mt-1 flex justify-center items-center absolute ${
-                        toggle ? "-right-1 bg-slate-900" : "-left-1 bg-blue-500"
+                    className={`w-7 h-7 rounded-full -mt-1 flex justify-center items-center transition translate-x-[68%] ${
+                        isDarkmode
+                            ? "bg-slate-900"
+                            : "bg-blue-500 translate-x-[-3%]"
                     }`}
                 >
                     <img
-                        src={toggle ? moon : sun}
+                        src={isDarkmode ? moon : sun}
                         alt="Toggle dark mode"
                         className="w-4 h-4"
                     />
