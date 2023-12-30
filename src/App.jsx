@@ -11,7 +11,7 @@ function App() {
     return (
         <div id={`${isDarkmode ? "dark-degraded" : "light-degraded"}`}>
             <Header />
-            <main className="pt-20 px-4 sm:px-20 xl:px-52 min-h-screen">
+            <main className="pt-20 px-4 sm:px-20 xl:px-52">
                 <PageComponent />
             </main>
         </div>

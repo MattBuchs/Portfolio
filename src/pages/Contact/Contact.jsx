@@ -5,6 +5,7 @@ export default function Contact() {
     const [message, setMessage] = useState("");
     const [emailError, setEmailError] = useState();
     const [messageError, setMessageError] = useState();
+    const [emailInvalid, setEmailInvalid] = useState();
 
     function sendEmail(e) {
         e.preventDefault();
@@ -16,6 +17,7 @@ export default function Contact() {
         if (company === "") company = `<em>Donnée non rentrée</em>`;
         if (email === "") setEmailError(true);
         if (message === "") setMessageError(true);
+        if (!checkEmail(email) && email !== "") return setEmailInvalid(true);
         if (message === "" || email === "") return;
 
         // eslint-disable-next-line no-undef
@@ -30,9 +32,14 @@ export default function Contact() {
         }).then((message) => alert(message));
     }
 
+    function checkEmail(email) {
+        const regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        return regex.test(email);
+    }
+
     return (
         <div className="h-full text-slate-100 flex justify-center items-center">
-            <div className="bg-[#120b2a] p-4 sm:px-14 sm:py-10 my-10 sm:my-20 rounded-md border border-slate-100/30 shadow-md shadow-slate-100/15 overflow-auto">
+            <div className="bg-[#120b2a] p-6 sm:px-14 sm:py-10 my-10 sm:my-20 rounded-md border border-slate-100/30 shadow-md shadow-slate-100/15 overflow-auto">
                 <h2 className="text-4xl underline underline-offset-8 decoration-yellow-300">
                     Contact
                 </h2>
@@ -52,21 +59,21 @@ export default function Contact() {
                             <input
                                 type="text"
                                 id="name"
-                                className="text-slate-950 w-full sm:w-[189px] sm:mr-6"
+                                className="text-slate-950 w-full sm:w-[189px] sm:mr-6 px-1 border border-yellow-300 rounded-sm"
                             />
                         </div>
-                        <div>
+                        <div className="mt-2 sm:mt-0">
                             <label htmlFor="company" className="block">
                                 Entreprise
                             </label>
                             <input
                                 type="text"
                                 id="company"
-                                className="text-slate-950 w-full sm:w-[189px]"
+                                className="text-slate-950 w-full sm:w-[189px] px-1"
                             />
                         </div>
                     </section>
-                    <div>
+                    <div className="mt-2">
                         <div>
                             <label htmlFor="email">Email</label>
                             <span className="text-yellow-300 text-xs"> *</span>
@@ -74,10 +81,11 @@ export default function Contact() {
                         <input
                             type="email"
                             id="email"
-                            className="text-slate-950 w-full sm:w-[402px]"
+                            className="text-slate-950 w-full sm:w-[402px] px-1"
                             onChange={(e) => {
                                 setEmail(e.target.value);
                                 setEmailError(false);
+                                setEmailInvalid(false);
                             }}
                         />
                         {emailError && (
@@ -85,8 +93,13 @@ export default function Contact() {
                                 Veuillez remplir ce champ
                             </p>
                         )}
+                        {emailInvalid && (
+                            <p className="text-red-600 text-sm">
+                                Email invalide
+                            </p>
+                        )}
                     </div>
-                    <div>
+                    <div className="mt-2">
                         <div>
                             <label htmlFor="message">Votre message</label>
                             <span className="text-yellow-300 text-xs"> *</span>
@@ -94,7 +107,7 @@ export default function Contact() {
                         <textarea
                             type="text"
                             id="message"
-                            className="text-slate-950 w-full sm:w-[402px]"
+                            className="text-slate-950 w-full sm:w-[402px] min-h-[100px] px-1"
                             onChange={(e) => {
                                 setMessage(e.target.value);
                                 setMessageError(false);
@@ -106,11 +119,13 @@ export default function Contact() {
                             </p>
                         )}
                     </div>
-                    <p className="text-yellow-200 text-xs">
+                    <button className="bg-slate-200 px-6 py-2 rounded text-slate-950 mt-6 hover:bg-slate-300">
+                        Envoyer
+                    </button>
+                    <p className="text-yellow-200 text-xs mt-4">
                         * Ces champs sont réquis pour pouvoir envoyer votre
                         message
                     </p>
-                    <button>Envoyer</button>
                 </form>
             </div>
         </div>
