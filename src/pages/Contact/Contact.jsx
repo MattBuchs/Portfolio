@@ -39,7 +39,7 @@ export default function Contact() {
     return (
         <div className="h-full text-slate-100 flex justify-center items-center">
             <div className="bg-[#120b2a] p-6 sm:px-14 sm:py-10 my-10 sm:my-20 rounded-md border border-slate-100/30 shadow-md shadow-slate-100/15 overflow-auto">
-                <h2 className="text-4xl underline underline-offset-8 decoration-yellow-300">
+                <h2 className="text-4xl underline underline-offset-8 decoration-yellow-300 font-semibold">
                     Contact
                 </h2>
                 <section className="mt-6 text-lg">
@@ -113,7 +113,7 @@ export default function Contact() {
                             }}
                         />
                         {messageError && (
-                            <p className="text-red-600 text-sm">
+                            <p className="text-red-600 text-sm -translate-y-1.5">
                                 Veuillez remplir ce champ
                             </p>
                         )}
@@ -121,7 +121,7 @@ export default function Contact() {
                     <button className="bg-slate-200 px-6 py-2 rounded text-slate-950 mt-6 hover:bg-slate-300">
                         Envoyer
                     </button>
-                    <p className="text-yellow-200 text-xs mt-4">
+                    <p className="text-yellow-200/80 text-xs mt-4">
                         * Ces champs sont réquis pour pouvoir envoyer votre
                         message
                     </p>

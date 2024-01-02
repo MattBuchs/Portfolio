@@ -1,6 +1,6 @@
 export default function Home() {
     return (
-        <div className="flex items-center h-[92vh] -translate-y-10">
+        <div className="flex items-center h-[90vh] -translate-y-10">
             <section className="w-1/2 bg-[#120b2a] text-slate-200 py-8 px-12 rounded shadow">
                 <p>
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
