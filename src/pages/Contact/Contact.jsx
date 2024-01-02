@@ -10,26 +10,25 @@ export default function Contact() {
     function sendEmail(e) {
         e.preventDefault();
 
-        let name = e.target[0].value;
-        let company = e.target[1].value;
+        let name = e.target[0].value || "<em>Donnée non rentrée</em>";
+        let company = e.target[1].value || "<em>Donnée non rentrée</em>";
 
-        if (name === "") name = `<em>Donnée non rentrée</em>`;
-        if (company === "") company = `<em>Donnée non rentrée</em>`;
         if (email === "") setEmailError(true);
         if (message === "") setMessageError(true);
         if (!checkEmail(email) && email !== "") return setEmailInvalid(true);
-        if (message === "" || email === "") return;
 
-        // eslint-disable-next-line no-undef
-        Email.send({
-            Host: "smtp.elasticemail.com",
-            Username: import.meta.env.VITE_EMAIL,
-            Password: import.meta.env.VITE_PASSWORD,
-            To: import.meta.env.VITE_EMAIL,
-            From: import.meta.env.VITE_EMAIL,
-            Subject: "Portfolio Message",
-            Body: `<strong>Nom/Prénom :</strong> ${name}<br><strong>Entreprise :</strong> ${company}<br><strong>Email :</strong> ${email}<br><strong>Message :</strong> ${message}`,
-        }).then((message) => alert(message));
+        if (message && email) {
+            // eslint-disable-next-line no-undef
+            Email.send({
+                Host: "smtp.elasticemail.com",
+                Username: import.meta.env.VITE_EMAIL,
+                Password: import.meta.env.VITE_PASSWORD,
+                To: import.meta.env.VITE_EMAIL,
+                From: import.meta.env.VITE_EMAIL,
+                Subject: "Portfolio Message",
+                Body: `<strong>Nom/Prénom :</strong> ${name}<br><strong>Entreprise :</strong> ${company}<br><strong>Email :</strong> ${email}<br><strong>Message :</strong> ${message}`,
+            }).then((message) => alert(message));
+        }
     }
 
     function checkEmail(email) {
@@ -59,7 +58,7 @@ export default function Contact() {
                             <input
                                 type="text"
                                 id="name"
-                                className="text-slate-950 w-full sm:w-[189px] sm:mr-6 px-1 border border-yellow-300 rounded-sm"
+                                className="text-slate-950 w-full sm:w-[189px] sm:mr-6 px-2 py-1 border border-yellow-300 rounded-sm"
                             />
                         </div>
                         <div className="mt-2 sm:mt-0">
@@ -69,7 +68,7 @@ export default function Contact() {
                             <input
                                 type="text"
                                 id="company"
-                                className="text-slate-950 w-full sm:w-[189px] px-1"
+                                className="text-slate-950 w-full sm:w-[189px] px-2 py-1 border border-yellow-300 rounded-sm"
                             />
                         </div>
                     </section>
@@ -81,7 +80,7 @@ export default function Contact() {
                         <input
                             type="email"
                             id="email"
-                            className="text-slate-950 w-full sm:w-[402px] px-1"
+                            className="text-slate-950 w-full sm:w-[402px] px-2 py-1 border border-yellow-300 rounded-sm"
                             onChange={(e) => {
                                 setEmail(e.target.value);
                                 setEmailError(false);
@@ -107,7 +106,7 @@ export default function Contact() {
                         <textarea
                             type="text"
                             id="message"
-                            className="text-slate-950 w-full sm:w-[402px] min-h-[100px] px-1"
+                            className="text-slate-950 w-full sm:w-[402px] min-h-[100px] px-2 py-1 border border-yellow-300 rounded-sm"
                             onChange={(e) => {
                                 setMessage(e.target.value);
                                 setMessageError(false);
