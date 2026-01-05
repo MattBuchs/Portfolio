@@ -58,11 +58,11 @@ export default function Form() {
 
         emailjs
             .send(
-                import.meta.env.VITE_SERVICE_ID,
-                import.meta.env.VITE_TEMPLATE_ID,
+                process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
+                process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
                 formData,
                 {
-                    publicKey: import.meta.env.VITE_PUBLIC_KEY,
+                    publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
                 }
             )
             .then(
