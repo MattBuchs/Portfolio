@@ -24,19 +24,19 @@ export default function sitemap() {
             priority: 0.8,
         },
         {
-            url: `${baseUrl}/mentions-legales`,
+            url: `${baseUrl}/legalNotice`,
             lastModified: new Date(),
             changeFrequency: "yearly",
             priority: 0.3,
         },
         {
-            url: `${baseUrl}/politique-confidentialite`,
+            url: `${baseUrl}/privacyPolicy`,
             lastModified: new Date(),
             changeFrequency: "yearly",
             priority: 0.3,
         },
         {
-            url: `${baseUrl}/conditions-utilisation`,
+            url: `${baseUrl}/termsOfService`,
             lastModified: new Date(),
             changeFrequency: "yearly",
             priority: 0.3,

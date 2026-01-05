@@ -1,21 +1,9 @@
-import NavBar from "../components/Header/NavBar";
-import Footer from "../components/Footer";
+"use client";
+
+import NavBar from "@/components/Header/NavBar";
+import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { FileText } from "lucide-react";
-
-export const metadata = {
-    title: "Conditions Générales d'Utilisation",
-    description: "Conditions générales d'utilisation du site matt-buchs.me.",
-    alternates: {
-        canonical: "https://matt-buchs.me/conditions-utilisation",
-    },
-    openGraph: {
-        title: "Conditions Générales d'Utilisation | Matt Buchs",
-        description:
-            "Conditions générales d'utilisation du site matt-buchs.me.",
-        url: "https://matt-buchs.me/conditions-utilisation",
-    },
-};
 
 export default function TermsOfService() {
     return (
@@ -165,7 +153,7 @@ export default function TermsOfService() {
                                 leurs demandes. Les informations collectées via
                                 ce formulaire sont traitées conformément à notre{" "}
                                 <a
-                                    href="/politique-confidentialite"
+                                    href="/privacyPolicy"
                                     className="text-blue-600 hover:underline"
                                 >
                                     Politique de Confidentialité
@@ -210,7 +198,7 @@ export default function TermsOfService() {
                                 sont traitées conformément au RGPD. Pour plus
                                 d&apos;informations, veuillez consulter notre{" "}
                                 <a
-                                    href="/politique-confidentialite"
+                                    href="/privacyPolicy"
                                     className="text-blue-600 hover:underline"
                                 >
                                     Politique de Confidentialité

@@ -55,21 +55,21 @@ export default function Footer() {
                     </p>
                     <nav className="flex flex-wrap justify-center gap-3 text-xs text-slate-300">
                         <Link
-                            href="/mentions-legales"
+                            href="/legalNotice"
                             className="hover:underline hover:text-white"
                         >
                             Mentions légales
                         </Link>
                         <span>•</span>
                         <Link
-                            href="/politique-confidentialite"
+                            href="/privacyPolicy"
                             className="hover:underline hover:text-white"
                         >
                             Confidentialité
                         </Link>
                         <span>•</span>
                         <Link
-                            href="/conditions-utilisation"
+                            href="/termsOfService"
                             className="hover:underline hover:text-white"
                         >
                             CGU

@@ -1,22 +1,9 @@
-import NavBar from "../components/Header/NavBar";
-import Footer from "../components/Footer";
+"use client";
+
+import NavBar from "@/components/Header/NavBar";
+import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { Shield } from "lucide-react";
-
-export const metadata = {
-    title: "Mentions Légales",
-    description:
-        "Mentions légales du site matt-buchs.me - Informations sur l'éditeur et l'hébergement du site.",
-    alternates: {
-        canonical: "https://matt-buchs.me/mentions-legales",
-    },
-    openGraph: {
-        title: "Mentions Légales | Matt Buchs",
-        description:
-            "Mentions légales du site matt-buchs.me - Informations sur l'éditeur et l'hébergement du site.",
-        url: "https://matt-buchs.me/mentions-legales",
-    },
-};
 
 export default function LegalNotice() {
     return (
@@ -151,7 +138,7 @@ export default function LegalNotice() {
                             <p className="text-gray-700 leading-relaxed mt-4">
                                 Pour plus d&apos;informations, consultez notre{" "}
                                 <a
-                                    href="/politique-confidentialite"
+                                    href="/privacyPolicy"
                                     className="text-blue-600 hover:underline"
                                 >
                                     Politique de confidentialité

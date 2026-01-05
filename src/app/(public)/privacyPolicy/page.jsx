@@ -1,22 +1,9 @@
-import NavBar from "../components/Header/NavBar";
-import Footer from "../components/Footer";
+"use client";
+
+import NavBar from "@/components/Header/NavBar";
+import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
 import { Lock } from "lucide-react";
-
-export const metadata = {
-    title: "Politique de Confidentialité",
-    description:
-        "Politique de confidentialité et protection des données personnelles du site matt-buchs.me.",
-    alternates: {
-        canonical: "https://matt-buchs.me/politique-confidentialite",
-    },
-    openGraph: {
-        title: "Politique de Confidentialité | Matt Buchs",
-        description:
-            "Politique de confidentialité et protection des données personnelles du site matt-buchs.me.",
-        url: "https://matt-buchs.me/politique-confidentialite",
-    },
-};
 
 export default function PrivacyPolicy() {
     return (
