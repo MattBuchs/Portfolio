@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import { Check, Copy, Download, Mail, ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import NavBar from "@/components/Header/NavBar";
 import Footer from "@/components/Footer";
 import { useSearchParams } from "next/navigation";
 
-export default function SuccessPage() {
+function SuccessContent() {
     const searchParams = useSearchParams();
     const [licenseKey, setLicenseKey] = useState("");
     const [email, setEmail] = useState("");
@@ -270,5 +270,19 @@ export default function SuccessPage() {
             </main>
             <Footer />
         </>
+    );
+}
+
+export default function SuccessPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen bg-linear-to-b from-gray-50 via-white to-gray-50 flex items-center justify-center">
+                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                </div>
+            }
+        >
+            <SuccessContent />
+        </Suspense>
     );
 }

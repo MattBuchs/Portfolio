@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Plan {
+  FREE
+  PRO
+  BUSINESS
+}
+
+model License {
+  id              String   @id @default(cuid())
+  email           String
+  licenseKey      String   @unique // Clé chiffrée
+  plan            Plan     @default(FREE)
+  maxUsages       Int      // Nombre maximum d'utilisations
+  remainingUsages Int      // Nombre d'utilisations restantes
+  sessionId       String   @unique // ID de session Stripe
+  customerName    String?
+  company         String?
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([email])
+  @@index([sessionId])
+  @@index([licenseKey])
+}

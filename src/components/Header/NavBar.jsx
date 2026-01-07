@@ -175,6 +175,19 @@ export default function NavBar({ isProjectPage }) {
                                     Projets
                                 </Link>
                             </li>
+                            <li className="mr-4" role="none">
+                                <Link
+                                    href="/escapetime"
+                                    className={`${
+                                        pathname.startsWith("/escapetime") &&
+                                        "underline underline-offset-4"
+                                    }`}
+                                    role="menuitem"
+                                    aria-label="Découvrir EscapeTime"
+                                >
+                                    EscapeTime
+                                </Link>
+                            </li>
                             <li role="none">
                                 <Link
                                     href="/contact"
@@ -286,6 +299,29 @@ export default function NavBar({ isProjectPage }) {
                                     </motion.li>
                                     <motion.li
                                         custom={2}
+                                        variants={menuItemVariants}
+                                        initial="hidden"
+                                        animate="visible"
+                                        role="none"
+                                    >
+                                        <Link
+                                            href="/escapetime"
+                                            className={`block py-2 px-4 text-lg ${
+                                                pathname.startsWith(
+                                                    "/escapetime"
+                                                )
+                                                    ? "bg-gray-100 text-black font-medium rounded-xl"
+                                                    : "text-gray-700"
+                                            }`}
+                                            onClick={() => setToggle(false)}
+                                            role="menuitem"
+                                            aria-label="Découvrir EscapeTime"
+                                        >
+                                            EscapeTime
+                                        </Link>
+                                    </motion.li>
+                                    <motion.li
+                                        custom={3}
                                         variants={menuItemVariants}
                                         initial="hidden"
                                         animate="visible"
