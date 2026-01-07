@@ -60,6 +60,9 @@ export async function GET(request) {
         const plan = session.metadata.plan || "pro";
         const maxUsages = PLAN_USAGES[plan] || 1;
 
+        // Déterminer le prix en fonction du plan
+        const price = plan === "pro" ? 99 : plan === "business" ? 179 : null;
+
         // Créer la licence dans la base de données
         const license = await prisma.license.create({
             data: {
@@ -71,6 +74,7 @@ export async function GET(request) {
                 remainingUsages: maxUsages,
                 customerName: session.metadata.name || null,
                 company: session.metadata.company || null,
+                price: price,
             },
         });
 

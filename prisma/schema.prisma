@@ -24,6 +24,7 @@ model License {
   sessionId       String   @unique // ID de session Stripe
   customerName    String?
   company         String?
+  price           Float?   // Prix personnalisé (pour BUSINESS notamment)
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
