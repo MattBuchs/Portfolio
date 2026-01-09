@@ -392,87 +392,6 @@ export default function DashboardClient() {
                     </motion.div>
                 </div>
 
-                {/* Chart */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-8"
-                >
-                    <div className="flex items-center gap-3 mb-6">
-                        <BarChart3 className="w-5 h-5 text-gray-600" />
-                        <h2 className="text-lg font-bold text-gray-900">
-                            Ventes des 7 derniers jours
-                        </h2>
-                    </div>
-                    <div className="flex items-end justify-between gap-2 h-48">
-                        {chartData.map((day, index) => {
-                            const total = day.pro + day.enterprise;
-                            const maxHeight = Math.max(
-                                ...chartData.map((d) => d.pro + d.enterprise)
-                            );
-                            const heightPro =
-                                maxHeight > 0 ? (day.pro / maxHeight) * 100 : 0;
-                            const heightEnterprise =
-                                maxHeight > 0
-                                    ? (day.enterprise / maxHeight) * 100
-                                    : 0;
-
-                            return (
-                                <div
-                                    key={index}
-                                    className="flex-1 flex flex-col items-center gap-2"
-                                >
-                                    <div className="text-xs font-medium text-gray-900">
-                                        {total}
-                                    </div>
-                                    <div className="w-full flex flex-col gap-1 items-center">
-                                        {day.enterprise > 0 && (
-                                            <div
-                                                className="w-full bg-purple-500 rounded-t"
-                                                style={{
-                                                    height: `${heightEnterprise}%`,
-                                                    minHeight: "4px",
-                                                }}
-                                            />
-                                        )}
-                                        {day.pro > 0 && (
-                                            <div
-                                                className="w-full bg-blue-500 rounded-b"
-                                                style={{
-                                                    height: `${heightPro}%`,
-                                                    minHeight: "4px",
-                                                }}
-                                            />
-                                        )}
-                                        {total === 0 && (
-                                            <div className="w-full h-1 bg-gray-200 rounded" />
-                                        )}
-                                    </div>
-                                    <div className="text-xs text-gray-600">
-                                        {new Date(day.date).toLocaleDateString(
-                                            "fr-FR",
-                                            { weekday: "short" }
-                                        )}
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </div>
-                    <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-200">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-blue-500 rounded" />
-                            <span className="text-sm text-gray-600">PRO</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-purple-500 rounded" />
-                            <span className="text-sm text-gray-600">
-                                Entreprise
-                            </span>
-                        </div>
-                    </div>
-                </motion.div>
-
                 {/* Filters */}
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
@@ -823,6 +742,87 @@ export default function DashboardClient() {
                             )}
                         </>
                     )}
+                </motion.div>
+
+                {/* Chart */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5 }}
+                    className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mt-8"
+                >
+                    <div className="flex items-center gap-3 mb-6">
+                        <BarChart3 className="w-5 h-5 text-gray-600" />
+                        <h2 className="text-lg font-bold text-gray-900">
+                            Ventes des 7 derniers jours
+                        </h2>
+                    </div>
+                    <div className="flex items-end justify-between gap-2 h-48">
+                        {chartData.map((day, index) => {
+                            const total = day.pro + day.enterprise;
+                            const maxHeight = Math.max(
+                                ...chartData.map((d) => d.pro + d.enterprise)
+                            );
+                            const heightPro =
+                                maxHeight > 0 ? (day.pro / maxHeight) * 100 : 0;
+                            const heightEnterprise =
+                                maxHeight > 0
+                                    ? (day.enterprise / maxHeight) * 100
+                                    : 0;
+
+                            return (
+                                <div
+                                    key={index}
+                                    className="flex-1 flex flex-col items-center gap-2"
+                                >
+                                    <div className="text-xs font-medium text-gray-900">
+                                        {total}
+                                    </div>
+                                    <div className="w-full flex flex-col gap-1 items-center">
+                                        {day.enterprise > 0 && (
+                                            <div
+                                                className="w-full bg-purple-500 rounded-t"
+                                                style={{
+                                                    height: `${heightEnterprise}%`,
+                                                    minHeight: "4px",
+                                                }}
+                                            />
+                                        )}
+                                        {day.pro > 0 && (
+                                            <div
+                                                className="w-full bg-blue-500 rounded-b"
+                                                style={{
+                                                    height: `${heightPro}%`,
+                                                    minHeight: "4px",
+                                                }}
+                                            />
+                                        )}
+                                        {total === 0 && (
+                                            <div className="w-full h-1 bg-gray-200 rounded" />
+                                        )}
+                                    </div>
+                                    <div className="text-xs text-gray-600">
+                                        {new Date(day.date).toLocaleDateString(
+                                            "fr-FR",
+                                            { weekday: "short" }
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-200">
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-blue-500 rounded" />
+                            <span className="text-sm text-gray-600">PRO</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <div className="w-3 h-3 bg-purple-500 rounded" />
+                            <span className="text-sm text-gray-600">
+                                Entreprise
+                            </span>
+                        </div>
+                    </div>
                 </motion.div>
             </main>
 
