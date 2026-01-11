@@ -18,6 +18,7 @@ model License {
   id              String   @id @default(cuid())
   email           String
   licenseKey      String   @unique // Clé chiffrée
+  licenseSecret   String   // Secret chiffré
   plan            Plan     @default(FREE)
   maxUsages       Int      // Nombre maximum d'utilisations
   remainingUsages Int      // Nombre d'utilisations restantes

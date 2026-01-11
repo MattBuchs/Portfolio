@@ -86,8 +86,6 @@ export async function POST(request) {
             );
         }
 
-        console.log("License :", matchingLicense);
-
         // Décrémenter le nombre d'utilisations restantes
         const updatedLicense = await prisma.license.update({
             where: { id: matchingLicense.id },
@@ -101,8 +99,7 @@ export async function POST(request) {
                 success: true,
                 valid: true,
                 plan: updatedLicense.plan,
-                remainingUsages: updatedLicense.remainingUsages,
-                maxUsages: updatedLicense.maxUsages,
+                licenseSecret: updatedLicense.licenseSecret,
             },
             { headers: corsHeaders }
         );

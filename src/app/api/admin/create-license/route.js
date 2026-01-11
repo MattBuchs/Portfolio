@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { generateLicenseKey, encryptLicenseKey } from "@/lib/crypto";
+import {
+    generateLicenseKey,
+    encryptLicenseKey,
+    generateLicenseSecret,
+} from "@/lib/crypto";
 
 export async function POST(request) {
     const session = await auth();
@@ -23,6 +27,7 @@ export async function POST(request) {
         // Générer une nouvelle clé
         const licenseKey = generateLicenseKey();
         const encryptedKey = encryptLicenseKey(licenseKey);
+        const licenseSecret = generateLicenseSecret();
 
         // Créer la licence
         const license = await prisma.license.create({
@@ -31,6 +36,7 @@ export async function POST(request) {
                 customerName,
                 company: company || null,
                 licenseKey: encryptedKey,
+                licenseSecret: licenseSecret,
                 plan,
                 maxUsages: parseInt(maxUsages),
                 remainingUsages: parseInt(maxUsages),
