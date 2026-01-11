@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
     Download,
@@ -13,11 +14,67 @@ import {
     Music,
     Palette,
     Building2,
+    TrendingDown,
 } from "lucide-react";
 import NavBar from "@/components/Header/NavBar";
 import Footer from "@/components/Footer";
+import Image from "next/image";
 
-export default function EscapeTimePage() {
+export default function GameMasterOSPage() {
+    const [pricing, setPricing] = useState(null);
+    const [loadingPricing, setLoadingPricing] = useState(true);
+
+    useEffect(() => {
+        const fetchPricing = async () => {
+            try {
+                const res = await fetch("/api/pricing");
+                const data = await res.json();
+                setPricing(data);
+            } catch (error) {
+                console.error("Error fetching pricing:", error);
+            }
+            setLoadingPricing(false);
+        };
+
+        fetchPricing();
+    }, []);
+
+    const getPlanPrice = (planName) => {
+        if (!pricing) return planName === "PRO" ? 119 : 199;
+        const plan = pricing.find((p) => p.plan === planName);
+        if (!plan) return planName === "PRO" ? 119 : 199;
+
+        const now = new Date();
+        const isPromoExpired =
+            plan.saleEndDate && now > new Date(plan.saleEndDate);
+
+        if (isPromoExpired && plan.isOnSale) {
+            return plan.basePrice;
+        }
+        return plan.currentPrice;
+    };
+
+    const isPlanOnSale = (planName) => {
+        if (!pricing) return false;
+        const plan = pricing.find((p) => p.plan === planName);
+        if (!plan) return false;
+
+        const now = new Date();
+        const isPromoExpired =
+            plan.saleEndDate && now > new Date(plan.saleEndDate);
+
+        return (
+            plan.isOnSale &&
+            !isPromoExpired &&
+            plan.currentPrice < plan.basePrice
+        );
+    };
+
+    const getBasePrice = (planName) => {
+        if (!pricing) return null;
+        const plan = pricing.find((p) => p.plan === planName);
+        return plan?.basePrice;
+    };
     const features = [
         {
             icon: Timer,
@@ -87,9 +144,9 @@ export default function EscapeTimePage() {
     return (
         <>
             <NavBar />
-            <main className="min-h-screen bg-linear-to-b from-gray-50 via-white to-gray-50 overflow-x-hidden">
+            <main className="min-h-screen bg-linear-to-b from-gray-50 via-white to-gray-50 overflow-x-hidden scroll-smooth">
                 {/* Hero Section */}
-                <section className="relative pt-32 pb-20 px-6">
+                <section className="relative pt-32 pb-20 px-6 bg-indigo-100">
                     <div className="max-w-7xl mx-auto">
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
@@ -97,37 +154,37 @@ export default function EscapeTimePage() {
                             transition={{ duration: 0.6 }}
                             className="text-center"
                         >
-                            <motion.div
+                            <motion.h1
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
                                 transition={{ duration: 0.5, type: "spring" }}
                                 className="inline-block mb-6"
                             >
-                                <div className="w-32 h-32 mx-auto bg-linear-to-br from-blue-500 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl">
-                                    <Clock className="w-16 h-16 text-white" />
-                                </div>
-                            </motion.div>
-
-                            <h1 className="text-6xl md:text-8xl font-bold mb-6 bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                                EscapeTime
-                            </h1>
+                                <Image
+                                    src="/img/logo_gamemaster-og_black.png"
+                                    // sizes="(max-width: 768px) 100vw, 500px"
+                                    width={450}
+                                    height={200}
+                                    alt="GameMaster OS Logo"
+                                    className="w-64 md:w-md mx-auto"
+                                />
+                            </motion.h1>
 
                             <p className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                                Le logiciel professionnel pour piloter vos
-                                Escape Games sans stress
+                                Le centre de contrôle des Game Masters.
                             </p>
 
                             <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
                                 Gérez vos timers, vos messages et vos ambiances
                                 sonores depuis une seule interface, conçue
-                                spécifiquement pour les maîtres du jeu.
+                                spécifiquement pour les Games Master.
                                 <br />
                                 <strong>Stable, local, sans abonnement.</strong>
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                                 <motion.a
-                                    href="/downloads/EscapeTime_Setup.exe"
+                                    href="/downloads/GameMasterOS_Setup.exe"
                                     download
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
@@ -181,7 +238,7 @@ export default function EscapeTimePage() {
                             viewport={{ once: true }}
                             className="text-center text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
                         >
-                            EscapeTime résout les vrais problèmes du terrain
+                            GameMaster OS résout les vrais problèmes du terrain
                         </motion.p>
 
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -207,7 +264,7 @@ export default function EscapeTimePage() {
                 </section>
 
                 {/* Pricing Section */}
-                <section id="pricing" className="py-20 px-6 bg-gray-50">
+                <section id="pricing" className="py-20 px-6 bg-gray-100">
                     <div className="max-w-7xl mx-auto">
                         <motion.h2
                             initial={{ opacity: 0, y: 20 }}
@@ -264,7 +321,7 @@ export default function EscapeTimePage() {
                                 </ul>
 
                                 <motion.a
-                                    href="/downloads/EscapeTime_Setup.exe"
+                                    href="/downloads/GameMasterOS_Setup.exe"
                                     download
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
@@ -276,12 +333,20 @@ export default function EscapeTimePage() {
 
                             {/* PRO Plan */}
                             <div className="bg-linear-to-br from-blue-50 to-purple-50 border-2 border-blue-400 rounded-3xl p-8 relative overflow-hidden shadow-xl">
-                                <div className="absolute top-4 right-4 bg-linear-to-r from-yellow-400 to-yellow-600 text-black px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1">
-                                    <Crown className="w-4 h-4" />
-                                    Populaire
+                                <div className="absolute top-4 right-4 flex gap-2 z-10">
+                                    {isPlanOnSale("PRO") && (
+                                        <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-lg">
+                                            <TrendingDown className="w-4 h-4" />
+                                            PROMO
+                                        </div>
+                                    )}
+                                    <div className="bg-linear-to-r from-yellow-400 to-yellow-600 text-black px-4 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-lg">
+                                        <Crown className="w-4 h-4" />
+                                        Populaire
+                                    </div>
                                 </div>
 
-                                <div className="flex items-center gap-3 mb-6">
+                                <div className="flex items-center gap-3 mb-6 relative z-0">
                                     <Crown className="w-8 h-8 text-blue-600" />
                                     <h3 className="text-3xl font-bold text-gray-900">
                                         Version PRO
@@ -294,12 +359,50 @@ export default function EscapeTimePage() {
                                 </p>
 
                                 <div className="mb-8">
+                                    {isPlanOnSale("PRO") &&
+                                        getBasePrice("PRO") && (
+                                            <p className="text-2xl font-semibold text-gray-400 line-through mb-1">
+                                                {getBasePrice("PRO")}€ TTC
+                                            </p>
+                                        )}
                                     <p className="text-5xl font-bold text-gray-900 mb-2">
-                                        99€
+                                        {loadingPricing
+                                            ? "..."
+                                            : `${getPlanPrice("PRO")}€`}
+                                        <span className="text-2xl text-gray-600 ml-2">
+                                            TTC
+                                        </span>
                                     </p>
                                     <p className="text-gray-700">
                                         Paiement unique • Licence perpétuelle
                                     </p>
+                                    {isPlanOnSale("PRO") &&
+                                        pricing &&
+                                        (() => {
+                                            const plan = pricing.find(
+                                                (p) => p.plan === "PRO"
+                                            );
+                                            if (plan?.saleEndDate) {
+                                                return (
+                                                    <p className="text-sm text-red-600 font-semibold mt-2 flex items-center gap-1">
+                                                        <Clock className="w-4 h-4" />
+                                                        Offre valable
+                                                        jusqu&apos;au{" "}
+                                                        {new Date(
+                                                            plan.saleEndDate
+                                                        ).toLocaleDateString(
+                                                            "fr-FR",
+                                                            {
+                                                                day: "numeric",
+                                                                month: "long",
+                                                                year: "numeric",
+                                                            }
+                                                        )}
+                                                    </p>
+                                                );
+                                            }
+                                            return null;
+                                        })()}
                                 </div>
 
                                 <ul className="space-y-4 mb-8">
@@ -315,7 +418,7 @@ export default function EscapeTimePage() {
                                 </ul>
 
                                 <motion.a
-                                    href="/escapetime/checkout?plan=pro"
+                                    href="/gamemaster-os/checkout?plan=pro"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     className="block w-full py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-center shadow-xl hover:shadow-blue-500/50 transition-shadow"
@@ -325,8 +428,15 @@ export default function EscapeTimePage() {
                             </div>
 
                             {/* Enterprise Plan */}
-                            <div className="bg-white border border-gray-200 rounded-3xl p-8 hover:border-blue-400 hover:shadow-xl transition-all">
-                                <div className="flex items-center gap-3 mb-6">
+                            <div className="bg-white border border-gray-200 rounded-3xl p-8 hover:border-blue-400 hover:shadow-xl transition-all relative">
+                                {isPlanOnSale("BUSINESS") && (
+                                    <div className="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold flex items-center gap-1 shadow-lg z-10">
+                                        <TrendingDown className="w-4 h-4" />
+                                        PROMO
+                                    </div>
+                                )}
+
+                                <div className="flex items-center gap-3 mb-6 relative z-0">
                                     <Building2 className="w-8 h-8 text-blue-600" />
                                     <h3 className="text-3xl font-bold text-gray-900">
                                         Entreprise
@@ -339,12 +449,50 @@ export default function EscapeTimePage() {
                                 </p>
 
                                 <div className="mb-8">
+                                    {isPlanOnSale("BUSINESS") &&
+                                        getBasePrice("BUSINESS") && (
+                                            <p className="text-2xl font-semibold text-gray-400 line-through mb-1">
+                                                {getBasePrice("BUSINESS")}€ TTC
+                                            </p>
+                                        )}
                                     <p className="text-5xl font-bold text-gray-900 mb-2">
-                                        179€
+                                        {loadingPricing
+                                            ? "..."
+                                            : `${getPlanPrice("BUSINESS")}€`}
+                                        <span className="text-2xl text-gray-600 ml-2">
+                                            TTC
+                                        </span>
                                     </p>
                                     <p className="text-gray-600">
                                         Paiement unique • Multi-postes
                                     </p>
+                                    {isPlanOnSale("BUSINESS") &&
+                                        pricing &&
+                                        (() => {
+                                            const plan = pricing.find(
+                                                (p) => p.plan === "BUSINESS"
+                                            );
+                                            if (plan?.saleEndDate) {
+                                                return (
+                                                    <p className="text-sm text-red-600 font-semibold mt-2 flex items-center gap-1">
+                                                        <Clock className="w-4 h-4" />
+                                                        Offre valable
+                                                        jusqu&apos;au{" "}
+                                                        {new Date(
+                                                            plan.saleEndDate
+                                                        ).toLocaleDateString(
+                                                            "fr-FR",
+                                                            {
+                                                                day: "numeric",
+                                                                month: "long",
+                                                                year: "numeric",
+                                                            }
+                                                        )}
+                                                    </p>
+                                                );
+                                            }
+                                            return null;
+                                        })()}
                                 </div>
 
                                 <ul className="space-y-4 mb-8">
@@ -362,7 +510,7 @@ export default function EscapeTimePage() {
                                 </ul>
 
                                 <motion.a
-                                    href="/escapetime/checkout?plan=enterprise"
+                                    href="/gamemaster-os/checkout?plan=enterprise"
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
                                     className="block w-full py-4 bg-gray-800 hover:bg-gray-900 text-white rounded-full font-semibold text-center transition-colors"
@@ -465,7 +613,7 @@ export default function EscapeTimePage() {
                             className="bg-linear-to-r from-blue-600 to-purple-600 rounded-3xl p-12 shadow-2xl"
                         >
                             <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                                Essayez EscapeTime dès maintenant
+                                Essayez GameMaster OS dès maintenant
                             </h2>
                             <p className="text-xl text-white mb-8">
                                 Téléchargez la version gratuite et découvrez un
@@ -474,7 +622,7 @@ export default function EscapeTimePage() {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <motion.a
-                                    href="/downloads/EscapeTime_Setup.exe"
+                                    href="/downloads/GameMasterOS_Setup.exe"
                                     download
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}

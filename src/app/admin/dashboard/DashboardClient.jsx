@@ -28,10 +28,14 @@ import {
     CheckCircle,
     Eye,
     Lock,
+    Tag,
 } from "lucide-react";
 import Link from "next/link";
+import PromoCodesManager from "./PromoCodesManager";
+import PricingManager from "./PricingManager";
 
 export default function DashboardClient() {
+    const [activeTab, setActiveTab] = useState("licenses"); // "licenses" ou "promoCodes"
     const [stats, setStats] = useState(null);
     const [chartData, setChartData] = useState([]);
     const [licenses, setLicenses] = useState([]);
@@ -270,7 +274,7 @@ export default function DashboardClient() {
                                 Administration
                             </h1>
                             <p className="text-sm text-gray-600">
-                                Gestion des licences EscapeTime
+                                Gestion des licences GameMaster OS
                             </p>
                         </div>
                     </div>
@@ -311,519 +315,585 @@ export default function DashboardClient() {
             </header>
 
             <main className="max-w-7xl mx-auto px-6 py-8">
-                {/* Stats Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-gray-600">
-                                Total Licences
-                            </p>
-                            <Key className="w-5 h-5 text-gray-400" />
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">
-                            {stats.total}
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-gray-600">Actives</p>
-                            <TrendingUp className="w-5 h-5 text-green-500" />
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">
-                            {stats.active}
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-gray-600">PRO</p>
-                            <Users className="w-5 h-5 text-blue-500" />
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">
-                            {stats.pro}
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-gray-600">Entreprise</p>
-                            <Building2 className="w-5 h-5 text-purple-500" />
-                        </div>
-                        <p className="text-3xl font-bold text-gray-900">
-                            {stats.enterprise}
-                        </p>
-                    </motion.div>
-
-                    <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="bg-linear-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200 shadow-sm"
-                    >
-                        <div className="flex items-center justify-between mb-2">
-                            <p className="text-sm text-green-700 font-medium">
-                                Revenus
-                            </p>
-                            <DollarSign className="w-5 h-5 text-green-600" />
-                        </div>
-                        <p className="text-3xl font-bold text-green-900">
-                            {stats.revenue}€
-                        </p>
-                    </motion.div>
+                {/* Tabs */}
+                <div className="mb-8 border-b border-gray-200">
+                    <div className="flex gap-4">
+                        <button
+                            onClick={() => setActiveTab("licenses")}
+                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                                activeTab === "licenses"
+                                    ? "border-blue-600 text-blue-600"
+                                    : "border-transparent text-gray-600 hover:text-gray-900"
+                            }`}
+                        >
+                            <Key className="w-5 h-5" />
+                            Licences
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("pricing")}
+                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                                activeTab === "pricing"
+                                    ? "border-blue-600 text-blue-600"
+                                    : "border-transparent text-gray-600 hover:text-gray-900"
+                            }`}
+                        >
+                            <DollarSign className="w-5 h-5" />
+                            Prix
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("promoCodes")}
+                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                                activeTab === "promoCodes"
+                                    ? "border-blue-600 text-blue-600"
+                                    : "border-transparent text-gray-600 hover:text-gray-900"
+                            }`}
+                        >
+                            <Tag className="w-5 h-5" />
+                            Codes Promo
+                        </button>
+                    </div>
                 </div>
 
-                {/* Filters */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6 }}
-                    className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6"
-                >
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="relative">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input
-                                type="text"
-                                placeholder="Rechercher (email, nom, société)..."
-                                value={search}
-                                onChange={(e) => {
-                                    setSearch(e.target.value);
-                                    setPage(1);
-                                }}
-                                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
+                {activeTab === "licenses" && (
+                    <>
+                        {/* Stats Cards */}
+                        <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
+                            >
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="text-sm text-gray-600">
+                                        Total Licences
+                                    </p>
+                                    <Key className="w-5 h-5 text-gray-400" />
+                                </div>
+                                <p className="text-3xl font-bold text-gray-900">
+                                    {stats.total}
+                                </p>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.1 }}
+                                className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
+                            >
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="text-sm text-gray-600">
+                                        Actives
+                                    </p>
+                                    <TrendingUp className="w-5 h-5 text-green-500" />
+                                </div>
+                                <p className="text-3xl font-bold text-gray-900">
+                                    {stats.active}
+                                </p>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 }}
+                                className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
+                            >
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="text-sm text-gray-600">PRO</p>
+                                    <Users className="w-5 h-5 text-blue-500" />
+                                </div>
+                                <p className="text-3xl font-bold text-gray-900">
+                                    {stats.pro}
+                                </p>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                                className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm"
+                            >
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="text-sm text-gray-600">
+                                        Entreprise
+                                    </p>
+                                    <Building2 className="w-5 h-5 text-purple-500" />
+                                </div>
+                                <p className="text-3xl font-bold text-gray-900">
+                                    {stats.enterprise}
+                                </p>
+                            </motion.div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4 }}
+                                className="bg-linear-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200 shadow-sm"
+                            >
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="text-sm text-green-700 font-medium">
+                                        Revenus
+                                    </p>
+                                    <DollarSign className="w-5 h-5 text-green-600" />
+                                </div>
+                                <p className="text-3xl font-bold text-green-900">
+                                    {stats.revenue}€
+                                </p>
+                            </motion.div>
                         </div>
 
-                        <select
-                            value={filterPlan}
-                            onChange={(e) => {
-                                setFilterPlan(e.target.value);
-                                setPage(1);
-                            }}
-                            className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        {/* Filters */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.6 }}
+                            className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mb-6"
                         >
-                            <option value="">Tous les plans</option>
-                            <option value="FREE">FREE</option>
-                            <option value="PRO">PRO</option>
-                            <option value="BUSINESS">BUSINESS</option>
-                        </select>
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div className="relative">
+                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                    <input
+                                        type="text"
+                                        placeholder="Rechercher (email, nom, société)..."
+                                        value={search}
+                                        onChange={(e) => {
+                                            setSearch(e.target.value);
+                                            setPage(1);
+                                        }}
+                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    />
+                                </div>
 
-                        <select
-                            value={filterActive}
-                            onChange={(e) => {
-                                setFilterActive(e.target.value);
-                                setPage(1);
-                            }}
-                            className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
-                            <option value="">Tous les statuts</option>
-                            <option value="true">Actives uniquement</option>
-                            <option value="false">Inactives uniquement</option>
-                        </select>
-                    </div>
-                </motion.div>
+                                <select
+                                    value={filterPlan}
+                                    onChange={(e) => {
+                                        setFilterPlan(e.target.value);
+                                        setPage(1);
+                                    }}
+                                    className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">Tous les plans</option>
+                                    <option value="FREE">FREE</option>
+                                    <option value="PRO">PRO</option>
+                                    <option value="BUSINESS">BUSINESS</option>
+                                </select>
 
-                {/* Licenses Table */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.7 }}
-                    className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
-                >
-                    <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-                        <div>
-                            <h2 className="text-lg font-bold text-gray-900">
-                                Licences
-                            </h2>
-                            <p className="text-sm text-gray-600">
-                                {pagination.total} licence
-                                {pagination.total > 1 ? "s" : ""} au total
-                            </p>
-                        </div>
-                        {stats.expiring > 0 && (
-                            <div className="flex items-center gap-2 px-3 py-1 bg-orange-50 text-orange-600 rounded-lg">
-                                <AlertCircle className="w-4 h-4" />
-                                <span className="text-sm font-medium">
-                                    {stats.expiring} licence
-                                    {stats.expiring > 1 ? "s" : ""} sans
-                                    utilisations
-                                </span>
+                                <select
+                                    value={filterActive}
+                                    onChange={(e) => {
+                                        setFilterActive(e.target.value);
+                                        setPage(1);
+                                    }}
+                                    className="px-4 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                >
+                                    <option value="">Tous les statuts</option>
+                                    <option value="true">
+                                        Actives uniquement
+                                    </option>
+                                    <option value="false">
+                                        Inactives uniquement
+                                    </option>
+                                </select>
                             </div>
-                        )}
-                    </div>
+                        </motion.div>
 
-                    {loading ? (
-                        <div className="flex items-center justify-center py-12">
-                            <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                        </div>
-                    ) : licenses.length === 0 ? (
-                        <div className="text-center py-12 text-gray-500">
-                            Aucune licence trouvée
-                        </div>
-                    ) : (
-                        <>
-                            <div className="overflow-x-auto">
-                                <table className="w-full">
-                                    <thead className="bg-gray-50 border-b border-gray-200">
-                                        <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Client
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Email
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Plan
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Utilisations
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Statut
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Date
-                                            </th>
-                                            <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                                Actions
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-200">
-                                        {licenses.map((license) => (
-                                            <tr
-                                                key={license.id}
-                                                className="hover:bg-gray-50 transition-colors"
-                                            >
-                                                <td className="px-6 py-4">
-                                                    <div>
-                                                        <p className="font-medium text-gray-900">
-                                                            {license.customerName ||
-                                                                "-"}
-                                                        </p>
-                                                        {license.company && (
-                                                            <p className="text-sm text-gray-600">
-                                                                {
-                                                                    license.company
-                                                                }
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-2 text-sm text-gray-700">
-                                                        <Mail className="w-4 h-4 text-gray-400" />
-                                                        {license.email}
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <span
-                                                        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                                                            license.plan ===
-                                                            "PRO"
-                                                                ? "bg-blue-100 text-blue-700"
-                                                                : license.plan ===
-                                                                  "BUSINESS"
-                                                                ? "bg-purple-100 text-purple-700"
-                                                                : "bg-gray-100 text-gray-700"
-                                                        }`}
+                        {/* Licenses Table */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.7 }}
+                            className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden"
+                        >
+                            <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                                <div>
+                                    <h2 className="text-lg font-bold text-gray-900">
+                                        Licences
+                                    </h2>
+                                    <p className="text-sm text-gray-600">
+                                        {pagination.total} licence
+                                        {pagination.total > 1 ? "s" : ""} au
+                                        total
+                                    </p>
+                                </div>
+                                {stats.expiring > 0 && (
+                                    <div className="flex items-center gap-2 px-3 py-1 bg-orange-50 text-orange-600 rounded-lg">
+                                        <AlertCircle className="w-4 h-4" />
+                                        <span className="text-sm font-medium">
+                                            {stats.expiring} licence
+                                            {stats.expiring > 1 ? "s" : ""} sans
+                                            utilisations
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+
+                            {loading ? (
+                                <div className="flex items-center justify-center py-12">
+                                    <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                                </div>
+                            ) : licenses.length === 0 ? (
+                                <div className="text-center py-12 text-gray-500">
+                                    Aucune licence trouvée
+                                </div>
+                            ) : (
+                                <>
+                                    <div className="overflow-x-auto">
+                                        <table className="w-full">
+                                            <thead className="bg-gray-50 border-b border-gray-200">
+                                                <tr>
+                                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                        Client
+                                                    </th>
+                                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                        Email
+                                                    </th>
+                                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                        Plan
+                                                    </th>
+                                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                        Utilisations
+                                                    </th>
+                                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                        Statut
+                                                    </th>
+                                                    <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                        Date
+                                                    </th>
+                                                    <th className="px-6 py-3 text-right text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                                        Actions
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="divide-y divide-gray-200">
+                                                {licenses.map((license) => (
+                                                    <tr
+                                                        key={license.id}
+                                                        className="hover:bg-gray-50 transition-colors"
                                                     >
-                                                        {license.plan}
-                                                    </span>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center gap-2">
-                                                        <div className="text-sm">
+                                                        <td className="px-6 py-4">
+                                                            <div>
+                                                                <p className="font-medium text-gray-900">
+                                                                    {license.customerName ||
+                                                                        "-"}
+                                                                </p>
+                                                                {license.company && (
+                                                                    <p className="text-sm text-gray-600">
+                                                                        {
+                                                                            license.company
+                                                                        }
+                                                                    </p>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex items-center gap-2 text-sm text-gray-700">
+                                                                <Mail className="w-4 h-4 text-gray-400" />
+                                                                {license.email}
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4">
                                                             <span
-                                                                className={`font-medium ${
-                                                                    license.remainingUsages ===
-                                                                    0
-                                                                        ? "text-red-600"
-                                                                        : "text-gray-900"
+                                                                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                                                    license.plan ===
+                                                                    "PRO"
+                                                                        ? "bg-blue-100 text-blue-700"
+                                                                        : license.plan ===
+                                                                          "BUSINESS"
+                                                                        ? "bg-purple-100 text-purple-700"
+                                                                        : "bg-gray-100 text-gray-700"
                                                                 }`}
                                                             >
-                                                                {
-                                                                    license.remainingUsages
-                                                                }
+                                                                {license.plan}
                                                             </span>
-                                                            <span className="text-gray-600">
-                                                                {" "}
-                                                                /{" "}
-                                                                {
-                                                                    license.maxUsages
-                                                                }
-                                                            </span>
-                                                        </div>
-                                                        <button
-                                                            onClick={() =>
-                                                                handleAction(
-                                                                    license.id,
-                                                                    "reset"
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                actionLoading ===
-                                                                license.id
-                                                            }
-                                                            className="p-1 hover:bg-gray-100 rounded transition-colors cursor-pointer"
-                                                            title="Réinitialiser"
-                                                        >
-                                                            <RefreshCw className="w-4 h-4 text-gray-500" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <button
-                                                        onClick={() =>
-                                                            handleAction(
-                                                                license.id,
-                                                                "toggle"
-                                                            )
-                                                        }
-                                                        disabled={
-                                                            actionLoading ===
-                                                            license.id
-                                                        }
-                                                        className="flex items-center gap-2 cursor-pointer"
-                                                    >
-                                                        {license.isActive ? (
-                                                            <>
-                                                                <ToggleRight className="w-5 h-5 text-green-500" />
-                                                                <span className="text-sm text-green-600">
-                                                                    Active
-                                                                </span>
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <ToggleLeft className="w-5 h-5 text-gray-400" />
-                                                                <span className="text-sm text-gray-500">
-                                                                    Inactive
-                                                                </span>
-                                                            </>
-                                                        )}
-                                                    </button>
-                                                </td>
-                                                <td className="px-6 py-4 text-sm text-gray-600">
-                                                    {new Date(
-                                                        license.createdAt
-                                                    ).toLocaleDateString(
-                                                        "fr-FR"
-                                                    )}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <div className="flex items-center justify-end gap-2">
-                                                        <button
-                                                            onClick={() =>
-                                                                handleViewKey(
-                                                                    license.id
-                                                                )
-                                                            }
-                                                            className="p-2 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
-                                                            title="Voir la clé"
-                                                        >
-                                                            {revealedKeys[
-                                                                license.id
-                                                            ] ? (
-                                                                <div className="flex items-center gap-2">
-                                                                    <code className="text-xs font-mono text-gray-900">
-                                                                        {
-                                                                            revealedKeys[
-                                                                                license
-                                                                                    .id
-                                                                            ]
-                                                                        }
-                                                                    </code>
-                                                                    <button
-                                                                        onClick={(
-                                                                            e
-                                                                        ) => {
-                                                                            e.stopPropagation();
-                                                                            copyToClipboard(
-                                                                                revealedKeys[
-                                                                                    license
-                                                                                        .id
-                                                                                ],
-                                                                                "copyArray"
-                                                                            );
-                                                                        }}
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="text-sm">
+                                                                    <span
+                                                                        className={`font-medium ${
+                                                                            license.remainingUsages ===
+                                                                            0
+                                                                                ? "text-red-600"
+                                                                                : "text-gray-900"
+                                                                        }`}
                                                                     >
-                                                                        {copySuccess.copyArray ? (
-                                                                            <CheckCircle className="w-4 h-4 text-green-600" />
-                                                                        ) : (
-                                                                            <Copy className="w-4 h-4 text-blue-600 cursor-pointer" />
-                                                                        )}
-                                                                    </button>
+                                                                        {
+                                                                            license.remainingUsages
+                                                                        }
+                                                                    </span>
+                                                                    <span className="text-gray-600">
+                                                                        {" "}
+                                                                        /{" "}
+                                                                        {
+                                                                            license.maxUsages
+                                                                        }
+                                                                    </span>
                                                                 </div>
-                                                            ) : (
-                                                                <Eye className="w-4 h-4 text-gray-600" />
-                                                            )}
-                                                        </button>
-                                                        <button
-                                                            onClick={() =>
-                                                                handleDelete(
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleAction(
+                                                                            license.id,
+                                                                            "reset"
+                                                                        )
+                                                                    }
+                                                                    disabled={
+                                                                        actionLoading ===
+                                                                        license.id
+                                                                    }
+                                                                    className="p-1 hover:bg-gray-100 rounded transition-colors cursor-pointer"
+                                                                    title="Réinitialiser"
+                                                                >
+                                                                    <RefreshCw className="w-4 h-4 text-gray-500" />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <button
+                                                                onClick={() =>
+                                                                    handleAction(
+                                                                        license.id,
+                                                                        "toggle"
+                                                                    )
+                                                                }
+                                                                disabled={
+                                                                    actionLoading ===
                                                                     license.id
-                                                                )
-                                                            }
-                                                            disabled={
-                                                                actionLoading ===
-                                                                license.id
-                                                            }
-                                                            className="p-2 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-                                                            title="Supprimer"
-                                                        >
-                                                            <Trash2 className="w-4 h-4 text-red-600" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {/* Pagination */}
-                            {pagination.totalPages > 1 && (
-                                <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                                    <p className="text-sm text-gray-600">
-                                        Page {pagination.page} sur{" "}
-                                        {pagination.totalPages}
-                                    </p>
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() =>
-                                                setPage((p) =>
-                                                    Math.max(1, p - 1)
-                                                )
-                                            }
-                                            disabled={pagination.page === 1}
-                                            className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                                        >
-                                            <ChevronLeft className="w-4 h-4" />
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                setPage((p) =>
-                                                    Math.min(
-                                                        pagination.totalPages,
-                                                        p + 1
-                                                    )
-                                                )
-                                            }
-                                            disabled={
-                                                pagination.page ===
-                                                pagination.totalPages
-                                            }
-                                            className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
-                                        >
-                                            <ChevronRight className="w-4 h-4" />
-                                        </button>
+                                                                }
+                                                                className="flex items-center gap-2 cursor-pointer"
+                                                            >
+                                                                {license.isActive ? (
+                                                                    <>
+                                                                        <ToggleRight className="w-5 h-5 text-green-500" />
+                                                                        <span className="text-sm text-green-600">
+                                                                            Active
+                                                                        </span>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        <ToggleLeft className="w-5 h-5 text-gray-400" />
+                                                                        <span className="text-sm text-gray-500">
+                                                                            Inactive
+                                                                        </span>
+                                                                    </>
+                                                                )}
+                                                            </button>
+                                                        </td>
+                                                        <td className="px-6 py-4 text-sm text-gray-600">
+                                                            {new Date(
+                                                                license.createdAt
+                                                            ).toLocaleDateString(
+                                                                "fr-FR"
+                                                            )}
+                                                        </td>
+                                                        <td className="px-6 py-4">
+                                                            <div className="flex items-center justify-end gap-2">
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleViewKey(
+                                                                            license.id
+                                                                        )
+                                                                    }
+                                                                    className="p-2 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                                                                    title="Voir la clé"
+                                                                >
+                                                                    {revealedKeys[
+                                                                        license
+                                                                            .id
+                                                                    ] ? (
+                                                                        <div className="flex items-center gap-2">
+                                                                            <code className="text-xs font-mono text-gray-900">
+                                                                                {
+                                                                                    revealedKeys[
+                                                                                        license
+                                                                                            .id
+                                                                                    ]
+                                                                                }
+                                                                            </code>
+                                                                            <button
+                                                                                onClick={(
+                                                                                    e
+                                                                                ) => {
+                                                                                    e.stopPropagation();
+                                                                                    copyToClipboard(
+                                                                                        revealedKeys[
+                                                                                            license
+                                                                                                .id
+                                                                                        ],
+                                                                                        "copyArray"
+                                                                                    );
+                                                                                }}
+                                                                            >
+                                                                                {copySuccess.copyArray ? (
+                                                                                    <CheckCircle className="w-4 h-4 text-green-600" />
+                                                                                ) : (
+                                                                                    <Copy className="w-4 h-4 text-blue-600 cursor-pointer" />
+                                                                                )}
+                                                                            </button>
+                                                                        </div>
+                                                                    ) : (
+                                                                        <Eye className="w-4 h-4 text-gray-600" />
+                                                                    )}
+                                                                </button>
+                                                                <button
+                                                                    onClick={() =>
+                                                                        handleDelete(
+                                                                            license.id
+                                                                        )
+                                                                    }
+                                                                    disabled={
+                                                                        actionLoading ===
+                                                                        license.id
+                                                                    }
+                                                                    className="p-2 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                                                                    title="Supprimer"
+                                                                >
+                                                                    <Trash2 className="w-4 h-4 text-red-600" />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
+
+                                    {/* Pagination */}
+                                    {pagination.totalPages > 1 && (
+                                        <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
+                                            <p className="text-sm text-gray-600">
+                                                Page {pagination.page} sur{" "}
+                                                {pagination.totalPages}
+                                            </p>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={() =>
+                                                        setPage((p) =>
+                                                            Math.max(1, p - 1)
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        pagination.page === 1
+                                                    }
+                                                    className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                                                >
+                                                    <ChevronLeft className="w-4 h-4" />
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        setPage((p) =>
+                                                            Math.min(
+                                                                pagination.totalPages,
+                                                                p + 1
+                                                            )
+                                                        )
+                                                    }
+                                                    disabled={
+                                                        pagination.page ===
+                                                        pagination.totalPages
+                                                    }
+                                                    className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                                                >
+                                                    <ChevronRight className="w-4 h-4" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </>
                             )}
-                        </>
-                    )}
-                </motion.div>
+                        </motion.div>
 
-                {/* Chart */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mt-8"
-                >
-                    <div className="flex items-center gap-3 mb-6">
-                        <BarChart3 className="w-5 h-5 text-gray-600" />
-                        <h2 className="text-lg font-bold text-gray-900">
-                            Ventes des 7 derniers jours
-                        </h2>
-                    </div>
-                    <div className="flex items-end justify-between gap-2 h-48">
-                        {chartData.map((day, index) => {
-                            const total = day.pro + day.enterprise;
-                            const maxHeight = Math.max(
-                                ...chartData.map((d) => d.pro + d.enterprise)
-                            );
-                            const heightPro =
-                                maxHeight > 0 ? (day.pro / maxHeight) * 100 : 0;
-                            const heightEnterprise =
-                                maxHeight > 0
-                                    ? (day.enterprise / maxHeight) * 100
-                                    : 0;
+                        {/* Chart */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.5 }}
+                            className="bg-white rounded-2xl p-6 border border-gray-200 shadow-sm mt-8"
+                        >
+                            <div className="flex items-center gap-3 mb-6">
+                                <BarChart3 className="w-5 h-5 text-gray-600" />
+                                <h2 className="text-lg font-bold text-gray-900">
+                                    Ventes des 7 derniers jours
+                                </h2>
+                            </div>
+                            <div className="flex items-end justify-between gap-2 h-48">
+                                {chartData.map((day, index) => {
+                                    const total = day.pro + day.enterprise;
+                                    const maxHeight = Math.max(
+                                        ...chartData.map(
+                                            (d) => d.pro + d.enterprise
+                                        )
+                                    );
+                                    const heightPro =
+                                        maxHeight > 0
+                                            ? (day.pro / maxHeight) * 100
+                                            : 0;
+                                    const heightEnterprise =
+                                        maxHeight > 0
+                                            ? (day.enterprise / maxHeight) * 100
+                                            : 0;
 
-                            return (
-                                <div
-                                    key={index}
-                                    className="flex-1 flex flex-col items-center gap-2"
-                                >
-                                    <div className="text-xs font-medium text-gray-900">
-                                        {total}
-                                    </div>
-                                    <div className="w-full flex flex-col gap-1 items-center">
-                                        {day.enterprise > 0 && (
-                                            <div
-                                                className="w-full bg-purple-500 rounded-t"
-                                                style={{
-                                                    height: `${heightEnterprise}%`,
-                                                    minHeight: "4px",
-                                                }}
-                                            />
-                                        )}
-                                        {day.pro > 0 && (
-                                            <div
-                                                className="w-full bg-blue-500 rounded-b"
-                                                style={{
-                                                    height: `${heightPro}%`,
-                                                    minHeight: "4px",
-                                                }}
-                                            />
-                                        )}
-                                        {total === 0 && (
-                                            <div className="w-full h-1 bg-gray-200 rounded" />
-                                        )}
-                                    </div>
-                                    <div className="text-xs text-gray-600">
-                                        {new Date(day.date).toLocaleDateString(
-                                            "fr-FR",
-                                            { weekday: "short" }
-                                        )}
-                                    </div>
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="flex-1 flex flex-col items-center gap-2"
+                                        >
+                                            <div className="text-xs font-medium text-gray-900">
+                                                {total}
+                                            </div>
+                                            <div className="w-full flex flex-col gap-1 items-center">
+                                                {day.enterprise > 0 && (
+                                                    <div
+                                                        className="w-full bg-purple-500 rounded-t"
+                                                        style={{
+                                                            height: `${heightEnterprise}%`,
+                                                            minHeight: "4px",
+                                                        }}
+                                                    />
+                                                )}
+                                                {day.pro > 0 && (
+                                                    <div
+                                                        className="w-full bg-blue-500 rounded-b"
+                                                        style={{
+                                                            height: `${heightPro}%`,
+                                                            minHeight: "4px",
+                                                        }}
+                                                    />
+                                                )}
+                                                {total === 0 && (
+                                                    <div className="w-full h-1 bg-gray-200 rounded" />
+                                                )}
+                                            </div>
+                                            <div className="text-xs text-gray-600">
+                                                {new Date(
+                                                    day.date
+                                                ).toLocaleDateString("fr-FR", {
+                                                    weekday: "short",
+                                                })}
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                            <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-200">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 bg-blue-500 rounded" />
+                                    <span className="text-sm text-gray-600">
+                                        PRO
+                                    </span>
                                 </div>
-                            );
-                        })}
-                    </div>
-                    <div className="flex items-center justify-center gap-6 mt-4 pt-4 border-t border-gray-200">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-blue-500 rounded" />
-                            <span className="text-sm text-gray-600">PRO</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-purple-500 rounded" />
-                            <span className="text-sm text-gray-600">
-                                Entreprise
-                            </span>
-                        </div>
-                    </div>
-                </motion.div>
+                                <div className="flex items-center gap-2">
+                                    <div className="w-3 h-3 bg-purple-500 rounded" />
+                                    <span className="text-sm text-gray-600">
+                                        Entreprise
+                                    </span>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+
+                {activeTab === "pricing" && <PricingManager />}
+
+                {activeTab === "promoCodes" && <PromoCodesManager />}
             </main>
 
             {/* Modal Créer une licence */}

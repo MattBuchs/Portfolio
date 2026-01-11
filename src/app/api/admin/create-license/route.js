@@ -36,7 +36,7 @@ export async function POST(request) {
                 customerName,
                 company: company || null,
                 licenseKey: encryptedKey,
-                licenseSecret: licenseSecret,
+                licenseSecret,
                 plan,
                 maxUsages: parseInt(maxUsages),
                 remainingUsages: parseInt(maxUsages),

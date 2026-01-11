@@ -1,8 +1,8 @@
 export const projects = [
     {
         id: 1,
-        title: "EscapeTime",
-        slug: "escapetime",
+        title: "GameMaster OS",
+        slug: "gamemaster-os",
         paragraph: "Timer réalisé pour un Escape Game",
         description:
             "Dans le cadre de l'Escape Game 'Angel's Game', j'ai développé un timer personnalisé visant à enrichir l'expérience des joueurs et à faciliter la gestion du temps par les maîtres du jeu. Ce chronomètre, conçu avec JavaScript et Electron, est déployé sur deux interfaces distinctes. L'une est destinée aux joueurs dans la salle de jeu sur une télévision qui affiche le temps restant, offrant aux participants une visualisation claire de leur progression et renforçant l'immersion. L'autre interface est réservée aux maîtres du jeu sur leur écran d'ordinateur, leur permettant de contrôler le temps, de lancer des effets sonores et de gérer les paramètres du jeu.",
@@ -11,8 +11,8 @@ export const projects = [
         bgColorRight: "#f1f1f1",
         bgColor: "#2b3231",
         class: "w-full h-full object-cover",
-        githubLink: "https://github.com/MattBuchs/EscapeGame-Timer",
-        projectLink: null,
+        githubLink: null,
+        projectLink: "/gamemaster-os",
     },
     {
         id: 2,

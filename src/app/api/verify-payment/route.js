@@ -5,20 +5,22 @@ import {
     generateLicenseKey,
     encryptLicenseKey,
     decryptLicenseKey,
+    generateLicenseSecret,
 } from "@/lib/crypto";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Nombre d'utilisations par plan
 const PLAN_USAGES = {
-    pro: 1, // 1 installation
-    enterprise: 3, // 3 installations
+    PRO: 1, // 1 installation
+    BUSINESS: 3, // 3 installations
 };
 
-export async function GET(request) {
+export async function POST(request) {
     try {
-        const { searchParams } = new URL(request.url);
-        const sessionId = searchParams.get("session_id");
+        const { sessionId } = await request.json();
+
+        console.log("sessionId", sessionId);
 
         if (!sessionId) {
             return NextResponse.json(
@@ -44,7 +46,9 @@ export async function GET(request) {
         }
 
         // Vérifier le paiement auprès de Stripe
-        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        const session = await stripe.checkout.sessions.retrieve(sessionId, {
+            expand: ["line_items"],
+        });
 
         if (session.payment_status !== "paid") {
             return NextResponse.json(
@@ -53,15 +57,25 @@ export async function GET(request) {
             );
         }
 
+        console.log("SESSION", session);
+
         // Générer une nouvelle clé de licence
         const licenseKey = generateLicenseKey();
         const encryptedKey = encryptLicenseKey(licenseKey);
+        const licenseSecret = generateLicenseSecret();
 
-        const plan = session.metadata.plan || "pro";
+        // Récupérer le plan depuis les metadata et le convertir en majuscules
+        const planLower = session.metadata.plan || "pro";
+        const plan = planLower.toUpperCase(); // Convertir en majuscules pour matcher l'enum Prisma
         const maxUsages = PLAN_USAGES[plan] || 1;
 
-        // Déterminer le prix en fonction du plan
-        const price = plan === "pro" ? 99 : plan === "business" ? 179 : null;
+        // Récupérer les prix depuis Stripe (en centimes)
+        const amountTotal = session.amount_total / 100; // Convertir en euros
+        const originalPrice = session.metadata.originalPrice
+            ? parseFloat(session.metadata.originalPrice)
+            : amountTotal;
+        const promoCode = session.metadata.promoCode || null;
+        const discount = originalPrice - amountTotal;
 
         // Créer la licence dans la base de données
         const license = await prisma.license.create({
@@ -69,14 +83,30 @@ export async function GET(request) {
                 sessionId,
                 email: session.customer_email,
                 licenseKey: encryptedKey,
+                licenseSecret,
                 plan,
                 maxUsages,
                 remainingUsages: maxUsages,
                 customerName: session.metadata.name || null,
                 company: session.metadata.company || null,
-                price: price,
+                price: amountTotal, // Prix final payé
+                originalPrice: originalPrice, // Prix avant réduction
+                promoCode: promoCode,
+                discount: discount > 0 ? discount : null,
             },
         });
+
+        // Si un code promo a été utilisé, incrémenter son compteur d'utilisations
+        if (promoCode) {
+            await prisma.promoCode.update({
+                where: { code: promoCode },
+                data: {
+                    usedCount: {
+                        increment: 1,
+                    },
+                },
+            });
+        }
 
         return NextResponse.json({
             success: true,

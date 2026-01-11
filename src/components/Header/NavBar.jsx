@@ -177,15 +177,15 @@ export default function NavBar({ isProjectPage }) {
                             </li>
                             <li className="mr-4" role="none">
                                 <Link
-                                    href="/escapetime"
+                                    href="/gamemaster-os"
                                     className={`${
-                                        pathname.startsWith("/escapetime") &&
+                                        pathname.startsWith("/gamemaster-os") &&
                                         "underline underline-offset-4"
                                     }`}
                                     role="menuitem"
-                                    aria-label="Découvrir EscapeTime"
+                                    aria-label="Découvrir GameMaster OS"
                                 >
-                                    EscapeTime
+                                    GameMaster OS
                                 </Link>
                             </li>
                             <li role="none">
@@ -305,19 +305,19 @@ export default function NavBar({ isProjectPage }) {
                                         role="none"
                                     >
                                         <Link
-                                            href="/escapetime"
+                                            href="/gamemaster-os"
                                             className={`block py-2 px-4 text-lg ${
                                                 pathname.startsWith(
-                                                    "/escapetime"
+                                                    "/gamemaster-os"
                                                 )
                                                     ? "bg-gray-100 text-black font-medium rounded-xl"
                                                     : "text-gray-700"
                                             }`}
                                             onClick={() => setToggle(false)}
                                             role="menuitem"
-                                            aria-label="Découvrir EscapeTime"
+                                            aria-label="Découvrir GameMaster OS"
                                         >
-                                            EscapeTime
+                                            GameMaster OS
                                         </Link>
                                     </motion.li>
                                     <motion.li

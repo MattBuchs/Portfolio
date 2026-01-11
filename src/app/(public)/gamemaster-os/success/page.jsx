@@ -22,7 +22,13 @@ function SuccessContent() {
             return;
         }
 
-        fetch(`/api/verify-payment?session_id=${sessionId}`)
+        fetch(`/api/verify-payment`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ sessionId }),
+        })
             .then((res) => res.json())
             .then((data) => {
                 if (data.success) {
@@ -74,7 +80,7 @@ function SuccessContent() {
                             erreur, contactez-nous.
                         </p>
                         <Link
-                            href="/escapetime"
+                            href="/gamemaster-os"
                             className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-semibold transition-colors"
                         >
                             <ArrowLeft className="w-4 h-4" />
@@ -110,8 +116,8 @@ function SuccessContent() {
                             Paiement réussi ! 🎉
                         </h1>
                         <p className="text-xl text-gray-600">
-                            Merci pour votre achat. Votre licence EscapeTime est
-                            prête !
+                            Merci pour votre achat. Votre licence GameMaster OS
+                            est prête !
                         </p>
                     </motion.div>
 
@@ -179,7 +185,7 @@ function SuccessContent() {
                                 </div>
                                 <div>
                                     <h3 className="font-semibold text-gray-900 mb-1">
-                                        Ouvrez EscapeTime
+                                        Ouvrez GameMaster OS
                                     </h3>
                                     <p className="text-gray-600 text-sm">
                                         Lancez l&apos;application sur votre
@@ -227,7 +233,7 @@ function SuccessContent() {
                         className="bg-gray-50 rounded-3xl p-8 border border-gray-200"
                     >
                         <h2 className="text-xl font-bold text-gray-900 mb-4">
-                            Vous n&apos;avez pas encore installé EscapeTime ?
+                            Vous n&apos;avez pas encore installé GameMaster OS ?
                         </h2>
                         <p className="text-gray-600 mb-6">
                             Téléchargez l&apos;application maintenant pour
@@ -236,18 +242,18 @@ function SuccessContent() {
 
                         <div className="flex flex-col sm:flex-row gap-4">
                             <motion.a
-                                href="/downloads/EscapeTime_Setup.exe"
+                                href="/downloads/GameMasterOS_Setup.exe"
                                 download
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
                                 className="flex-1 px-6 py-3 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold flex items-center justify-center gap-2 shadow-xl hover:shadow-blue-500/50 transition-shadow"
                             >
                                 <Download className="w-5 h-5" />
-                                Télécharger EscapeTime
+                                Télécharger GameMaster OS
                             </motion.a>
 
                             <Link
-                                href="/escapetime"
+                                href="/gamemaster-os"
                                 className="flex-1 px-6 py-3 bg-white border-2 border-gray-300 text-gray-700 rounded-full font-semibold hover:bg-gray-50 transition-colors text-center"
                             >
                                 Retour à la page principale

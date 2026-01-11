@@ -25,7 +25,10 @@ model License {
   sessionId       String   @unique // ID de session Stripe
   customerName    String?
   company         String?
-  price           Float?   // Prix personnalisé (pour BUSINESS notamment)
+  price           Float?   // Prix payé (après réduction)
+  originalPrice   Float?   // Prix original avant réduction
+  promoCode       String?  // Code promo utilisé
+  discount        Float?   // Montant de la réduction appliquée
   isActive        Boolean  @default(true)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -33,4 +36,37 @@ model License {
   @@index([email])
   @@index([sessionId])
   @@index([licenseKey])
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+model PromoCode {
+  id              String       @id @default(cuid())
+  code            String       @unique
+  discountType    DiscountType
+  discountValue   Float        // Pourcentage (ex: 20 pour 20%) ou montant fixe (ex: 10 pour 10€)
+  maxUses         Int?         // Nombre maximum d'utilisations (null = illimité)
+  usedCount       Int          @default(0)
+  validFrom       DateTime     @default(now())
+  validUntil      DateTime?    // Date d'expiration (null = pas d'expiration)
+  isActive        Boolean      @default(true)
+  applicablePlans Plan[]       // Plans auxquels ce code s'applique (vide = tous)
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([code])
+}
+
+model PlanPricing {
+  id              String   @id @default(cuid())
+  plan            Plan     @unique
+  basePrice       Float    // Prix de base
+  currentPrice    Float    // Prix actuel
+  isOnSale        Boolean  @default(false)
+  saleEndDate     DateTime? // Date de fin de la promotion
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { motion } from "framer-motion";
 import { CreditCard, Lock, ArrowLeft, Check } from "lucide-react";
 import Link from "next/link";
@@ -16,14 +16,24 @@ function CheckoutForm() {
         email: "",
         name: "",
         company: "",
+        promoCode: "",
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [promoValidation, setPromoValidation] = useState({
+        isValidating: false,
+        isValid: false,
+        message: "",
+        discountType: null,
+        discountValue: 0,
+    });
+    const [dynamicPricing, setDynamicPricing] = useState(null);
+    const [loadingPricing, setLoadingPricing] = useState(true);
 
     const plans = {
         pro: {
             name: "Version PRO",
-            price: 99,
+            price: 119,
             features: [
                 "Timers illimités",
                 "Messages illimités",
@@ -35,7 +45,7 @@ function CheckoutForm() {
         },
         enterprise: {
             name: "Entreprise",
-            price: 179,
+            price: 199,
             features: [
                 "Toutes les fonctionnalités PRO",
                 "Installation sur 3 postes",
@@ -46,7 +56,117 @@ function CheckoutForm() {
         },
     };
 
-    const selectedPlan = plans[plan] || plans.pro;
+    // Récupérer les prix dynamiques depuis l'API
+    useEffect(() => {
+        const fetchPricing = async () => {
+            try {
+                const res = await fetch("/api/pricing");
+                const data = await res.json();
+                setDynamicPricing(data);
+            } catch (error) {
+                console.error("Error fetching pricing:", error);
+            }
+            setLoadingPricing(false);
+        };
+
+        fetchPricing();
+    }, []);
+
+    // Obtenir le prix du plan sélectionné (avec les prix dynamiques ou par défaut)
+    const getPlanPrice = () => {
+        if (!dynamicPricing) return plans[plan]?.price || 119;
+
+        const planUpper = plan === "enterprise" ? "BUSINESS" : "PRO";
+        const planPricing = dynamicPricing.find((p) => p.plan === planUpper);
+
+        if (planPricing) {
+            const now = new Date();
+            const isPromoExpired =
+                planPricing.saleEndDate &&
+                now > new Date(planPricing.saleEndDate);
+
+            if (isPromoExpired && planPricing.isOnSale) {
+                return planPricing.basePrice;
+            }
+            return planPricing.currentPrice;
+        }
+
+        return plans[plan]?.price || 199;
+    };
+
+    const selectedPlan = {
+        ...(plans[plan] || plans.pro),
+        price: getPlanPrice(),
+    };
+
+    const validatePromoCode = async (code) => {
+        if (!code) {
+            setPromoValidation({
+                isValidating: false,
+                isValid: false,
+                message: "",
+                discountType: null,
+                discountValue: 0,
+            });
+            return;
+        }
+
+        setPromoValidation((prev) => ({ ...prev, isValidating: true }));
+
+        try {
+            const response = await fetch("/api/validate-promo", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ promoCode: code, plan }),
+            });
+
+            const data = await response.json();
+
+            setPromoValidation({
+                isValidating: false,
+                isValid: data.valid,
+                message: data.message || "",
+                discountType: data.discountType || null,
+                discountValue: data.discountValue || 0,
+            });
+        } catch (error) {
+            setPromoValidation({
+                isValidating: false,
+                isValid: false,
+                message: "Erreur lors de la validation",
+                discountType: null,
+                discountValue: 0,
+            });
+        }
+    };
+
+    const handlePromoCodeChange = (e) => {
+        const code = e.target.value.toUpperCase();
+        setFormData({ ...formData, promoCode: code });
+    };
+
+    const handlePromoCodeBlur = () => {
+        if (formData.promoCode) {
+            validatePromoCode(formData.promoCode);
+        }
+    };
+
+    const calculateFinalPrice = () => {
+        if (!promoValidation.isValid) return selectedPlan.price;
+
+        if (promoValidation.discountType === "PERCENTAGE") {
+            return (
+                selectedPlan.price * (1 - promoValidation.discountValue / 100)
+            );
+        } else {
+            return Math.max(
+                selectedPlan.price - promoValidation.discountValue,
+                0
+            );
+        }
+    };
+
+    const finalPrice = calculateFinalPrice();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -70,6 +190,9 @@ function CheckoutForm() {
                     email: formData.email,
                     name: formData.name,
                     company: formData.company,
+                    promoCode: promoValidation.isValid
+                        ? formData.promoCode
+                        : null,
                 }),
             });
 
@@ -93,7 +216,7 @@ function CheckoutForm() {
             <main className="min-h-screen bg-linear-to-b from-gray-50 via-white to-gray-50 py-20 px-6">
                 <div className="max-w-6xl mx-auto">
                     <Link
-                        href="/escapetime"
+                        href="/gamemaster-os"
                         className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 transition-colors"
                     >
                         <ArrowLeft className="w-4 h-4" />
@@ -209,6 +332,43 @@ function CheckoutForm() {
                                         />
                                     </div>
 
+                                    <div>
+                                        <label
+                                            htmlFor="promoCode"
+                                            className="block text-sm font-semibold text-gray-900 mb-2"
+                                        >
+                                            Code promo (optionnel)
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="promoCode"
+                                            value={formData.promoCode}
+                                            onChange={handlePromoCodeChange}
+                                            onBlur={handlePromoCodeBlur}
+                                            className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent uppercase"
+                                            placeholder="PROMO2025"
+                                            disabled={
+                                                promoValidation.isValidating
+                                            }
+                                        />
+                                        {promoValidation.isValidating && (
+                                            <p className="mt-2 text-sm text-gray-500">
+                                                Validation en cours...
+                                            </p>
+                                        )}
+                                        {promoValidation.message && (
+                                            <p
+                                                className={`mt-2 text-sm ${
+                                                    promoValidation.isValid
+                                                        ? "text-green-600"
+                                                        : "text-red-600"
+                                                }`}
+                                            >
+                                                {promoValidation.message}
+                                            </p>
+                                        )}
+                                    </div>
+
                                     <button
                                         type="submit"
                                         disabled={loading}
@@ -222,7 +382,8 @@ function CheckoutForm() {
                                         ) : (
                                             <>
                                                 <Lock className="w-5 h-5" />
-                                                Payer {selectedPlan.price}€
+                                                Payer {finalPrice.toFixed(2)}€
+                                                TTC
                                             </>
                                         )}
                                     </button>
@@ -242,20 +403,84 @@ function CheckoutForm() {
                             animate={{ opacity: 1, x: 0 }}
                         >
                             <div className="bg-linear-to-br from-blue-50 to-purple-50 border-2 border-blue-400 rounded-3xl p-8 sticky top-8">
-                                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                                    {selectedPlan.name}
-                                </h2>
+                                <div className="flex justify-between items-start mb-6">
+                                    <h2 className="text-2xl font-bold text-gray-900">
+                                        {selectedPlan.name}
+                                    </h2>
+                                    {dynamicPricing &&
+                                        (() => {
+                                            const planUpper =
+                                                plan === "enterprise"
+                                                    ? "BUSINESS"
+                                                    : "PRO";
+                                            const planPricing =
+                                                dynamicPricing.find(
+                                                    (p) => p.plan === planUpper
+                                                );
+                                            const now = new Date();
+                                            const isPromoExpired =
+                                                planPricing?.saleEndDate &&
+                                                now >
+                                                    new Date(
+                                                        planPricing.saleEndDate
+                                                    );
+
+                                            return (
+                                                planPricing?.isOnSale &&
+                                                !isPromoExpired &&
+                                                planPricing.currentPrice <
+                                                    planPricing.basePrice && (
+                                                    <span className="px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold">
+                                                        PROMO
+                                                    </span>
+                                                )
+                                            );
+                                        })()}
+                                </div>
 
                                 <div className="mb-6 pb-6 border-b border-blue-200">
-                                    <div className="flex justify-between items-baseline mb-2">
-                                        <span className="text-gray-600">
-                                            Prix
-                                        </span>
-                                        <span className="text-4xl font-bold text-gray-900">
-                                            {selectedPlan.price}€
-                                        </span>
+                                    <div className="space-y-3">
+                                        {promoValidation.isValid && (
+                                            <div className="flex justify-between items-baseline">
+                                                <span className="text-gray-600">
+                                                    Prix original
+                                                </span>
+                                                <span className="text-xl font-semibold text-gray-400 line-through">
+                                                    {selectedPlan.price}€ TTC
+                                                </span>
+                                            </div>
+                                        )}
+                                        {promoValidation.isValid && (
+                                            <div className="flex justify-between items-baseline">
+                                                <span className="text-green-600 font-semibold">
+                                                    Réduction
+                                                </span>
+                                                <span className="text-xl font-semibold text-green-600">
+                                                    -
+                                                    {promoValidation.discountType ===
+                                                    "PERCENTAGE"
+                                                        ? `${promoValidation.discountValue}%`
+                                                        : `${promoValidation.discountValue}€`}
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div className="flex justify-between items-baseline">
+                                            <span className="text-gray-600">
+                                                {promoValidation.isValid
+                                                    ? "Prix final"
+                                                    : "Prix"}
+                                            </span>
+                                            <div className="text-right">
+                                                <span className="text-4xl font-bold text-gray-900">
+                                                    {finalPrice.toFixed(2)}€
+                                                </span>
+                                                <span className="text-lg text-gray-600 ml-2">
+                                                    TTC
+                                                </span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <p className="text-sm text-gray-600">
+                                    <p className="text-sm text-gray-600 mt-2">
                                         Paiement unique • Licence perpétuelle
                                     </p>
                                 </div>

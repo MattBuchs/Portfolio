@@ -28,8 +28,8 @@ export async function GET(request) {
                 return sum + license.price;
             }
             // Prix par défaut si non renseigné
-            if (license.plan === "PRO") return sum + 99;
-            if (license.plan === "BUSINESS") return sum + 179;
+            if (license.plan === "PRO") return sum + 119;
+            if (license.plan === "BUSINESS") return sum + 199;
             return sum;
         }, 0);
 
