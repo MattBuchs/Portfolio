@@ -153,7 +153,7 @@ export default function PromoCodesManager() {
                 </div>
                 <button
                     onClick={() => setShowCreateModal(true)}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors flex items-center gap-2"
+                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors flex items-center gap-2 cursor-pointer"
                 >
                     <Plus className="w-5 h-5" />
                     Créer un code promo
@@ -317,7 +317,7 @@ export default function PromoCodesManager() {
                                                             promo.isActive
                                                         )
                                                     }
-                                                    className="flex items-center gap-2"
+                                                    className="flex items-center gap-2 cursor-pointer"
                                                 >
                                                     {promo.isActive ? (
                                                         <>
@@ -341,7 +341,7 @@ export default function PromoCodesManager() {
                                                     onClick={() =>
                                                         handleDelete(promo.id)
                                                     }
-                                                    className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors"
+                                                    className="p-2 hover:bg-red-50 rounded-lg text-red-600 transition-colors cursor-pointer"
                                                 >
                                                     <Trash2 className="w-5 h-5" />
                                                 </button>
@@ -369,7 +369,7 @@ export default function PromoCodesManager() {
                             </h3>
                             <button
                                 onClick={() => setShowCreateModal(false)}
-                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                                className="p-2 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
                             >
                                 <X className="w-5 h-5" />
                             </button>
@@ -562,14 +562,14 @@ export default function PromoCodesManager() {
                                 <button
                                     type="button"
                                     onClick={() => setShowCreateModal(false)}
-                                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors cursor-pointer"
                                 >
                                     Annuler
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={createLoading}
-                                    className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors disabled:opacity-50"
+                                    className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors disabled:opacity-50 cursor-pointer"
                                 >
                                     {createLoading ? "Création..." : "Créer"}
                                 </button>

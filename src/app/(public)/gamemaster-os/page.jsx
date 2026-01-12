@@ -24,6 +24,8 @@ export default function GameMasterOSPage() {
     const [pricing, setPricing] = useState(null);
     const [loadingPricing, setLoadingPricing] = useState(true);
     const [zoomedImage, setZoomedImage] = useState(null);
+    const [latestVersion, setLatestVersion] = useState(null);
+    const [loadingVersion, setLoadingVersion] = useState(true);
 
     useEffect(() => {
         const fetchPricing = async () => {
@@ -37,7 +39,21 @@ export default function GameMasterOSPage() {
             setLoadingPricing(false);
         };
 
+        const fetchLatestVersion = async () => {
+            try {
+                const res = await fetch("/api/versions?latest=true");
+                if (res.ok) {
+                    const data = await res.json();
+                    setLatestVersion(data);
+                }
+            } catch (error) {
+                console.error("Error fetching version:", error);
+            }
+            setLoadingVersion(false);
+        };
+
         fetchPricing();
+        fetchLatestVersion();
     }, []);
 
     const getPlanPrice = (planName) => {
@@ -245,7 +261,11 @@ export default function GameMasterOSPage() {
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                                 <motion.a
-                                    href="/downloads/GameMasterOS_Setup.exe"
+                                    href={
+                                        latestVersion
+                                            ? `/downloads/${latestVersion.fileName}`
+                                            : "/downloads/GameMasterOS_Setup.exe"
+                                    }
                                     download
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}
@@ -266,7 +286,17 @@ export default function GameMasterOSPage() {
                             </div>
 
                             <p className="mt-6 text-sm text-gray-600">
-                                Compatible Windows 10/11 • Version 1.0.0
+                                Compatible Windows 10/11 •{" "}
+                                {loadingVersion
+                                    ? "Version 1.0.0"
+                                    : `Version ${latestVersion?.version}`}{" "}
+                                •{" "}
+                                <a
+                                    href="/gamemaster-os/versions"
+                                    className="text-blue-600 hover:text-blue-700 font-semibold"
+                                >
+                                    Voir les versions
+                                </a>
                             </p>
                         </motion.div>
                     </div>
@@ -500,7 +530,11 @@ export default function GameMasterOSPage() {
                                 </div>
 
                                 <motion.a
-                                    href="/downloads/GameMasterOS_Setup.exe"
+                                    href={
+                                        latestVersion
+                                            ? `/downloads/${latestVersion.fileName}`
+                                            : "/downloads/GameMasterOS_Setup.exe"
+                                    }
                                     download
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
@@ -798,7 +832,11 @@ export default function GameMasterOSPage() {
                             </p>
                             <div className="flex flex-col sm:flex-row gap-4 justify-center">
                                 <motion.a
-                                    href="/downloads/GameMasterOS_Setup.exe"
+                                    href={
+                                        latestVersion
+                                            ? `/downloads/${latestVersion.fileName}`
+                                            : "/downloads/GameMasterOS_Setup.exe"
+                                    }
                                     download
                                     whileHover={{ scale: 1.05 }}
                                     whileTap={{ scale: 0.95 }}

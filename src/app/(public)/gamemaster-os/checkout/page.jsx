@@ -217,7 +217,7 @@ function CheckoutForm() {
                 <div className="max-w-6xl mx-auto">
                     <Link
                         href="/gamemaster-os"
-                        className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 transition-colors"
+                        className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-8 transition-colors mt-4"
                     >
                         <ArrowLeft className="w-4 h-4" />
                         Retour
@@ -372,7 +372,7 @@ function CheckoutForm() {
                                     <button
                                         type="submit"
                                         disabled={loading}
-                                        className="w-full py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-xl hover:shadow-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                        className="w-full py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold shadow-xl hover:shadow-blue-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
                                     >
                                         {loading ? (
                                             <>

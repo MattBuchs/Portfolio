@@ -284,7 +284,7 @@ export default function PricingManager() {
                                                 onClick={() =>
                                                     setEditingPlan(null)
                                                 }
-                                                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors"
+                                                className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors cursor-pointer"
                                             >
                                                 Annuler
                                             </button>
@@ -293,7 +293,7 @@ export default function PricingManager() {
                                                     handleSave(plan.plan)
                                                 }
                                                 disabled={saveLoading}
-                                                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors disabled:opacity-50"
+                                                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors disabled:opacity-50 cursor-pointer"
                                             >
                                                 {saveLoading
                                                     ? "Enregistrement..."
@@ -342,7 +342,7 @@ export default function PricingManager() {
                                         <div className="flex gap-3 pt-2">
                                             <button
                                                 onClick={() => handleEdit(plan)}
-                                                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors flex items-center justify-center gap-2"
+                                                className="flex-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer"
                                             >
                                                 <Tag className="w-4 h-4" />
                                                 Modifier
@@ -353,7 +353,7 @@ export default function PricingManager() {
                                                     onClick={() =>
                                                         handleReset(plan.plan)
                                                     }
-                                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors flex items-center gap-2"
+                                                    className="px-4 py-2 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors flex items-center gap-2 cursor-pointer"
                                                 >
                                                     <RefreshCw className="w-4 h-4" />
                                                     Réinitialiser

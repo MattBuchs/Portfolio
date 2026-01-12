@@ -33,9 +33,10 @@ import {
 import Link from "next/link";
 import PromoCodesManager from "./PromoCodesManager";
 import PricingManager from "./PricingManager";
+import VersionManager from "./VersionManager";
 
 export default function DashboardClient() {
-    const [activeTab, setActiveTab] = useState("licenses"); // "licenses" ou "promoCodes"
+    const [activeTab, setActiveTab] = useState("licenses"); // "licenses", "promoCodes", "pricing", ou "versions"
     const [stats, setStats] = useState(null);
     const [chartData, setChartData] = useState([]);
     const [licenses, setLicenses] = useState([]);
@@ -320,7 +321,7 @@ export default function DashboardClient() {
                     <div className="flex gap-4">
                         <button
                             onClick={() => setActiveTab("licenses")}
-                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 cursor-pointer ${
                                 activeTab === "licenses"
                                     ? "border-blue-600 text-blue-600"
                                     : "border-transparent text-gray-600 hover:text-gray-900"
@@ -331,7 +332,7 @@ export default function DashboardClient() {
                         </button>
                         <button
                             onClick={() => setActiveTab("pricing")}
-                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 cursor-pointer ${
                                 activeTab === "pricing"
                                     ? "border-blue-600 text-blue-600"
                                     : "border-transparent text-gray-600 hover:text-gray-900"
@@ -342,7 +343,7 @@ export default function DashboardClient() {
                         </button>
                         <button
                             onClick={() => setActiveTab("promoCodes")}
-                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 ${
+                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 cursor-pointer ${
                                 activeTab === "promoCodes"
                                     ? "border-blue-600 text-blue-600"
                                     : "border-transparent text-gray-600 hover:text-gray-900"
@@ -350,6 +351,17 @@ export default function DashboardClient() {
                         >
                             <Tag className="w-5 h-5" />
                             Codes Promo
+                        </button>
+                        <button
+                            onClick={() => setActiveTab("versions")}
+                            className={`px-4 py-3 font-semibold border-b-2 transition-colors flex items-center gap-2 cursor-pointer ${
+                                activeTab === "versions"
+                                    ? "border-blue-600 text-blue-600"
+                                    : "border-transparent text-gray-600 hover:text-gray-900"
+                            }`}
+                        >
+                            <Download className="w-5 h-5" />
+                            Versions
                         </button>
                     </div>
                 </div>
@@ -894,6 +906,8 @@ export default function DashboardClient() {
                 {activeTab === "pricing" && <PricingManager />}
 
                 {activeTab === "promoCodes" && <PromoCodesManager />}
+
+                {activeTab === "versions" && <VersionManager />}
             </main>
 
             {/* Modal Créer une licence */}

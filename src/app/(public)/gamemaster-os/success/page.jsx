@@ -142,7 +142,7 @@ function SuccessContent() {
 
                         <button
                             onClick={copyToClipboard}
-                            className="w-full py-3 bg-white border-2 border-blue-300 text-blue-700 rounded-xl font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
+                            className="w-full py-3 bg-white border-2 border-blue-300 text-blue-700 rounded-xl font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                         >
                             {copied ? (
                                 <>

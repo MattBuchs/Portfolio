@@ -231,7 +231,7 @@ export default function NavBar({ isProjectPage }) {
                             aria-label="Menu de navigation mobile"
                         >
                             <button
-                                className="flex justify-center pt-3 pb-4 w-full"
+                                className="flex justify-center pt-3 pb-4 w-full cursor-pointer"
                                 onClick={() => setToggle(false)}
                                 aria-label="Fermer le menu"
                             >
