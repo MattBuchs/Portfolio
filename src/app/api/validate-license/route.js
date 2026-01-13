@@ -15,7 +15,7 @@ export async function OPTIONS() {
 
 export async function POST(request) {
     try {
-        const { licenseKey, email } = await request.json();
+        const { licenseKey, email, machineId } = await request.json();
 
         if (!email) {
             return NextResponse.json(
@@ -27,6 +27,13 @@ export async function POST(request) {
         if (!licenseKey) {
             return NextResponse.json(
                 { error: "Clé de licence manquante" },
+                { status: 400, headers: corsHeaders }
+            );
+        }
+
+        if (!machineId) {
+            return NextResponse.json(
+                { error: "ID de machine manquant" },
                 { status: 400, headers: corsHeaders }
             );
         }
@@ -86,11 +93,12 @@ export async function POST(request) {
             );
         }
 
-        // Décrémenter le nombre d'utilisations restantes
+        // Décrémenter le nombre d'utilisations restantes et ajoute l'ID de la machine
         const updatedLicense = await prisma.license.update({
             where: { id: matchingLicense.id },
             data: {
                 remainingUsages: matchingLicense.remainingUsages - 1,
+                machineIds: { push: machineId },
             },
         });
 

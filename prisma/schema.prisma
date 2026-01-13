@@ -23,6 +23,7 @@ model License {
   maxUsages       Int      // Nombre maximum d'utilisations
   remainingUsages Int      // Nombre d'utilisations restantes
   sessionId       String   @unique // ID de session Stripe
+  machineIds      String[] // Liste des IDs de machines
   customerName    String?
   company         String?
   price           Float?   // Prix payé (après réduction)
