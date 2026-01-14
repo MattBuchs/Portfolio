@@ -13,16 +13,26 @@ export async function OPTIONS() {
     return NextResponse.json({}, { headers: corsHeaders });
 }
 
-export async function GET(request) {
+export async function POST(request) {
     try {
-        const { searchParams } = new URL(request.url);
-        const licenseKey = searchParams.get("licenseKey");
-        const email = searchParams.get("email");
-        const machineId = searchParams.get("machineId");
+        const { licenseKey, email, machineId, timestamp } =
+            await request.json();
 
-        if (!licenseKey || !email || !machineId) {
+        if (!licenseKey || !email || !machineId || !timestamp) {
             return NextResponse.json(
                 { valid: false, error: "Paramètres manquants" },
+                { status: 400, headers: corsHeaders }
+            );
+        }
+
+        // Vérification de l'horodatage (5 minutes de tolérance)
+        const currentTime = Date.now();
+        const requestTime = new Date(timestamp).getTime();
+        const timeDifference = Math.abs(currentTime - requestTime);
+
+        if (timeDifference > 5 * 60 * 1000) {
+            return NextResponse.json(
+                { valid: false, error: "Requête expirée" },
                 { status: 400, headers: corsHeaders }
             );
         }

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// GET: Récupérer toutes les versions (public)
+// Récupére toutes les versions (public)
 export async function GET(req) {
     try {
         const { searchParams } = new URL(req.url);
@@ -30,10 +30,12 @@ export async function GET(req) {
         });
 
         // Convertir BigInt en string pour JSON
-        const versionsForJson = versions.map((v) => ({
-            ...v,
-            fileSize: v.fileSize.toString(),
-        }));
+        const versionsForJson = versions.map(
+            ({ downloadCount, fileSize, ...rest }) => ({
+                ...rest,
+                fileSize: fileSize.toString(),
+            })
+        );
 
         return NextResponse.json(versionsForJson);
     } catch (error) {
