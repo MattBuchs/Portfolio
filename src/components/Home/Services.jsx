@@ -1,261 +1,211 @@
 "use client";
 
-import Link from "next/link";
-import { ClipboardList } from "lucide-react";
-import { useScreenSize } from "../../hook/useScreenSize";
 import { motion } from "framer-motion";
+import { ArrowRight, Code, Search, Settings } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+
+const services = [
+	{
+		id: 1,
+		icon: Code,
+		title: "Développement Web Sur Mesure",
+		description:
+			"Je crée des sites web personnalisés, adaptés à votre identité et vos besoins. Chaque projet offre une expérience utilisateur intuitive et un design moderne.",
+		image: "/img/illustration/illustration-conception-de-sites-web-personnalisés.jpg",
+		features: [
+			"Sites vitrines",
+			"Applications web",
+			"E-commerce",
+			"Dashboards",
+		],
+	},
+	{
+		id: 2,
+		icon: Search,
+		title: "Optimisation SEO & Performance",
+		description:
+			"Un site performant et bien référencé est essentiel. J'optimise la vitesse, la structure et le contenu pour améliorer votre visibilité sur les moteurs de recherche.",
+		image: "/img/illustration/illustration-seo.png",
+		features: [
+			"Audit SEO",
+			"Optimisation vitesse",
+			"Core Web Vitals",
+			"Analytics",
+		],
+	},
+	{
+		id: 3,
+		icon: Settings,
+		title: "Maintenance & Support",
+		description:
+			"Pour assurer la pérennité de votre site, j'offre des services de maintenance régulière : mises à jour, sécurité, corrections et support technique réactif.",
+		image: "/img/illustration/illustration-maintenance.jpg",
+		features: ["Mises à jour", "Sécurité", "Backups", "Support 24/7"],
+	},
+];
 
 export default function Services() {
-    const screenSize = useScreenSize();
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: { delayChildren: 0.1, staggerChildren: 0.1 },
+		},
+	};
 
-    // Variants pour les animations
-    const headerVariants = {
-        hidden: { opacity: 0, y: -50 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6 },
-        },
-    };
+	const itemVariants = {
+		hidden: { y: 25, opacity: 0, filter: "blur(4px)" },
+		visible: {
+			y: 0,
+			opacity: 1,
+			filter: "blur(0px)",
+			transition: {
+				type: "spring",
+				stiffness: 100,
+				damping: 15,
+			},
+		},
+	};
 
-    const iconVariants = {
-        hidden: { scale: 0 },
-        visible: {
-            scale: 1,
-            transition: { delay: 0.3, type: "spring", stiffness: 200 },
-        },
-        hover: {
-            rotate: 10,
-            scale: 1.1,
-            transition: { duration: 0.3 },
-        },
-    };
+	const cardVariants = {
+		hidden: { scale: 0.96, opacity: 0, y: 20 },
+		visible: (idx) => ({
+			scale: 1,
+			opacity: 1,
+			y: 0,
+			transition: {
+				type: "spring",
+				stiffness: 100,
+				damping: 15,
+				delay: idx * 0.1,
+			},
+		}),
+	};
 
-    const sectionVariants = {
-        hidden: { opacity: 0, x: -100 },
-        visible: {
-            opacity: 1,
-            x: 0,
-            transition: { duration: 0.6 },
-        },
-    };
+	return (
+		<section className="relative py-24 md:py-32 overflow-hidden">
+			{/* Background gradient */}
+			<div className="absolute inset-0 bg-gradient-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
 
-    const sectionRightVariants = {
-        hidden: { opacity: 0, x: 100 },
-        visible: {
-            opacity: 1,
-            x: 0,
-            transition: { duration: 0.6 },
-        },
-    };
+			{/* Ambient light */}
+			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 rounded-full blur-3xl" />
 
-    const imageVariants = {
-        hidden: { scale: 0.8, opacity: 0 },
-        visible: {
-            scale: 1,
-            opacity: 1,
-            transition: { delay: 0.2, duration: 0.5 },
-        },
-    };
+			<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+				<motion.div
+					variants={containerVariants}
+					initial="hidden"
+					whileInView="visible"
+					viewport={{ once: true, amount: 0.1 }}
+				>
+					{/* Header */}
+					<motion.div
+						variants={itemVariants}
+						className="text-center mb-16 md:mb-20"
+					>
+						<span className="inline-block px-4 py-1.5 text-sm font-medium text-amber-400 bg-amber-500/10 rounded-full border border-amber-500/20 mb-4">
+							Mes Services
+						</span>
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+							Ce que je peux faire{" "}
+							<span className="text-gradient-warm">
+								pour vous
+							</span>
+						</h2>
+						<p className="text-zinc-400 max-w-2xl mx-auto text-lg">
+							Des solutions complètes pour donner vie à vos
+							projets digitaux
+						</p>
+					</motion.div>
 
-    return (
-        <section className="max-w-4xl md:w-[90%] w-full h-full mx-auto relative">
-            <div className="pt-20 pb-8">
-                <motion.header
-                    className="mb-12"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.5 }}
-                    variants={headerVariants}
-                >
-                    <h2 className="text-3xl text-center font-bold">Services</h2>
-                    <div className="flex justify-center mt-6 relative">
-                        <motion.span
-                            className="w-10 h-10 border border-gray-300 rounded-full p-2.5 bg-gray-100"
-                            variants={iconVariants}
-                            whileHover="hover"
-                        >
-                            <ClipboardList className="w-full h-full text-blue-700" />
-                        </motion.span>
-                        <hr
-                            className="h-0.5 w-182.5 absolute mt-4.5 -z-10 border-none"
-                            style={{
-                                background:
-                                    "linear-gradient(to right, rgba(0, 0, 0, 0) 10%, rgba(209, 213, 219, 1) 50%, rgba(0, 0, 0, 0) 90%)",
-                            }}
-                        />
-                    </div>
-                </motion.header>
+					{/* Services Grid */}
+					<div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-8">
+						{services.map((service, idx) => {
+							const Icon = service.icon;
+							return (
+								<motion.article
+									key={service.id}
+									custom={idx}
+									variants={cardVariants}
+									className="group card-dark overflow-hidden spotlight will-change-transform"
+									whileHover={{ y: -6 }}
+									transition={{
+										type: "spring",
+										stiffness: 300,
+										damping: 20,
+									}}
+								>
+									{/* Image */}
+									<div className="relative h-40 sm:h-48 overflow-hidden">
+										<Image
+											src={service.image}
+											alt={service.title}
+											fill
+											className="object-cover transition-transform duration-500 group-hover:scale-110"
+										/>
+										<div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
 
-                <main className="flex flex-col gap-8 px-4 md:px-0">
-                    <motion.section
-                        className={`flex flex-col md:flex-row items-center p-5 sm:p-8 rounded-2xl md:rounded-full ${
-                            screenSize.width < 768
-                                ? "gradient-card-mobile"
-                                : "gradient-card"
-                        }`}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
-                        variants={sectionVariants}
-                    >
-                        <motion.div
-                            className="w-37.5 h-37.5 md:min-w-50 md:h-50 flex justify-center items-center mb-4 md:mb-0"
-                            variants={imageVariants}
-                        >
-                            <Image
-                                src="/img/illustration/illustration-conception-de-sites-web-personnalisés.jpg"
-                                alt=""
-                                className="rounded-full w-full h-full object-cover"
-                                width={200}
-                                height={200}
-                            />
-                        </motion.div>
+										{/* Icon Badge */}
+										<motion.div
+											className="absolute bottom-3 sm:bottom-4 left-3 sm:left-4"
+											whileHover={{
+												scale: 1.08,
+												rotate: 3,
+											}}
+											transition={{
+												type: "spring",
+												stiffness: 400,
+												damping: 20,
+											}}
+										>
+											<div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-500/20 backdrop-blur-sm rounded-lg sm:rounded-xl flex items-center justify-center border border-amber-500/30 group-hover:bg-amber-500/30 transition-colors">
+												<Icon
+													size={20}
+													className="text-amber-400 sm:w-6 sm:h-6"
+												/>
+											</div>
+										</motion.div>
+									</div>
 
-                        <div className="md:ml-8 lg:ml-24">
-                            <motion.h3
-                                className="text-lg text-center md:text-left md:text-xl font-semibold mb-2 md:mb-3"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3 }}
-                            >
-                                Conception et Développement de Sites Web
-                                Personnalisés
-                            </motion.h3>
-                            <motion.p
-                                className="text-sm md:text-base mt-2 md:mt-0"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.4 }}
-                            >
-                                Je propose la création de sites web sur mesure,
-                                adaptés à l&apos;identité et aux besoins
-                                spécifiques de chaque client. Chaque projet est
-                                conçu pour offrir une expérience utilisateur
-                                intuitive, une navigation fluide et un design
-                                moderne, garantissant une présence en ligne
-                                professionnelle et efficace.
-                            </motion.p>
-                            <motion.div
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.5 }}
-                            >
-                                <Link
-                                    href="/contact"
-                                    className="inline-block mt-2 text-sm italic text-blue-500 font-semibold hover:underline"
-                                >
-                                    Demander un devis
-                                </Link>
-                            </motion.div>
-                        </div>
-                    </motion.section>
+									{/* Content */}
+									<div className="p-4 sm:p-6">
+										<h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-amber-400 transition-colors">
+											{service.title}
+										</h3>
+										<p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4">
+											{service.description}
+										</p>
 
-                    <motion.section
-                        className={`flex flex-col md:flex-row-reverse items-center p-5 sm:p-8 rounded-2xl md:rounded-full ${
-                            screenSize.width < 768
-                                ? "gradient-card-mobile"
-                                : "gradient-card-inverse"
-                        }`}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
-                        variants={sectionRightVariants}
-                    >
-                        <motion.div
-                            className="w-37.5 h-37.5 md:min-w-50 md:h-50 flex justify-center items-center mb-4 md:mb-0"
-                            variants={imageVariants}
-                        >
-                            <Image
-                                src="/img/illustration/illustration-seo.webp"
-                                alt=""
-                                className="rounded-full w-full h-full object-cover"
-                                width={200}
-                                height={200}
-                            />
-                        </motion.div>
+										{/* Features */}
+										<div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5">
+											{service.features.map((feature) => (
+												<span
+													key={feature}
+													className="px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs bg-zinc-800 text-zinc-400 rounded-md border border-zinc-700 hover:border-amber-500/30 hover:text-amber-400 transition-colors"
+												>
+													{feature}
+												</span>
+											))}
+										</div>
 
-                        <div className="md:mr-8 lg:mr-24">
-                            <motion.h3
-                                className="text-lg text-center md:text-left md:text-xl font-semibold mb-2 md:mb-3"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3 }}
-                            >
-                                Optimisation des Performances et du
-                                Référencement (SEO)
-                            </motion.h3>
-                            <motion.p
-                                className="text-sm md:text-base mt-2 md:mt-0"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.4 }}
-                            >
-                                Un site performant et bien référencé est
-                                essentiel pour attirer et retenir les visiteurs.
-                                J&apos;analyse et optimise la vitesse de
-                                chargement, la structure du site et le contenu
-                                pour améliorer la visibilité sur les moteurs de
-                                recherche, assurant ainsi une meilleure position
-                                dans les résultats et une augmentation du trafic
-                                organique.
-                            </motion.p>
-                        </div>
-                    </motion.section>
-
-                    <motion.section
-                        className={`flex flex-col md:flex-row items-center p-5 sm:p-8 rounded-2xl md:rounded-full ${
-                            screenSize.width < 768
-                                ? "gradient-card-mobile"
-                                : "gradient-card"
-                        }`}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true, amount: 0.3 }}
-                        variants={sectionVariants}
-                    >
-                        <motion.div
-                            className="w-37.5 h-37.5 md:min-w-50 md:h-50 flex justify-center items-center mb-4 md:mb-0"
-                            variants={imageVariants}
-                        >
-                            <Image
-                                src="/img/illustration/illustration-maintenance.jpg"
-                                alt=""
-                                className="rounded-full w-full h-full object-cover"
-                                width={200}
-                                height={200}
-                            />
-                        </motion.div>
-
-                        <div className="md:ml-8 lg:ml-24">
-                            <motion.h3
-                                className="text-lg text-center md:text-left md:text-xl font-semibold mb-2 md:mb-3"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.3 }}
-                            >
-                                Maintenance Continue et Support Technique
-                            </motion.h3>
-                            <motion.p
-                                className="text-sm md:text-base mt-2 md:mt-0"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 0.4 }}
-                            >
-                                Pour assurer la pérennité et la sécurité de
-                                votre site, j&apos;offre des services de
-                                maintenance régulière. Cela inclut les mises à
-                                jour nécessaires, la surveillance de la
-                                sécurité, la correction de bugs éventuels et un
-                                support technique réactif, garantissant que
-                                votre site reste opérationnel et sécurisé en
-                                tout temps.
-                            </motion.p>
-                        </div>
-                    </motion.section>
-                </main>
-            </div>
-        </section>
-    );
+										{/* CTA */}
+										<Link
+											href="/contact"
+											className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-amber-400 hover:text-amber-300 transition-colors group/link"
+										>
+											Demander un devis
+											<ArrowRight
+												size={14}
+												className="group-hover/link:translate-x-1 transition-transform sm:w-4 sm:h-4"
+											/>
+										</Link>
+									</div>
+								</motion.article>
+							);
+						})}
+					</div>
+				</motion.div>
+			</div>
+		</section>
+	);
 }

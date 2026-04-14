@@ -1,262 +1,367 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { ArrowRight, Sparkles } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 import BarLink from "../utils/BarLink";
 import DownloadCV from "../utils/DownloadCV";
 import "./Card.css";
 
 export default function Presentation() {
-    const [isBarVisible, setIsBarVisible] = useState(true);
-    const [lastScrollTop, setLastScrollTop] = useState(0);
+	const [isBarVisible, setIsBarVisible] = useState(true);
+	const [lastScrollTop, setLastScrollTop] = useState(0);
 
-    const handleScroll = () => {
-        const technosSection = document.querySelector("#technos");
-        const barLink = document.querySelector("#barLink");
+	const handleScroll = () => {
+		const technosSection = document.querySelector("#technos");
+		const barLink = document.querySelector("#barLink");
 
-        if (technosSection && barLink) {
-            const technosRect = technosSection.getBoundingClientRect();
-            const mainRect = barLink.getBoundingClientRect();
+		if (technosSection && barLink) {
+			const technosRect = technosSection.getBoundingClientRect();
+			const mainRect = barLink.getBoundingClientRect();
+			const currentScrollTop =
+				window.pageYOffset || document.documentElement.scrollTop;
+			const isScrollingDown = currentScrollTop > lastScrollTop;
 
-            const currentScrollTop =
-                window.pageYOffset || document.documentElement.scrollTop;
+			if (isScrollingDown) {
+				const technosInView =
+					technosRect.top <= window.innerHeight &&
+					technosRect.bottom >= 0;
+				setIsBarVisible(!technosInView);
+			} else {
+				const barLinkInView =
+					mainRect.top <= window.innerHeight && mainRect.bottom >= 0;
+				setIsBarVisible(barLinkInView);
+			}
+			setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
+		}
+	};
 
-            const isScrollingDown = currentScrollTop > lastScrollTop;
+	useEffect(() => {
+		document.addEventListener("scroll", handleScroll);
+		return () => document.removeEventListener("scroll", handleScroll);
+	}, [lastScrollTop]);
 
-            if (isScrollingDown) {
-                // Scroll down logic
-                const technosInView =
-                    technosRect.top <= window.innerHeight &&
-                    technosRect.bottom >= 0;
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: { delayChildren: 0.1, staggerChildren: 0.08 },
+		},
+	};
 
-                setIsBarVisible(!technosInView);
-            } else {
-                // Scroll up logic
-                const barLinkInView =
-                    mainRect.top <= window.innerHeight && mainRect.bottom >= 0;
+	const itemVariants = {
+		hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
+		visible: {
+			y: 0,
+			opacity: 1,
+			filter: "blur(0px)",
+			transition: {
+				type: "spring",
+				stiffness: 100,
+				damping: 15,
+				mass: 0.8,
+			},
+		},
+	};
 
-                setIsBarVisible(barLinkInView);
-            }
+	return (
+		<motion.section
+			className="relative min-h-screen overflow-hidden"
+			initial="hidden"
+			animate="visible"
+			variants={containerVariants}
+		>
+			{/* Background Elements */}
+			<div className="absolute inset-0 overflow-hidden">
+				{/* Gradient Orbs */}
+				<motion.div
+					className="absolute top-20 -left-32 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl"
+					animate={{
+						x: [0, 50, 0],
+						y: [0, 30, 0],
+						scale: [1, 1.1, 1],
+					}}
+					transition={{
+						duration: 10,
+						repeat: Infinity,
+						ease: "easeInOut",
+					}}
+				/>
+				<motion.div
+					className="absolute bottom-20 -right-32 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl"
+					animate={{
+						x: [0, -40, 0],
+						y: [0, -20, 0],
+						scale: [1, 1.15, 1],
+					}}
+					transition={{
+						duration: 12,
+						repeat: Infinity,
+						ease: "easeInOut",
+					}}
+				/>
+				<motion.div
+					className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/5 rounded-full blur-3xl"
+					animate={{ scale: [1, 1.2, 1] }}
+					transition={{
+						duration: 8,
+						repeat: Infinity,
+						ease: "easeInOut",
+					}}
+				/>
 
-            setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
-        }
-    };
+				{/* Grid Pattern */}
+				<div
+					className="absolute inset-0 opacity-[0.02]"
+					style={{
+						backgroundImage: `linear-gradient(rgba(251,191,36,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.3) 1px, transparent 1px)`,
+						backgroundSize: "60px 60px",
+					}}
+				/>
+			</div>
 
-    useEffect(() => {
-        document.addEventListener("scroll", handleScroll);
+			{/* Content */}
+			<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 min-h-screen flex items-center py-32 sm:py-20">
+				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full">
+					{/* Left Content */}
+					<motion.div
+						className="space-y-8"
+						variants={containerVariants}
+					>
+						{/* Main Title */}
+						<div className="space-y-3 sm:space-y-4">
+							<motion.p
+								variants={itemVariants}
+								className="text-base sm:text-lg text-amber-400 font-medium flex items-center gap-2"
+							>
+								<Sparkles size={18} className="animate-pulse" />
+								Bienvenue sur mon portfolio
+							</motion.p>
 
-        return () => {
-            document.removeEventListener("scroll", handleScroll);
-        };
-    }, [lastScrollTop]);
+							<motion.h1
+								variants={itemVariants}
+								className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
+							>
+								Je suis{" "}
+								<span className="text-gradient-warm inline-block">
+									Matt Buchs
+								</span>
+							</motion.h1>
 
-    // Animation variants
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                delayChildren: 0.3,
-                staggerChildren: 0.2,
-            },
-        },
-    };
+							<motion.p
+								variants={itemVariants}
+								className="text-base sm:text-lg md:text-xl text-zinc-400 leading-relaxed max-w-xl"
+							>
+								<strong className="text-white">
+									Développeur Web Full-Stack
+								</strong>{" "}
+								passionné, je crée des expériences digitales
+								modernes et performantes. Spécialisé en React,
+								Next.js et Node.js.
+							</motion.p>
+						</div>
 
-    const itemVariants = {
-        hidden: { y: 20, opacity: 0 },
-        visible: {
-            y: 0,
-            opacity: 1,
-            transition: { duration: 0.6, ease: "easeOut" },
-        },
-    };
+						{/* CTA Buttons */}
+						<motion.div
+							variants={itemVariants}
+							className="flex flex-row gap-3 sm:gap-4 pt-4"
+						>
+							<motion.div
+								whileHover={{ scale: 1.02, y: -2 }}
+								whileTap={{ scale: 0.98 }}
+								transition={{
+									type: "spring",
+									stiffness: 400,
+									damping: 25,
+								}}
+							>
+								<Link
+									href="/contact"
+									className="btn-warm inline-flex items-center justify-center gap-2 relative z-10 group"
+								>
+									<span className="relative z-10">
+										Démarrer un projet
+									</span>
+									<ArrowRight
+										size={18}
+										className="relative z-10 group-hover:translate-x-1 transition-transform duration-200"
+									/>
+								</Link>
+							</motion.div>
+							<motion.div
+								whileHover={{ scale: 1.02, y: -2 }}
+								whileTap={{ scale: 0.98 }}
+								transition={{
+									type: "spring",
+									stiffness: 400,
+									damping: 25,
+								}}
+							>
+								<DownloadCV />
+							</motion.div>
+						</motion.div>
 
-    return (
-        <motion.section
-            className="max-w-312.5 md:w-[90%] h-full w-full mx-auto relative"
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
-        >
-            <div className="px-5 flex flex-col-reverse lg:flex-row items-center pt-44 lg:pt-0 sm:min-h-screen">
-                <motion.article
-                    className="w-full sm:w-5/6 lg:w-1/2 px-4 sm:px-10 mt-24 lg:mt-0 mb-20 lg:mb-4"
-                    variants={itemVariants}
-                >
-                    <motion.p
-                        className="flex items-center"
-                        variants={itemVariants}
-                    >
-                        <motion.svg
-                            width="20"
-                            height="21"
-                            viewBox="0 0 20 21"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                            animate={{ scale: [1, 1.1, 1] }}
-                            transition={{
-                                duration: 2,
-                                repeat: Infinity,
-                                repeatType: "reverse",
-                            }}
-                        >
-                            <g clipPath="url(#clip0)">
-                                <path
-                                    d="M17.5 8.83334C17.5 14.6667 10 19.6667 10 19.6667C10 19.6667 2.5 14.6667 2.5 8.83334C2.5 6.84422 3.29018 4.93656 4.6967 3.53004C6.10322 2.12352 8.01088 1.33334 10 1.33334C11.9891 1.33334 13.8968 2.12352 15.3033 3.53004C16.7098 4.93656 17.5 6.84422 17.5 8.83334Z"
-                                    stroke="currentColor"
-                                    strokeWidth="1.66667"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                ></path>
-                                <path
-                                    d="M10 11.3333C11.3807 11.3333 12.5 10.2141 12.5 8.83334C12.5 7.45263 11.3807 6.33334 10 6.33334C8.61929 6.33334 7.5 7.45263 7.5 8.83334C7.5 10.2141 8.61929 11.3333 10 11.3333Z"
-                                    stroke="#101828"
-                                    strokeWidth="1.66667"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                ></path>
-                            </g>
-                            <defs>
-                                <clipPath id="clip0">
-                                    <rect
-                                        width="20"
-                                        height="20"
-                                        fill="white"
-                                        transform="translate(0 0.5)"
-                                    ></rect>
-                                </clipPath>
-                            </defs>
-                        </motion.svg>
-                        <motion.span
-                            className="ml-2 font-semibold"
-                            variants={itemVariants}
-                        >
-                            Pontarlier, France
-                        </motion.span>
-                    </motion.p>
-                    <motion.h2
-                        className="flex flex-col text-2xl mt-2"
-                        variants={itemVariants}
-                    >
-                        Hello,{" "}
-                        <motion.span
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: 1, duration: 0.8 }}
-                        >
-                            je suis{" "}
-                            <motion.strong
-                                className="font-bold"
-                                initial={{ color: "#000" }}
-                                animate={{ color: "#4f46e5" }}
-                                transition={{
-                                    delay: 1.5,
-                                    duration: 1,
-                                    repeatType: "reverse",
-                                    repeat: 1,
-                                }}
-                            >
-                                Matt Buchs
-                            </motion.strong>
-                            ,
-                        </motion.span>
-                    </motion.h2>
-                    <motion.p
-                        className="mt-4"
-                        variants={itemVariants}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 1, delay: 1.2 }}
-                    >
-                        Développeur Web & Mobile passionné par les nouvelles
-                        technologies, je suis désormais freelance, offrant mes
-                        services aux entreprises et particuliers. Diplômé du
-                        Titre Professionnel de Développeur Web, j&apos;ai depuis
-                        mené divers projets qui ont enrichi mes compétences
-                        techniques. Curieux, logique et pragmatique, je
-                        m&apos;efforce de proposer des solutions innovantes et
-                        adaptées aux besoins spécifiques de chaque client.
-                    </motion.p>
+						{/* Stats */}
+						<motion.div
+							variants={itemVariants}
+							className="grid grid-cols-3 gap-4 sm:gap-6 pt-6 sm:pt-8 border-t border-white/10"
+						>
+							{[
+								{ value: "3+", label: "Années d'exp." },
+								{ value: "10+", label: "Projets" },
+								{ value: "24/7", label: "Support" },
+							].map((stat, idx) => (
+								<motion.div
+									key={idx}
+									className="text-center sm:text-left"
+									whileHover={{ scale: 1.05, y: -2 }}
+									transition={{
+										type: "spring",
+										stiffness: 400,
+										damping: 25,
+									}}
+								>
+									<p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient-warm">
+										{stat.value}
+									</p>
+									<p className="text-xs sm:text-sm text-zinc-500 mt-1">
+										{stat.label}
+									</p>
+								</motion.div>
+							))}
+						</motion.div>
+					</motion.div>
 
-                    <motion.div
-                        className="mt-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center"
-                        variants={itemVariants}
-                    >
-                        <DownloadCV />
-                    </motion.div>
-                </motion.article>
-                <div className="w-[70%] min-w-50 sm:w-[45%] lg:w-1/2 -ml-6 sm:ml-0 relative flex justify-center">
-                    <motion.div
-                        className="lg:w-[70%] h-full rounded-lg shadow-lg relative ml-10"
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{
-                            duration: 0.8,
-                            delay: 0.5,
-                        }}
-                    >
-                        <motion.div
-                            className="card-wrapper"
-                            initial={{
-                                opacity: 0,
-                                transform: "rotateY(15deg)",
-                            }}
-                            animate={{
-                                opacity: 1,
-                                transform: "rotateY(0deg)",
-                            }}
-                            transition={{
-                                duration: 0.8,
-                                delay: 0.5,
-                            }}
-                        >
-                            <div className="card rounded-lg bg-slate-100">
-                                <motion.img
-                                    src="/img/me.png"
-                                    alt=""
-                                    className="w-full h-1/2 select-none"
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    transition={{ delay: 0.8, duration: 0.5 }}
-                                />
-                                <motion.img
-                                    src="/img/light-accent-compressed.png"
-                                    alt=""
-                                    className="absolute -bottom-1/2 -left-[60%] min-w-[170%] -rotate-12 select-none"
-                                    initial={{ opacity: 0, y: 100 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{
-                                        delay: 1.2,
-                                        duration: 0.8,
-                                        type: "spring",
-                                        stiffness: 60,
-                                    }}
-                                />
-                            </div>
-                        </motion.div>
-                        <motion.div
-                            className="glow"
-                            initial={{ opacity: 0 }}
-                            animate={{
-                                opacity: [0, 0.3, 0],
-                                boxShadow: [
-                                    "0px 0px 0px rgba(79, 70, 229, 0)",
-                                    "0px 0px 30px rgba(79, 70, 229, 0.6)",
-                                    "0px 0px 0px rgba(79, 70, 229, 0)",
-                                ],
-                            }}
-                            transition={{
-                                duration: 3,
-                                repeat: Infinity,
-                                repeatType: "loop",
-                                repeatDelay: 2,
-                            }}
-                        />
-                    </motion.div>
-                </div>
+					{/* Right Visual */}
+					<motion.aside
+						className="relative flex items-center justify-center order-first lg:order-last"
+						initial={{
+							opacity: 0,
+							scale: 0.95,
+							filter: "blur(8px)",
+						}}
+						animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+						transition={{
+							type: "spring",
+							stiffness: 80,
+							damping: 20,
+							delay: 0.3,
+						}}
+					>
+						{/* Glow Effect */}
+						<div className="absolute inset-0 flex items-center justify-center">
+							<motion.div
+								className="w-64 sm:w-80 h-64 sm:h-80 bg-linear-to-br from-amber-500/25 via-orange-500/20 to-amber-400/15 rounded-full blur-3xl"
+								animate={{
+									scale: [1, 1.2, 1],
+									opacity: [0.5, 0.8, 0.5],
+								}}
+								transition={{
+									duration: 4,
+									repeat: Infinity,
+									ease: "easeInOut",
+								}}
+							/>
+						</div>
 
-                <BarLink isBarVisible={isBarVisible} />
-            </div>
-        </motion.section>
-    );
+						{/* Card with classic border style */}
+						<motion.div
+							className="relative card-wrapper max-w-50 sm:max-w-xs md:max-w-sm"
+							whileHover={{ y: -6 }}
+							transition={{
+								type: "spring",
+								stiffness: 300,
+								damping: 20,
+							}}
+						>
+							<div className="w-full flex justify-center">
+								<div className="card w-3/4 sm:w-full">
+									<Image
+										src="/img/me.png"
+										alt="Photo de Matt Buchs"
+										width={400}
+										height={400}
+										className="w-full h-auto"
+									/>
+								</div>
+							</div>
+
+							{/* Decorative floating elements */}
+							<motion.div
+								className="absolute -top-3 -right-3 sm:-top-6 sm:-right-6 w-12 h-12 sm:w-20 sm:h-20 border-2 border-amber-500/40 rounded-full hidden sm:block"
+								animate={{ rotate: 360 }}
+								transition={{
+									duration: 20,
+									repeat: Infinity,
+									ease: "linear",
+								}}
+							/>
+							<motion.div
+								className="absolute -bottom-4 -left-4 sm:-bottom-7 sm:-left-7 w-10 h-10 sm:w-14 sm:h-14 bg-linear-to-br from-amber-500/40 to-orange-500/30 rounded-xl backdrop-blur-sm border border-amber-500/30 hidden sm:block"
+								animate={{ y: [0, -12, 0], rotate: [0, 8, 0] }}
+								transition={{
+									duration: 3.5,
+									repeat: Infinity,
+									ease: "easeInOut",
+								}}
+							/>
+							<motion.div
+								className="absolute top-1/3 -right-6 sm:-right-10 w-2 h-2 sm:w-3 sm:h-3 bg-amber-400 rounded-full shadow-lg shadow-amber-500/50"
+								animate={{
+									scale: [1, 1.5, 1],
+									opacity: [0.6, 1, 0.6],
+								}}
+								transition={{ duration: 2, repeat: Infinity }}
+							/>
+							<motion.div
+								className="absolute bottom-1/4 -left-4 sm:-left-8 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-400 rounded-full shadow-lg shadow-orange-500/50"
+								animate={{
+									scale: [1, 1.3, 1],
+									opacity: [0.5, 0.9, 0.5],
+								}}
+								transition={{
+									duration: 2.5,
+									repeat: Infinity,
+									delay: 0.5,
+								}}
+							/>
+							<motion.div
+								className="absolute -top-1 left-1/4 w-3 h-3 sm:w-4 sm:h-4 border border-amber-400/50 rounded-full hidden sm:block"
+								animate={{ y: [0, -8, 0] }}
+								transition={{
+									duration: 2.8,
+									repeat: Infinity,
+									ease: "easeInOut",
+								}}
+							/>
+						</motion.div>
+					</motion.aside>
+				</div>
+			</div>
+
+			{/* Scroll Indicator - Hidden on mobile */}
+			<motion.div
+				className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden sm:block"
+				animate={{ y: [0, 8, 0] }}
+				transition={{ duration: 2, repeat: Infinity }}
+			>
+				<div className="flex flex-col items-center gap-2">
+					<span className="text-xs text-zinc-500 uppercase tracking-widest">
+						Scroll
+					</span>
+					<div className="w-5 h-8 border border-zinc-600 rounded-full flex justify-center pt-2">
+						<motion.div
+							className="w-1 h-2 bg-amber-400 rounded-full"
+							animate={{ y: [0, 6, 0], opacity: [1, 0.3, 1] }}
+							transition={{ duration: 2, repeat: Infinity }}
+						/>
+					</div>
+				</div>
+			</motion.div>
+
+			<BarLink isBarVisible={isBarVisible} />
+		</motion.section>
+	);
 }

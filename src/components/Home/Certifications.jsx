@@ -1,158 +1,155 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, GraduationCap, Award } from "lucide-react";
+import { Award, Calendar, CheckCircle2, GraduationCap } from "lucide-react";
 
 const certifications = [
-    {
-        id: 1,
-        name: "Développeur Web et Web Mobile",
-        organization: "O'clock - École en ligne",
-        level: "Titre RNCP Niveau 5 (Bac +2)",
-        year: "2022",
-        verified: true,
-    },
+	{
+		id: 1,
+		name: "Développeur Web et Web Mobile",
+		organization: "O'clock - École en ligne",
+		level: "Titre RNCP Niveau 5 (Bac +2)",
+		year: "2022",
+		verified: true,
+		skills: ["React", "Node.js", "JavaScript", "HTML/CSS", "SQL"],
+	},
 ];
 
 export default function Certifications() {
-    // Variants pour les animations
-    const headerVariants = {
-        hidden: { opacity: 0, y: -50 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6 },
-        },
-    };
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: { delayChildren: 0.1, staggerChildren: 0.08 },
+		},
+	};
 
-    const iconVariants = {
-        hidden: { scale: 0 },
-        visible: {
-            scale: 1,
-            transition: { delay: 0.3, type: "spring", stiffness: 200 },
-        },
-        hover: {
-            rotate: 10,
-            scale: 1.1,
-            transition: { duration: 0.3 },
-        },
-    };
+	const itemVariants = {
+		hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
+		visible: {
+			y: 0,
+			opacity: 1,
+			filter: "blur(0px)",
+			transition: {
+				type: "spring",
+				stiffness: 100,
+				damping: 15,
+			},
+		},
+	};
 
-    return (
-        <section className="max-w-4xl md:w-[90%] w-full h-full mx-auto relative">
-            <div className="pt-20 pb-8">
-                <motion.header
-                    className="mb-12"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.5 }}
-                    variants={headerVariants}
-                >
-                    <h2 className="text-3xl text-center font-bold">
-                        Formation & Certifications
-                    </h2>
-                    <div className="flex justify-center mt-6 relative">
-                        <motion.span
-                            className="w-10 h-10 border border-gray-300 rounded-full p-2.5 bg-gray-100"
-                            variants={iconVariants}
-                            whileHover="hover"
-                        >
-                            <GraduationCap className="w-full h-full text-blue-700" />
-                        </motion.span>
-                        <hr
-                            className="h-0.5 w-182.5 absolute mt-4.5 -z-10 border-none"
-                            style={{
-                                background:
-                                    "linear-gradient(to right, rgba(0, 0, 0, 0) 10%, rgba(209, 213, 219, 1) 50%, rgba(0, 0, 0, 0) 90%)",
-                            }}
-                        />
-                    </div>
-                </motion.header>
+	return (
+		<section className="relative py-24 md:py-32 overflow-hidden">
+			{/* Background */}
+			<div className="absolute inset-0 bg-gradient-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
 
-                <div className="max-w-3xl mx-auto px-4">
-                    {certifications.map((cert, index) => (
-                        <motion.article
-                            key={cert.id}
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, amount: 0.3 }}
-                            transition={{
-                                duration: 0.7,
-                                delay: index * 0.1,
-                                ease: [0.25, 0.1, 0.25, 1],
-                            }}
-                            whileHover={{
-                                y: -8,
-                                transition: { duration: 0.3, ease: "easeOut" },
-                            }}
-                            className="relative bg-linear-to-br from-white to-gray-50 rounded-2xl p-6 md:p-8 shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200 overflow-hidden"
-                        >
-                            {/* Decoration */}
-                            <motion.div
-                                className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-blue-100 to-purple-100 rounded-full -mr-16 -mt-16 opacity-50"
-                                initial={{ scale: 0, rotate: 0 }}
-                                whileInView={{ scale: 1, rotate: 180 }}
-                                transition={{ duration: 1, ease: "easeOut" }}
-                                viewport={{ once: true }}
-                            />
+			<div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-8 lg:px-12">
+				<motion.div
+					variants={containerVariants}
+					initial="hidden"
+					whileInView="visible"
+					viewport={{ once: true, amount: 0.2 }}
+				>
+					{/* Header */}
+					<motion.div
+						variants={itemVariants}
+						className="text-center mb-16"
+					>
+						<span className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-amber-400 bg-amber-500/10 rounded-full border border-amber-500/20 mb-4">
+							<GraduationCap size={16} />
+							Formation
+						</span>
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+							Ma{" "}
+							<span className="text-gradient-warm">
+								Formation
+							</span>
+						</h2>
+						<p className="text-zinc-400 max-w-xl mx-auto">
+							Diplômé en développement web avec une formation
+							intensive et certifiante
+						</p>
+					</motion.div>
 
-                            <div className="relative z-10">
-                                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-                                    <div className="flex items-start gap-3">
-                                        <div className="w-12 h-12 bg-linear-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shrink-0">
-                                            <Award
-                                                className="text-white"
-                                                size={24}
-                                            />
-                                        </div>
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2 mb-1 flex-wrap">
-                                                <h3 className="text-xl md:text-2xl font-bold text-gray-900">
-                                                    {cert.name}
-                                                </h3>
-                                                {cert.verified && (
-                                                    <CheckCircle2
-                                                        className="text-blue-600 hidden sm:inline-block"
-                                                        size={22}
-                                                        aria-label="Certification vérifiée"
-                                                    />
-                                                )}
-                                            </div>
-                                            <p className="text-gray-700 font-medium text-base mb-1">
-                                                {cert.organization}
-                                            </p>
-                                            <p className="text-gray-600 text-sm">
-                                                {cert.level}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <span className="flex items-center bg-linear-to-br from-blue-500 to-purple-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-md">
-                                        {cert.year}
-                                    </span>
-                                </div>
+					{/* Certifications */}
+					<div className="space-y-6">
+						{certifications.map((cert) => (
+							<motion.article
+								key={cert.id}
+								variants={itemVariants}
+								className="group card-dark p-6 md:p-8 relative overflow-hidden will-change-transform"
+								whileHover={{ y: -4 }}
+								transition={{
+									type: "spring",
+									stiffness: 300,
+									damping: 20,
+								}}
+							>
+								{/* Glow effect on hover */}
+								<div className="absolute -top-20 -right-20 w-40 h-40 bg-amber-500/10 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                                {/* Skills tags */}
-                                <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200">
-                                    {[
-                                        "React",
-                                        "Node.js",
-                                        "JavaScript",
-                                        "HTML/CSS",
-                                        "SQL",
-                                    ].map((skill) => (
-                                        <span
-                                            key={skill}
-                                            className="px-3 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded-full border border-blue-200"
-                                        >
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </motion.article>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+								<div className="relative z-10">
+									<div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-6">
+										<div className="flex items-start gap-4">
+											{/* Icon */}
+											<div className="w-14 h-14 bg-amber-500/10 rounded-xl flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors">
+												<Award
+													size={28}
+													className="text-amber-400"
+												/>
+											</div>
+
+											{/* Info */}
+											<div>
+												<div className="flex items-center gap-2 flex-wrap mb-1">
+													<h3 className="text-xl md:text-2xl font-bold text-white">
+														{cert.name}
+													</h3>
+													{cert.verified && (
+														<CheckCircle2
+															size={20}
+															className="text-amber-400"
+														/>
+													)}
+												</div>
+												<p className="text-amber-400 font-medium mb-1">
+													{cert.organization}
+												</p>
+												<p className="text-zinc-500 text-sm">
+													{cert.level}
+												</p>
+											</div>
+										</div>
+
+										{/* Year Badge */}
+										<div className="flex items-center gap-2 px-4 py-2 bg-amber-500/10 rounded-lg border border-amber-500/20">
+											<Calendar
+												size={16}
+												className="text-amber-400"
+											/>
+											<span className="font-bold text-amber-400">
+												{cert.year}
+											</span>
+										</div>
+									</div>
+
+									{/* Skills */}
+									<div className="flex flex-wrap gap-2 pt-4 border-t border-zinc-800">
+										{cert.skills.map((skill) => (
+											<span
+												key={skill}
+												className="px-3 py-1.5 text-xs font-medium bg-zinc-800 text-zinc-300 rounded-md border border-zinc-700 hover:border-amber-500/30 hover:text-amber-400 transition-colors"
+											>
+												{skill}
+											</span>
+										))}
+									</div>
+								</div>
+							</motion.article>
+						))}
+					</div>
+				</motion.div>
+			</div>
+		</section>
+	);
 }

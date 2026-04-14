@@ -1,56 +1,190 @@
-.card:before,
-.card:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 4px;
-    background: #f1f1f1;
-    transition: 0.5s;
-    z-index: -1;
-}
+/* ===== CARD COMPONENT - WARM DARK THEME ===== */
 
 .card {
-    border: 12px solid rgb(238, 238, 238);
-    height: 100%;
+	position: relative;
+	height: 100%;
+	border-radius: 10px;
+	background: linear-gradient(145deg, #1a1a1f, #121214);
+	padding: 8px;
 }
 
-.card:before {
-    transform: rotate(20deg);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
-}
-.card:after {
-    transform: rotate(10deg);
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+/* Gradient border using pseudo-element */
+.card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+	padding: 8px;
+	background: linear-gradient(145deg, #fbbf24, #f59e0b, #d97706);
+	-webkit-mask:
+		linear-gradient(#fff 0 0) content-box,
+		linear-gradient(#fff 0 0);
+	-webkit-mask-composite: xor;
+	mask-composite: exclude;
+	pointer-events: none;
+	z-index: 1;
 }
 
+/* Decorative layered cards behind main image - on wrapper */
+.card-wrapper::before,
+.card-wrapper::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 50%;
+	transform-origin: center;
+	width: 75%;
+	height: 100%;
+	border-radius: 12px;
+	background: linear-gradient(
+		145deg,
+		rgba(251, 191, 36, 0.2),
+		rgba(234, 88, 12, 0.15)
+	);
+	transition:
+		transform 0.3s ease,
+		box-shadow 0.3s ease;
+	z-index: -1;
+	border: 2px solid rgba(251, 191, 36, 0.3);
+}
+
+.card-wrapper::before {
+	transform: translateX(-50%) rotate(12deg) scale(0.98);
+	box-shadow: 0 15px 40px -10px rgba(251, 191, 36, 0.25);
+}
+
+.card-wrapper::after {
+	transform: translateX(-50%) rotate(6deg) scale(0.99);
+	box-shadow: 0 10px 30px -5px rgba(251, 191, 36, 0.2);
+}
+
+.card-wrapper:hover::before {
+	transform: translateX(-50%) rotate(16deg) scale(0.98);
+	box-shadow: 0 20px 50px -10px rgba(251, 191, 36, 0.4);
+}
+
+.card-wrapper:hover::after {
+	transform: translateX(-50%) rotate(8deg) scale(0.99);
+	box-shadow: 0 15px 40px -5px rgba(251, 191, 36, 0.35);
+}
+
+/* Full width on larger screens */
+@media (min-width: 640px) {
+	.card-wrapper::before,
+	.card-wrapper::after {
+		width: 100%;
+		left: 0;
+	}
+
+	.card-wrapper::before {
+		transform: rotate(12deg) scale(0.98);
+	}
+
+	.card-wrapper::after {
+		transform: rotate(6deg) scale(0.99);
+	}
+
+	.card-wrapper:hover::before {
+		transform: rotate(16deg) scale(0.98);
+	}
+
+	.card-wrapper:hover::after {
+		transform: rotate(8deg) scale(0.99);
+	}
+}
+
+/* Card wrapper with 3D transform */
+.card-wrapper {
+	width: 100%;
+	max-width: 400px;
+	height: 100%;
+	position: relative;
+	transform-style: preserve-3d;
+}
+
+/* Techno cards with 3D tilt effect */
 .techno-card {
-    position: relative;
-    transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
-    transform-style: preserve-3d;
+	position: relative;
+	transition:
+		transform 0.2s ease-out,
+		box-shadow 0.2s ease-out;
+	transform-style: preserve-3d;
+	background: linear-gradient(
+		145deg,
+		rgba(26, 26, 31, 0.9),
+		rgba(18, 18, 20, 0.9)
+	);
+	border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .techno-card:hover {
-    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
-    box-shadow: 0 3px 10px 2px rgba(0, 0, 0, 0.2);
+	box-shadow: 0 20px 40px -15px rgba(251, 191, 36, 0.15);
+	border-color: rgba(251, 191, 36, 0.3);
 }
 
+/* Glow effect overlay - VISIBLE */
 .glow {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    z-index: -1; /* Ensure the glow is behind the content */
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	border-radius: inherit;
+	pointer-events: none;
+	z-index: 10;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+	background: radial-gradient(
+		circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+		rgba(251, 191, 36, 0.35) 0%,
+		rgba(251, 191, 36, 0.15) 30%,
+		transparent 70%
+	);
 }
 
-.card-wrapper {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    transform-style: preserve-3d;
+.techno-card:hover .glow,
+.card-dark:hover .glow {
+	opacity: 1;
+}
+
+/* Techno card glow border on hover */
+.techno-card::after {
+	content: "";
+	position: absolute;
+	inset: -1px;
+	border-radius: inherit;
+	background: linear-gradient(
+		135deg,
+		transparent,
+		rgba(251, 191, 36, 0.4),
+		transparent
+	);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	z-index: -1;
+}
+
+.techno-card:hover::after {
+	opacity: 1;
+}
+
+/* Image container within card */
+.card-image-wrapper {
+	position: relative;
+	overflow: hidden;
+	border-radius: 1rem;
+	background: linear-gradient(145deg, #1a1a1f, #121214);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.card-image-wrapper::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		180deg,
+		transparent 60%,
+		rgba(10, 10, 11, 0.9) 100%
+	);
+	pointer-events: none;
 }

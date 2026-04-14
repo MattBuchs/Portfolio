@@ -1,129 +1,201 @@
 "use client";
 
-import { Layers } from "lucide-react";
-import { useRef } from "react";
 import { motion } from "framer-motion";
+import { Layers } from "lucide-react";
 import Image from "next/image";
+import { useRef } from "react";
 
 export default function Technos() {
-    const cardRefs = useRef([]);
-    const technos = [
-        { id: 1, title: "JavaScript", img: "Javascript.png" },
-        { id: 2, title: "TypeScript", img: "Typescript.png" },
-        { id: 3, title: "Tailwind", img: "Tailwind.png" },
-        { id: 4, title: "Sass", img: "Sass.png" },
-        { id: 5, title: "React", img: "React.png" },
-        { id: 6, title: "Next.js", img: "Nextjs.png" },
-        { id: 7, title: "Node.js", img: "Node.png" },
-        { id: 8, title: "PostgreSQL", img: "Postgres.png" },
-        { id: 9, title: "MongoDB", img: "Mongo.png" },
-        { id: 10, title: "Git", img: "Git.png" },
-    ];
+	const cardRefs = useRef([]);
 
-    const rotateToMouse = (e, index) => {
-        const card = cardRefs.current[index];
-        const bounds = card.getBoundingClientRect();
-        const mouseX = e.clientX - bounds.x;
-        const mouseY = e.clientY - bounds.y;
-        const centerX = bounds.width / 2;
-        const centerY = bounds.height / 2;
-        const rotateX = ((mouseY - centerY) / centerY) * 10;
-        const rotateY = ((centerX - mouseX) / centerX) * 10;
+	const technos = [
+		{
+			id: 1,
+			title: "JavaScript",
+			img: "Javascript.png",
+			category: "Language",
+		},
+		{
+			id: 2,
+			title: "TypeScript",
+			img: "Typescript.png",
+			category: "Language",
+		},
+		{ id: 3, title: "React", img: "React.png", category: "Frontend" },
+		{ id: 4, title: "Next.js", img: "Nextjs.png", category: "Framework" },
+		{ id: 5, title: "Tailwind", img: "Tailwind.png", category: "Styling" },
+		{ id: 6, title: "Node.js", img: "Node.png", category: "Backend" },
+		{
+			id: 7,
+			title: "PostgreSQL",
+			img: "Postgres.png",
+			category: "Database",
+		},
+		{ id: 8, title: "MongoDB", img: "Mongo.png", category: "Database" },
+		{ id: 9, title: "Sass", img: "Sass.png", category: "Styling" },
+		{ id: 10, title: "Git", img: "Git.png", category: "Tools" },
+	];
 
-        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.03)`;
+	const rotateToMouse = (e, index) => {
+		const card = cardRefs.current[index];
+		if (!card) return;
 
-        card.querySelector(".glow").style.backgroundImage = `
-            radial-gradient(
-                circle at
-                ${mouseX}px
-                ${mouseY}px,
-                #ffffffa5,
-                #0000000f
-            )
-        `;
-    };
+		const bounds = card.getBoundingClientRect();
+		const mouseX = e.clientX - bounds.x;
+		const mouseY = e.clientY - bounds.y;
+		const centerX = bounds.width / 2;
+		const centerY = bounds.height / 2;
+		const rotateX = ((mouseY - centerY) / centerY) * 10;
+		const rotateY = ((centerX - mouseX) / centerX) * 10;
 
-    const resetCard = (index) => {
-        const card = cardRefs.current[index];
-        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
-        card.querySelector(".glow").style.backgroundImage = "none";
-    };
+		card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.08)`;
 
-    const headerVariants = {
-        hidden: { opacity: 0, y: -50 },
-        visible: {
-            opacity: 1,
-            y: 0,
-            transition: { duration: 0.6 },
-        },
-    };
+		const glow = card.querySelector(".glow");
+		if (glow) {
+			glow.style.opacity = "1";
+			glow.style.backgroundImage = `radial-gradient(circle at ${mouseX}px ${mouseY}px, rgba(251,191,36,0.4) 0%, rgba(251,191,36,0.15) 40%, transparent 70%)`;
+		}
+	};
 
-    const iconVariants = {
-        hidden: { scale: 0 },
-        visible: {
-            scale: 1,
-            transition: { delay: 0.3, type: "spring", stiffness: 200 },
-        },
-        hover: {
-            rotate: 10,
-            scale: 1.1,
-            transition: { duration: 0.3 },
-        },
-    };
+	const resetCard = (index) => {
+		const card = cardRefs.current[index];
+		if (!card) return;
 
-    return (
-        <section className="max-w-312.5 md:w-[90%] w-full h-full mx-auto relative">
-            <div className="py-20">
-                <motion.header
-                    className="mb-12"
-                    initial="hidden"
-                    whileInView="visible"
-                    viewport={{ once: true, amount: 0.5 }}
-                    variants={headerVariants}
-                >
-                    <h2 className="text-3xl text-center font-bold">Technos</h2>
-                    <div className="flex justify-center mt-6 relative">
-                        <motion.span
-                            className="w-10 h-10 border border-gray-300 rounded-full p-2.5 bg-gray-100"
-                            variants={iconVariants}
-                            whileHover="hover"
-                        >
-                            <Layers className="w-full h-full text-blue-700" />
-                        </motion.span>
-                        <hr
-                            className="h-0.5 w-182.5 absolute mt-4.5 -z-10 border-none"
-                            style={{
-                                background:
-                                    "linear-gradient(to right, rgba(0, 0, 0, 0) 10%, rgba(209, 213, 219, 1) 50%, rgba(0, 0, 0, 0) 90%)",
-                            }}
-                        />
-                    </div>
-                </motion.header>
+		card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+		const glow = card.querySelector(".glow");
+		if (glow) {
+			glow.style.opacity = "0";
+			glow.style.backgroundImage = "none";
+		}
+	};
 
-                <div className="flex gap-3 sm:gap-5 mx-4 flex-wrap justify-center">
-                    {technos.map((techno, index) => (
-                        <div
-                            key={techno.id}
-                            onMouseMove={(e) => rotateToMouse(e, index)}
-                            onMouseLeave={() => resetCard(index)}
-                            ref={(el) => (cardRefs.current[index] = el)}
-                            className="techno-card w-35 sm:w-62.5 bg-slate-100 flex flex-col justify-center items-center py-5 sm:py-8 border border-gray-300 rounded shadow"
-                        >
-                            <div className="relative h-14 sm:h-20 w-14 sm:w-20">
-                                <Image
-                                    src={`/img/technos/${techno.img}`}
-                                    alt=""
-                                    fill
-                                    className="object-contain"
-                                />
-                            </div>
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: { delayChildren: 0.1, staggerChildren: 0.04 },
+		},
+	};
 
-                            <p className="mt-4 sm:text-lg">{techno.title}</p>
-                            <div className="glow"></div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </section>
-    );
+	const itemVariants = {
+		hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
+		visible: {
+			y: 0,
+			opacity: 1,
+			filter: "blur(0px)",
+			transition: {
+				type: "spring",
+				stiffness: 120,
+				damping: 18,
+			},
+		},
+	};
+
+	const technoVariants = {
+		hidden: { scale: 0.9, opacity: 0 },
+		visible: (idx) => ({
+			scale: 1,
+			opacity: 1,
+			transition: {
+				type: "spring",
+				stiffness: 150,
+				damping: 15,
+				delay: idx * 0.03,
+			},
+		}),
+	};
+
+	return (
+		<section
+			id="technos"
+			className="relative py-24 md:py-32 overflow-hidden"
+		>
+			{/* Background */}
+			<div className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-900/80 to-transparent" />
+
+			{/* Grid pattern */}
+			<div
+				className="absolute inset-0 opacity-[0.025]"
+				style={{
+					backgroundImage: `linear-gradient(rgba(251,191,36,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.6) 1px, transparent 1px)`,
+					backgroundSize: "40px 40px",
+				}}
+			/>
+
+			{/* Decorative */}
+			<div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+			<div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+
+			<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+				<motion.div
+					variants={containerVariants}
+					initial="hidden"
+					whileInView="visible"
+					viewport={{ once: true, amount: 0.1 }}
+				>
+					{/* Header */}
+					<motion.div
+						variants={itemVariants}
+						className="text-center mb-16"
+					>
+						<span className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-amber-400 bg-amber-500/10 rounded-full border border-amber-500/20 mb-4">
+							<Layers size={16} />
+							Stack Technique
+						</span>
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+							Technologies{" "}
+							<span className="text-gradient-warm">
+								maîtrisées
+							</span>
+						</h2>
+						<p className="text-zinc-400 max-w-2xl mx-auto">
+							Les outils et frameworks que j'utilise au quotidien
+							pour créer des applications performantes
+						</p>
+					</motion.div>
+
+					{/* Technos Grid */}
+					<div className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4 md:gap-6">
+						{technos.map((techno, index) => (
+							<motion.div
+								key={techno.id}
+								custom={index}
+								variants={technoVariants}
+								ref={(el) => (cardRefs.current[index] = el)}
+								onMouseMove={(e) => rotateToMouse(e, index)}
+								onMouseLeave={() => resetCard(index)}
+								className="group relative card-dark p-4 sm:p-5 md:p-6 flex flex-col items-center cursor-pointer spotlight will-change-transform"
+								style={{
+									transition: "transform 0.12s ease-out",
+								}}
+							>
+								{/* Glow effect */}
+								<div className="glow absolute inset-0 rounded-2xl sm:rounded-3xl pointer-events-none transition-opacity duration-200" />
+
+								{/* Icon */}
+								<div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 mb-2 sm:mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-200">
+									<Image
+										src={`/img/technos/${techno.img}`}
+										alt={techno.title}
+										fill
+										className="object-contain drop-shadow-lg"
+									/>
+								</div>
+
+								{/* Title */}
+								<h3 className="font-semibold text-white text-xs sm:text-sm md:text-base text-center mb-0.5 sm:mb-1 group-hover:text-amber-400 transition-colors duration-200">
+									{techno.title}
+								</h3>
+
+								{/* Category */}
+								<span className="text-[10px] sm:text-xs text-zinc-500">
+									{techno.category}
+								</span>
+							</motion.div>
+						))}
+					</div>
+				</motion.div>
+			</div>
+		</section>
+	);
 }
