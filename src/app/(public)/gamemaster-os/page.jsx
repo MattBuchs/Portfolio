@@ -228,12 +228,6 @@ export default function GameMasterOSPage() {
 		damping: 20,
 	};
 
-	const hoverTransition = {
-		type: "spring",
-		stiffness: 400,
-		damping: 25,
-	};
-
 	const fadeInUp = {
 		initial: { opacity: 0, y: 30 },
 		animate: { opacity: 1, y: 0 },
@@ -243,23 +237,61 @@ export default function GameMasterOSPage() {
 	return (
 		<>
 			<NavBar />
-			<main className="min-h-screen bg-zinc-900 overflow-x-hidden">
+			<main className="min-h-screen">
 				{/* Hero Section */}
 				<section
 					ref={heroRef}
-					className="relative min-h-[90vh] flex items-center justify-center pt-28 pb-20 px-6 overflow-hidden"
+					className="relative min-h-[86vh] flex items-center justify-center pt-28 pb-20 px-6 overflow-hidden"
 				>
 					{/* Background Effects */}
-					<div className="absolute inset-0 -z-10">
-						<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-zinc-900 to-zinc-900" />
-						<div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[120px]" />
-						<div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[100px]" />
-						{/* Grid pattern */}
+					<div className="absolute inset-0 -z-10 overflow-hidden">
+						<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-amber-900/20 via-zinc-900 to-zinc-900" />
+
+						{/* Animated Gradient Orbs */}
+						<motion.div
+							className="absolute top-20 -left-32 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl will-change-transform backface-hidden"
+							style={{ transform: "translateZ(0)" }}
+							animate={{
+								x: [0, 50, 0],
+								y: [0, 30, 0],
+								opacity: [0.8, 1, 0.8],
+							}}
+							transition={{
+								duration: 10,
+								repeat: Infinity,
+								ease: "easeInOut",
+							}}
+						/>
+						<motion.div
+							className="absolute bottom-20 -right-32 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl will-change-transform backface-hidden"
+							style={{ transform: "translateZ(0)" }}
+							animate={{
+								x: [0, -40, 0],
+								y: [0, -20, 0],
+								opacity: [0.8, 1, 0.8],
+							}}
+							transition={{
+								duration: 12,
+								repeat: Infinity,
+								ease: "easeInOut",
+							}}
+						/>
+						<motion.div
+							className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/5 rounded-full blur-3xl will-change-transform backface-hidden"
+							style={{ transform: "translateZ(0)" }}
+							animate={{ opacity: [0.5, 0.8, 0.5] }}
+							transition={{
+								duration: 8,
+								repeat: Infinity,
+								ease: "easeInOut",
+							}}
+						/>
+
+						{/* Grid Pattern */}
 						<div
-							className="absolute inset-0 opacity-[0.03]"
+							className="absolute inset-0 opacity-[0.02]"
 							style={{
-								backgroundImage: `linear-gradient(rgba(251, 191, 36, 0.5) 1px, transparent 1px),
-                                                  linear-gradient(90deg, rgba(251, 191, 36, 0.5) 1px, transparent 1px)`,
+								backgroundImage: `linear-gradient(rgba(251,191,36,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.3) 1px, transparent 1px)`,
 								backgroundSize: "60px 60px",
 							}}
 						/>
@@ -310,7 +342,7 @@ export default function GameMasterOSPage() {
 								width={500}
 								height={200}
 								alt="GameMaster OS Logo"
-								className="w-72 md:w-[450px] mx-auto"
+								className="w-72 md:w-112.5 mx-auto"
 							/>
 						</motion.div>
 
@@ -367,39 +399,27 @@ export default function GameMasterOSPage() {
 							}}
 							className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
 						>
-							<motion.div
-								whileHover={{ scale: 1.02, y: -2 }}
-								whileTap={{ scale: 0.98 }}
-								transition={hoverTransition}
+							<a
+								href={
+									latestVersion
+										? `/downloads/${latestVersion.fileName}`
+										: "/downloads/GameMasterOS_Setup.exe"
+								}
+								download
+								className="btn-warm group flex items-center gap-2 text-lg px-8 py-4 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 							>
-								<a
-									href={
-										latestVersion
-											? `/downloads/${latestVersion.fileName}`
-											: "/downloads/GameMasterOS_Setup.exe"
-									}
-									download
-									className="btn-warm group flex items-center gap-2 text-lg px-8 py-4"
-								>
-									<Download className="w-5 h-5" />
-									Télécharger gratuitement
-									<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-								</a>
-							</motion.div>
+								<Download className="w-5 h-5" />
+								Télécharger gratuitement
+								<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+							</a>
 
-							<motion.div
-								whileHover={{ scale: 1.02, y: -2 }}
-								whileTap={{ scale: 0.98 }}
-								transition={hoverTransition}
+							<a
+								href="#pricing"
+								className="btn-outline flex items-center gap-2 text-lg px-8 py-4 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 							>
-								<a
-									href="#pricing"
-									className="btn-outline flex items-center gap-2 text-lg px-8 py-4"
-								>
-									<Crown className="w-5 h-5" />
-									Voir les offres PRO
-								</a>
-							</motion.div>
+								<Crown className="w-5 h-5" />
+								Voir les offres PRO
+							</a>
 						</motion.div>
 
 						{/* Version info */}
@@ -466,8 +486,8 @@ export default function GameMasterOSPage() {
 				</section>
 
 				{/* Social Proof */}
-				<section className="py-12 px-6 border-b border-zinc-800 bg-zinc-900/50">
-					<div className="max-w-5xl mx-auto">
+				<section className="py-12 px-6 border-b border-zinc-800 relative">
+					<div className="max-w-5xl mx-auto relative">
 						<div className="flex flex-wrap justify-center items-center gap-8 md:gap-0 text-center">
 							{[
 								{
@@ -486,11 +506,9 @@ export default function GameMasterOSPage() {
 									hasStar: false,
 								},
 							].map((stat, i) => (
-								<motion.div
+								<div
 									key={stat.label}
-									whileHover={{ scale: 1.05, y: -2 }}
-									transition={hoverTransition}
-									className={`flex items-center cursor-default ${i < 2 ? "md:border-r md:border-zinc-700" : ""}`}
+									className={`flex items-center cursor-default transition-transform duration-300 ease-out hover:scale-105 hover:-translate-y-0.5 ${i < 2 ? "md:border-r md:border-zinc-700" : ""}`}
 								>
 									<div className="flex flex-col items-center px-8 md:px-12">
 										<div className="text-3xl md:text-4xl font-bold text-white mb-1">
@@ -503,15 +521,18 @@ export default function GameMasterOSPage() {
 											{stat.label}
 										</div>
 									</div>
-								</motion.div>
+								</div>
 							))}
 						</div>
 					</div>
 				</section>
 
 				{/* Feature highlights */}
-				<section className="py-16 px-6 border-b border-zinc-800">
-					<div className="max-w-4xl mx-auto">
+				<section className="py-16 px-6 border-b border-zinc-800 relative overflow-hidden">
+					{/* Subtle ambient light */}
+					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/3 rounded-full blur-3xl" />
+
+					<div className="max-w-4xl mx-auto relative z-10">
 						<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
 							{[
 								{
@@ -534,14 +555,12 @@ export default function GameMasterOSPage() {
 									label: "100% Offline",
 									desc: "Aucune dépendance",
 								},
-							].map((item, i) => (
-								<motion.div
+							].map((item) => (
+								<div
 									key={item.label}
-									whileHover={{ y: -5, scale: 1.03 }}
-									transition={hoverTransition}
-									className="flex flex-col items-center gap-3 p-6 rounded-xl bg-zinc-800/50 border border-zinc-700/50 hover:border-amber-500/30 hover:bg-zinc-800 transition-all cursor-default"
+									className="group flex flex-col items-center gap-3 p-6 rounded-xl bg-zinc-800/50 border border-zinc-700/50 cursor-default transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.03] hover:border-amber-500/30 hover:bg-zinc-800 hover:shadow-[0_20px_40px_-15px_rgba(251,191,36,0.1)]"
 								>
-									<div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+									<div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
 										<item.icon className="w-6 h-6 text-amber-500" />
 									</div>
 									<div className="text-center">
@@ -552,19 +571,22 @@ export default function GameMasterOSPage() {
 											{item.desc}
 										</span>
 									</div>
-								</motion.div>
+								</div>
 							))}
 						</div>
 					</div>
 				</section>
 
 				{/* Features Section */}
-				<section className="py-28 px-6 relative">
-					<div className="absolute inset-0 -z-10">
-						<div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[100px]" />
-					</div>
+				<section className="py-28 px-6 relative overflow-hidden">
+					{/* Background */}
+					<div className="absolute inset-0 bg-zinc-800/40" />
 
-					<div className="max-w-7xl mx-auto">
+					{/* Decorative lines */}
+					<div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
+					<div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
+
+					<div className="max-w-7xl mx-auto relative z-10">
 						<div className="text-center mb-16">
 							<h2 className="text-4xl md:text-5xl font-bold mb-6">
 								<span className="text-white">
@@ -582,13 +604,11 @@ export default function GameMasterOSPage() {
 
 						<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 							{features.map((feature, index) => (
-								<motion.div
+								<div
 									key={index}
-									whileHover={{ y: -8, scale: 1.02 }}
-									transition={hoverTransition}
-									className="card-dark group cursor-default"
+									className="group card-dark cursor-default transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-amber-500/30 hover:shadow-[0_25px_60px_-15px_rgba(251,191,36,0.15)]"
 								>
-									<div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+									<div className="w-14 h-14 rounded-xl bg-linear-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110">
 										<feature.icon className="w-7 h-7 text-white" />
 									</div>
 									<h3 className="text-xl font-bold text-white mb-3">
@@ -597,15 +617,21 @@ export default function GameMasterOSPage() {
 									<p className="text-zinc-400 leading-relaxed">
 										{feature.description}
 									</p>
-								</motion.div>
+								</div>
 							))}
 						</div>
 					</div>
 				</section>
 
 				{/* Screenshots Gallery */}
-				<section className="py-28 px-6 bg-zinc-800/30">
-					<div className="max-w-7xl mx-auto">
+				<section className="py-28 px-6 bg-zinc-800/30 relative overflow-hidden">
+					{/* Background */}
+					<div className="absolute inset-0 bg-linear-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
+
+					{/* Ambient light */}
+					<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-amber-500/5 rounded-full blur-3xl" />
+
+					<div className="max-w-7xl mx-auto relative z-10">
 						<div className="text-center mb-16">
 							<h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
 								Aperçu de l&apos;interface
@@ -618,23 +644,21 @@ export default function GameMasterOSPage() {
 
 						<div className="grid md:grid-cols-3 gap-6">
 							{screenshots.map((shot, index) => (
-								<motion.div
+								<div
 									key={index}
-									whileHover={{ y: -8, scale: 1.02 }}
-									transition={hoverTransition}
 									onClick={() => setZoomedImage(shot)}
-									className="group cursor-pointer"
+									className="group cursor-pointer transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02]"
 								>
-									<div className="relative rounded-xl overflow-hidden border border-zinc-700/50 bg-zinc-800 hover:border-amber-500/50 transition-all">
+									<div className="relative rounded-xl overflow-hidden border border-zinc-700/50 bg-zinc-800 transition-all duration-300 group-hover:border-amber-500/50 group-hover:shadow-[0_25px_60px_-15px_rgba(251,191,36,0.15)]">
 										<div className="aspect-video relative overflow-hidden">
 											<Image
 												src={shot.src}
 												alt={shot.alt}
 												fill
-												className="object-cover group-hover:scale-105 transition-transform duration-500"
+												className="object-cover transition-transform duration-500 group-hover:scale-105"
 											/>
-											<div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
-											<div className="absolute bottom-3 right-3 px-3 py-1.5 bg-zinc-900/80 backdrop-blur-sm rounded-lg text-xs text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
+											<div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300" />
+											<div className="absolute bottom-3 right-3 px-3 py-1.5 bg-zinc-900/80 backdrop-blur-sm rounded-lg text-xs text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1.5">
 												<Search className="w-3.5 h-3.5" />
 												Cliquez pour agrandir
 											</div>
@@ -648,19 +672,31 @@ export default function GameMasterOSPage() {
 											</p>
 										</div>
 									</div>
-								</motion.div>
+								</div>
 							))}
 						</div>
 					</div>
 				</section>
 
 				{/* Use Cases */}
-				<section className="py-28 px-6 relative">
-					<div className="absolute inset-0 -z-10">
-						<div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[120px]" />
-					</div>
+				<section className="py-28 px-6 relative overflow-hidden">
+					{/* Background */}
+					<div className="absolute inset-0 bg-linear-to-b from-transparent via-zinc-900/80 to-transparent" />
 
-					<div className="max-w-5xl mx-auto">
+					{/* Grid Pattern */}
+					<div
+						className="absolute inset-0 opacity-[0.03]"
+						style={{
+							backgroundImage: `linear-gradient(rgba(251,191,36,1) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,1) 1px, transparent 1px)`,
+							backgroundSize: "60px 60px",
+						}}
+					/>
+
+					{/* Decorative lines */}
+					<div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-orange-500/20 to-transparent" />
+					<div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-orange-500/20 to-transparent" />
+
+					<div className="max-w-5xl mx-auto relative z-10">
 						<div className="text-center mb-16">
 							<span className="inline-block px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium mb-6">
 								Au-delà des Escape Games
@@ -676,13 +712,11 @@ export default function GameMasterOSPage() {
 
 						<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
 							{useCases.map((useCase, index) => (
-								<motion.div
+								<div
 									key={index}
-									whileHover={{ y: -5, scale: 1.02 }}
-									transition={hoverTransition}
-									className="bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-5 hover:border-orange-500/30 hover:bg-zinc-800 transition-all cursor-default"
+									className="group bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-5 cursor-default transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-orange-500/30 hover:bg-zinc-800 hover:shadow-[0_20px_40px_-15px_rgba(249,115,22,0.1)]"
 								>
-									<div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4">
+									<div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
 										<useCase.icon className="w-5 h-5 text-orange-400" />
 									</div>
 									<h3 className="font-bold text-white mb-1">
@@ -691,7 +725,7 @@ export default function GameMasterOSPage() {
 									<p className="text-sm text-zinc-400">
 										{useCase.description}
 									</p>
-								</motion.div>
+								</div>
 							))}
 						</div>
 					</div>
@@ -700,13 +734,42 @@ export default function GameMasterOSPage() {
 				{/* Pricing Section */}
 				<section
 					id="pricing"
-					className="py-28 px-6 bg-zinc-800/30 relative"
+					className="py-28 px-6 bg-zinc-800/30 relative overflow-hidden"
 				>
-					<div className="absolute inset-0 -z-10">
-						<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 rounded-full blur-[150px]" />
-					</div>
+					{/* Background */}
+					<div className="absolute inset-0 bg-linear-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
 
-					<div className="max-w-7xl mx-auto">
+					{/* Animated orbs */}
+					<motion.div
+						className="absolute top-20 left-1/4 w-80 h-80 bg-amber-500/8 rounded-full blur-3xl will-change-transform backface-hidden"
+						style={{ transform: "translateZ(0)" }}
+						animate={{
+							x: [0, 30, 0],
+							y: [0, -20, 0],
+							opacity: [0.6, 1, 0.6],
+						}}
+						transition={{
+							duration: 12,
+							repeat: Infinity,
+							ease: "easeInOut",
+						}}
+					/>
+					<motion.div
+						className="absolute bottom-20 right-1/4 w-96 h-96 bg-orange-500/8 rounded-full blur-3xl will-change-transform backface-hidden"
+						style={{ transform: "translateZ(0)" }}
+						animate={{
+							x: [0, -40, 0],
+							y: [0, 25, 0],
+							opacity: [0.7, 1, 0.7],
+						}}
+						transition={{
+							duration: 15,
+							repeat: Infinity,
+							ease: "easeInOut",
+						}}
+					/>
+
+					<div className="max-w-7xl mx-auto relative z-10">
 						<div className="text-center mb-16">
 							<h2 className="text-4xl md:text-5xl font-bold mb-6">
 								<span className="text-white">Offres & </span>
@@ -722,11 +785,7 @@ export default function GameMasterOSPage() {
 
 						<div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
 							{/* Free Plan */}
-							<motion.div
-								whileHover={{ y: -8 }}
-								transition={hoverTransition}
-								className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 hover:border-zinc-600 transition-all flex flex-col"
-							>
+							<div className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:border-zinc-600 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.3)]">
 								<div className="flex items-center gap-3 mb-4">
 									<div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
 										<Download className="w-6 h-6 text-zinc-300" />
@@ -761,39 +820,29 @@ export default function GameMasterOSPage() {
 									))}
 								</ul>
 
-								<motion.div
-									whileHover={{ scale: 1.02, y: -2 }}
-									whileTap={{ scale: 0.98 }}
-									transition={hoverTransition}
+								<a
+									href={
+										latestVersion
+											? `/downloads/${latestVersion.fileName}`
+											: "/downloads/GameMasterOS_Setup.exe"
+									}
+									download
+									className="block w-full py-4 bg-zinc-700 text-white rounded-xl font-semibold text-center transition-all duration-300 hover:bg-zinc-600 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 								>
-									<a
-										href={
-											latestVersion
-												? `/downloads/${latestVersion.fileName}`
-												: "/downloads/GameMasterOS_Setup.exe"
-										}
-										download
-										className="block w-full py-4 bg-zinc-700 hover:bg-zinc-600 text-white rounded-xl font-semibold text-center transition-colors"
-									>
-										Télécharger
-									</a>
-								</motion.div>
-							</motion.div>
+									Télécharger
+								</a>
+							</div>
 
 							{/* PRO Plan - highlighted */}
-							<motion.div
-								whileHover={{ y: -8, scale: 1.02 }}
-								transition={hoverTransition}
-								className="relative bg-gradient-to-b from-amber-500/10 to-zinc-800/50 border-2 border-amber-500/50 rounded-2xl p-8 flex flex-col hover:border-amber-500/80 transition-all"
-							>
+							<div className="relative bg-linear-to-b from-amber-500/10 to-zinc-800/50 border-2 border-amber-500/50 rounded-2xl p-8 flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-amber-500/80 hover:shadow-[0_25px_60px_-15px_rgba(251,191,36,0.2)]">
 								{/* Popular badge */}
-								<div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-full flex items-center gap-1.5">
+								<div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-linear-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-full flex items-center gap-1.5">
 									<Crown className="w-4 h-4" />
 									Populaire
 								</div>
 
 								<div className="flex items-center gap-3 mb-4 mt-2">
-									<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+									<div className="w-12 h-12 rounded-xl bg-linear-to-br from-amber-500 to-orange-600 flex items-center justify-center">
 										<Crown className="w-6 h-6 text-white" />
 									</div>
 									<h3 className="text-2xl font-bold text-white">
@@ -840,26 +889,16 @@ export default function GameMasterOSPage() {
 									))}
 								</ul>
 
-								<motion.div
-									whileHover={{ scale: 1.02, y: -2 }}
-									whileTap={{ scale: 0.98 }}
-									transition={hoverTransition}
+								<a
+									href="/gamemaster-os/checkout?plan=pro"
+									className="btn-warm w-full flex justify-center transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 								>
-									<a
-										href="/gamemaster-os/checkout?plan=pro"
-										className="btn-warm w-full flex justify-center"
-									>
-										Acheter la version PRO
-									</a>
-								</motion.div>
-							</motion.div>
+									Acheter la version PRO
+								</a>
+							</div>
 
 							{/* Enterprise Plan */}
-							<motion.div
-								whileHover={{ y: -8 }}
-								transition={hoverTransition}
-								className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 hover:border-zinc-600 transition-all flex flex-col"
-							>
+							<div className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:border-zinc-600 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.3)]">
 								<div className="flex items-center gap-3 mb-4">
 									<div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
 										<Building2 className="w-6 h-6 text-zinc-300" />
@@ -904,19 +943,13 @@ export default function GameMasterOSPage() {
 									)}
 								</ul>
 
-								<motion.div
-									whileHover={{ scale: 1.02, y: -2 }}
-									whileTap={{ scale: 0.98 }}
-									transition={hoverTransition}
+								<a
+									href="/gamemaster-os/checkout?plan=enterprise"
+									className="block w-full py-4 bg-zinc-700 text-white rounded-xl font-semibold text-center transition-all duration-300 hover:bg-zinc-600 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 								>
-									<a
-										href="/gamemaster-os/checkout?plan=enterprise"
-										className="block w-full py-4 bg-zinc-700 hover:bg-zinc-600 text-white rounded-xl font-semibold text-center transition-colors"
-									>
-										Acheter Entreprise
-									</a>
-								</motion.div>
-							</motion.div>
+									Acheter Entreprise
+								</a>
+							</div>
 						</div>
 
 						<p className="text-center text-zinc-500 mt-10">
@@ -932,8 +965,18 @@ export default function GameMasterOSPage() {
 				</section>
 
 				{/* Installation */}
-				<section className="py-28 px-6">
-					<div className="max-w-4xl mx-auto">
+				<section className="py-28 px-6 relative overflow-hidden">
+					{/* Background */}
+					<div className="absolute inset-0 bg-linear-to-b from-transparent via-zinc-900/50 to-transparent" />
+
+					{/* Ambient light */}
+					<div className="absolute top-0 left-1/3 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
+
+					{/* Decorative lines */}
+					<div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
+					<div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
+
+					<div className="max-w-4xl mx-auto relative z-10">
 						<div className="text-center mb-16">
 							<h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
 								Installation en 3 clics
@@ -944,11 +987,7 @@ export default function GameMasterOSPage() {
 						</div>
 
 						<div className="grid md:grid-cols-2 gap-6">
-							<motion.div
-								whileHover={{ y: -5, scale: 1.02 }}
-								transition={hoverTransition}
-								className="bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-6 hover:border-amber-500/30 transition-all cursor-default"
-							>
+							<div className="group bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-6 cursor-default transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-amber-500/30 hover:shadow-[0_20px_40px_-15px_rgba(251,191,36,0.1)]">
 								<h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
 									<Monitor className="w-5 h-5 text-amber-500" />
 									Configuration requise
@@ -967,13 +1006,9 @@ export default function GameMasterOSPage() {
 										2 écrans conseillés
 									</li>
 								</ul>
-							</motion.div>
+							</div>
 
-							<motion.div
-								whileHover={{ y: -5, scale: 1.02 }}
-								transition={hoverTransition}
-								className="bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-6 hover:border-amber-500/30 transition-all cursor-default"
-							>
+							<div className="group bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-6 cursor-default transition-all duration-300 ease-out hover:-translate-y-1.5 hover:scale-[1.02] hover:border-amber-500/30 hover:shadow-[0_20px_40px_-15px_rgba(251,191,36,0.1)]">
 								<h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
 									<Zap className="w-5 h-5 text-amber-500" />
 									Mise en route
@@ -992,18 +1027,48 @@ export default function GameMasterOSPage() {
 										Configuration automatique
 									</li>
 								</ul>
-							</motion.div>
+							</div>
 						</div>
 					</div>
 				</section>
 
 				{/* Final CTA */}
-				<section className="py-28 px-6">
-					<div className="max-w-4xl mx-auto">
+				<section className="py-28 px-6 relative overflow-hidden bg-zinc-900/80">
+					{/* Animated orbs */}
+					<motion.div
+						className="absolute top-10 left-1/4 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl will-change-transform backface-hidden"
+						style={{ transform: "translateZ(0)" }}
+						animate={{
+							x: [0, 40, 0],
+							y: [0, -25, 0],
+							opacity: [0.6, 1, 0.6],
+						}}
+						transition={{
+							duration: 12,
+							repeat: Infinity,
+							ease: "easeInOut",
+						}}
+					/>
+					<motion.div
+						className="absolute bottom-10 right-1/4 w-80 h-80 bg-orange-500/10 rounded-full blur-3xl will-change-transform backface-hidden"
+						style={{ transform: "translateZ(0)" }}
+						animate={{
+							x: [0, -35, 0],
+							y: [0, 20, 0],
+							opacity: [0.7, 1, 0.7],
+						}}
+						transition={{
+							duration: 15,
+							repeat: Infinity,
+							ease: "easeInOut",
+						}}
+					/>
+
+					<div className="max-w-4xl mx-auto relative z-10">
 						<div className="relative rounded-3xl overflow-hidden border border-zinc-700/50">
 							{/* Background */}
 							<div className="absolute inset-0 bg-zinc-800" />
-							<div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-orange-500/5" />
+							<div className="absolute inset-0 bg-linear-to-br from-amber-500/10 via-transparent to-orange-500/5" />
 
 							<div className="relative p-12 md:p-16 text-center">
 								<h2 className="text-3xl md:text-5xl font-bold mb-6">
@@ -1021,37 +1086,25 @@ export default function GameMasterOSPage() {
 								</p>
 
 								<div className="flex flex-col sm:flex-row gap-4 justify-center">
-									<motion.div
-										whileHover={{ scale: 1.02, y: -2 }}
-										whileTap={{ scale: 0.98 }}
-										transition={hoverTransition}
+									<a
+										href={
+											latestVersion
+												? `/downloads/${latestVersion.fileName}`
+												: "/downloads/GameMasterOS_Setup.exe"
+										}
+										download
+										className="btn-warm flex items-center justify-center gap-2 px-8 py-4 text-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 									>
-										<a
-											href={
-												latestVersion
-													? `/downloads/${latestVersion.fileName}`
-													: "/downloads/GameMasterOS_Setup.exe"
-											}
-											download
-											className="btn-warm flex items-center justify-center gap-2 px-8 py-4 text-lg"
-										>
-											<Download className="w-5 h-5" />
-											Télécharger gratuitement
-										</a>
-									</motion.div>
-									<motion.div
-										whileHover={{ scale: 1.02, y: -2 }}
-										whileTap={{ scale: 0.98 }}
-										transition={hoverTransition}
+										<Download className="w-5 h-5" />
+										Télécharger gratuitement
+									</a>
+									<a
+										href="#pricing"
+										className="btn-outline flex items-center justify-center gap-2 px-8 py-4 text-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 									>
-										<a
-											href="#pricing"
-											className="btn-outline flex items-center justify-center gap-2 px-8 py-4 text-lg"
-										>
-											<Crown className="w-5 h-5" />
-											Passer à la version PRO
-										</a>
-									</motion.div>
+										<Crown className="w-5 h-5" />
+										Passer à la version PRO
+									</a>
 								</div>
 							</div>
 						</div>

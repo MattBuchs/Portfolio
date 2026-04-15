@@ -4,13 +4,7 @@ import Footer from "@/components/Footer";
 import NavBar from "@/components/Header/NavBar";
 import { projects } from "@/lib/projects";
 import { motion } from "framer-motion";
-import {
-	ArrowLeft,
-	ArrowRight,
-	ExternalLink,
-	FolderOpen,
-	Github,
-} from "lucide-react";
+import { ArrowRight, ExternalLink, FolderOpen, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -58,7 +52,7 @@ export default function Projects() {
 			<main className="min-h-screen pt-24 pb-16 overflow-hidden">
 				{/* Background */}
 				<div className="fixed inset-0 -z-10">
-					<div className="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
+					<div className="absolute inset-0 bg-linear-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
 					<div
 						className="absolute inset-0 opacity-[0.02]"
 						style={{
@@ -67,8 +61,8 @@ export default function Projects() {
 						}}
 					/>
 					{/* Ambient lights */}
-					<div className="absolute top-20 -left-40 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-3xl" />
-					<div className="absolute bottom-20 -right-40 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-3xl" />
+					<div className="absolute top-20 -left-40 w-125 h-125 bg-amber-500/10 rounded-full blur-3xl" />
+					<div className="absolute bottom-20 -right-40 w-125 h-125 bg-orange-500/10 rounded-full blur-3xl" />
 				</div>
 
 				<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
@@ -77,38 +71,24 @@ export default function Projects() {
 						initial="hidden"
 						animate="visible"
 					>
-						{/* Back Link */}
-						<motion.div variants={itemVariants} className="mb-8">
-							<Link
-								href="/"
-								className="inline-flex items-center gap-2 text-zinc-400 hover:text-amber-400 transition-colors group"
-							>
-								<ArrowLeft
-									size={18}
-									className="group-hover:-translate-x-1 transition-transform"
-								/>
-								Retour à l'accueil
-							</Link>
-						</motion.div>
-
 						{/* Header */}
 						<motion.div
 							variants={itemVariants}
 							className="text-center mb-16"
 						>
-							<span className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-amber-400 bg-amber-500/10 rounded-full border border-amber-500/20 mb-4">
+							<span className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium text-amber-400 bg-amber-500/10 rounded-full border border-amber-500/20 mt-8 md:mt-14 mb-4">
 								<FolderOpen size={16} />
-								Portfolio complet
+								Portfolio
 							</span>
 							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
-								Tous mes{" "}
+								Mes meilleurs{" "}
 								<span className="text-gradient-warm">
 									Projets
 								</span>
 							</h1>
 							<p className="text-zinc-400 max-w-2xl mx-auto text-lg">
-								Explorez l'ensemble de mes réalisations, du
-								développement web aux applications desktop
+								Explorez l&apos;ensemble de mes réalisations, du
+								développement web aux applications
 							</p>
 						</motion.div>
 
@@ -141,7 +121,7 @@ export default function Projects() {
 											fill
 											className="object-contain p-5 transition-transform duration-500 group-hover:scale-105"
 										/>
-										<div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/30 to-transparent" />
+										<div className="absolute inset-0 bg-linear-to-t from-zinc-900 via-zinc-900/30 to-transparent" />
 
 										{/* Project number badge */}
 										<div className="absolute top-4 right-4 px-3 py-1 bg-zinc-900/80 backdrop-blur-sm rounded-full text-xs font-medium text-amber-400 border border-amber-500/20">
@@ -153,13 +133,20 @@ export default function Projects() {
 									</div>
 
 									{/* Content */}
-									<div className="p-5 sm:p-6">
-										<h2 className="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors duration-200">
-											{project.title}
-										</h2>
-										<p className="text-zinc-400 text-sm leading-relaxed mb-5 line-clamp-2">
-											{project.paragraph}
-										</p>
+									<div
+										className="p-5 sm:p-6 flex flex-col justify-between"
+										style={{
+											height: "calc(100% - 185px)", // Adjust height based on image container
+										}}
+									>
+										<div>
+											<h2 className="text-xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors duration-200">
+												{project.title}
+											</h2>
+											<p className="text-zinc-400 text-sm leading-relaxed mb-5 line-clamp-2">
+												{project.paragraph}
+											</p>
+										</div>
 
 										{/* Actions */}
 										<div className="flex items-center justify-between">

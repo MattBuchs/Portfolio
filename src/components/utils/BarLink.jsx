@@ -2,46 +2,40 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRight, FileText, Github, Linkedin, Mail } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export default function BarLink() {
-	const [isOpen, setIsOpen] = useState(false);
+const links = [
+	{
+		icon: Linkedin,
+		href: "https://www.linkedin.com/in/matt-buchs/",
+		label: "Profil LinkedIn",
+	},
+	{
+		icon: Github,
+		href: "https://github.com/MattBuchs",
+		label: "Profil GitHub",
+	},
+	{
+		icon: Mail,
+		href: "mailto:mattbuchs25@gmail.com",
+		label: "Envoyer un email",
+	},
+	{
+		icon: FileText,
+		href: "/files/Flyer.pdf",
+		label: "Télécharger le flyer (PDF)",
+	},
+];
 
-	const links = [
-		{
-			icon: Linkedin,
-			href: "https://www.linkedin.com/in/matt-buchs/",
-			label: "Profil LinkedIn",
-			color: "hover:bg-blue-500/20 hover:border-blue-500/50 hover:text-blue-400",
-		},
-		{
-			icon: Github,
-			href: "https://github.com/MattBuchs",
-			label: "Profil GitHub",
-			color: "hover:bg-zinc-400/20 hover:border-zinc-400/50 hover:text-zinc-300",
-		},
-		{
-			icon: Mail,
-			href: "mailto:mattbuchs25@gmail.com",
-			label: "Envoyer un email",
-			color: "hover:bg-amber-500/20 hover:border-amber-500/50 hover:text-amber-400",
-		},
-		{
-			icon: FileText,
-			href: "/files/Flyer.pdf",
-			label: "Télécharger le flyer (PDF)",
-			color: "hover:bg-orange-500/20 hover:border-orange-500/50 hover:text-orange-400",
-		},
-	];
-
-	const LinksPanel = ({ className = "" }) => (
+function LinksPanel({ className = "" }) {
+	return (
 		<div
 			className={`flex flex-col gap-2 p-2 bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl shadow-black/20 ${className}`}
 		>
 			{links.map((link, idx) => {
 				const Icon = link.icon;
 				return (
-					<motion.a
+					<a
 						key={idx}
 						href={link.href}
 						target={
@@ -54,12 +48,13 @@ export default function BarLink() {
 						}
 						aria-label={link.label}
 						title={link.label}
-						whileHover={{ scale: 1.1 }}
-						whileTap={{ scale: 0.95 }}
-						className={`w-11 h-11 flex items-center justify-center rounded-xl bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 transition-all duration-200 ${link.color}`}
+						className="group w-11 h-11 flex items-center justify-center rounded-xl bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 transition-all duration-300 ease-out hover:scale-110 hover:bg-linear-to-br hover:from-amber-500/20 hover:to-orange-500/20 hover:border-amber-500/50 hover:text-amber-400 hover:shadow-[0_0_20px_-5px_rgba(251,191,36,0.4)] active:scale-95"
 					>
-						<Icon size={20} />
-					</motion.a>
+						<Icon
+							size={20}
+							className="transition-transform duration-300 group-hover:rotate-6"
+						/>
+					</a>
 				);
 			})}
 
@@ -82,6 +77,21 @@ export default function BarLink() {
 			</div>
 		</div>
 	);
+}
+
+export default function BarLink() {
+	const [isOpen, setIsOpen] = useState(false);
+
+	// Fermer le panneau quand on passe en grand écran
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth >= 1280) {
+				setIsOpen(false);
+			}
+		};
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	return (
 		<>
@@ -91,9 +101,7 @@ export default function BarLink() {
 			</div>
 
 			{/* Version avec toggle sur écrans moyens */}
-			<div
-				className={`hidden md:block 1.5xl:hidden fixed bottom-12 left-0 z-50`}
-			>
+			<div className="hidden md:block 1.5xl:hidden fixed bottom-12 left-0 z-50">
 				{/* Toggle Button */}
 				<motion.button
 					onClick={() => setIsOpen(!isOpen)}

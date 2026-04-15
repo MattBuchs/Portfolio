@@ -53,7 +53,7 @@ export default function Projects() {
 			className="relative py-24 md:py-32 overflow-hidden"
 		>
 			{/* Background */}
-			<div className="absolute inset-0 bg-gradient-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
+			<div className="absolute inset-0 bg-linear-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
 
 			{/* Grid pattern */}
 			<div
@@ -65,11 +65,11 @@ export default function Projects() {
 			/>
 
 			{/* Decorative elements */}
-			<div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
-			<div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+			<div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
+			<div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
 
 			{/* Ambient light */}
-			<div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-3xl" />
+			<div className="absolute top-1/2 left-1/4 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/5 rounded-full blur-3xl" />
 
 			<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
 				<motion.div
@@ -125,7 +125,7 @@ export default function Projects() {
 										fill
 										className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
 									/>
-									<div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/20 to-transparent" />
+									<div className="absolute inset-0 bg-linear-to-t from-zinc-900 via-zinc-900/20 to-transparent" />
 
 									{/* Project number badge */}
 									<div className="absolute top-4 right-4 px-3 py-1 bg-zinc-900/80 backdrop-blur-sm rounded-full text-xs font-medium text-amber-400 border border-amber-500/20">
@@ -135,13 +135,20 @@ export default function Projects() {
 								</div>
 
 								{/* Content */}
-								<div className="p-5 sm:p-6">
-									<h3 className="text-xl sm:text-2xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors duration-200">
-										{project.title}
-									</h3>
-									<p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-5 line-clamp-2">
-										{project.paragraph}
-									</p>
+								<div
+									className="p-5 sm:p-6 flex flex-col justify-between"
+									style={{
+										height: "calc(100% - 200px)", // Adjust height based on image container
+									}}
+								>
+									<div>
+										<h3 className="text-xl sm:text-2xl font-bold text-white mb-2 group-hover:text-amber-400 transition-colors duration-200">
+											{project.title}
+										</h3>
+										<p className="text-zinc-400 text-sm sm:text-base leading-relaxed mb-5 line-clamp-2">
+											{project.paragraph}
+										</p>
+									</div>
 
 									{/* Actions */}
 									<div className="flex items-center justify-between">

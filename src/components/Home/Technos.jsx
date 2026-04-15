@@ -203,6 +203,7 @@ export default function Technos() {
 										src={`/img/technos/${techno.img}`}
 										alt=""
 										fill
+										sizes="64px"
 										className="object-contain drop-shadow-lg"
 									/>
 								</div>
