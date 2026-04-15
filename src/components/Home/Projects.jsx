@@ -87,7 +87,7 @@ export default function Projects() {
 							<FolderOpen size={16} />
 							Portfolio
 						</span>
-						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold mb-4">
 							Mes{" "}
 							<span className="text-gradient-warm">Projets</span>
 						</h2>

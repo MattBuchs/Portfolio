@@ -110,12 +110,12 @@ export default function Footer() {
 										}
 										whileHover={{ scale: 1.1, y: -2 }}
 										whileTap={{ scale: 0.95 }}
-										className="w-10 h-10 bg-zinc-800 hover:bg-amber-500/10 border border-zinc-700 hover:border-amber-500/30 rounded-lg flex items-center justify-center transition-colors"
+										className="w-10 h-10 bg-zinc-800 hover:bg-amber-500/10 border border-zinc-700 hover:border-amber-500/30 hover:rotate-2 rounded-lg flex items-center justify-center transition-colors group"
 										aria-label={social.label}
 									>
 										<Icon
 											size={18}
-											className="text-zinc-400 hover:text-amber-400"
+											className="text-zinc-400 group-hover:text-amber-400"
 										/>
 									</motion.a>
 								);

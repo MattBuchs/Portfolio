@@ -142,7 +142,7 @@ export default function Technos() {
 			<div
 				className="absolute inset-0 opacity-[0.025]"
 				style={{
-					backgroundImage: `linear-gradient(rgba(251,191,36,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.6) 1px, transparent 1px)`,
+					backgroundImage: `linear-gradient(rgba(251,191,36,1) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,1) 1px, transparent 1px)`,
 					backgroundSize: "40px 40px",
 				}}
 			/>
@@ -167,7 +167,7 @@ export default function Technos() {
 							<Layers size={16} />
 							Stack Technique
 						</span>
-						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold mb-4">
 							Technologies{" "}
 							<span className="text-gradient-warm">
 								maîtrisées

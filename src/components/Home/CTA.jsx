@@ -74,10 +74,28 @@ export default function CTA() {
 					</motion.div>
 
 					{/* Title */}
-					<h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
+					<motion.h2
+						className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-space font-bold mb-4 sm:mb-6 cursor-default"
+						whileHover="hover"
+					>
 						Un projet en tête
-						<span className="text-gradient-warm"> ?</span>
-					</h2>
+						<motion.span
+							className="text-gradient-warm inline-block origin-top ml-1"
+							variants={{
+								hover: {
+									rotate: [0, -20, 15, -10, 8, -5, 3, 0],
+									y: [0, -8, 4, -6, 3, -2, 1, 0],
+									scale: [1, 1.2, 1.1, 1.15, 1.05, 1.1, 1],
+									transition: {
+										duration: 0.8,
+										ease: "easeOut",
+									},
+								},
+							}}
+						>
+							?
+						</motion.span>
+					</motion.h2>
 
 					<p className="text-base sm:text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2">
 						Discutons de votre projet et voyons comment je peux vous

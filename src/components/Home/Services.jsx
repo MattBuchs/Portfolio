@@ -86,10 +86,10 @@ export default function Services() {
 	return (
 		<section className="relative py-24 md:py-32 overflow-hidden">
 			{/* Background gradient */}
-			<div className="absolute inset-0 bg-gradient-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
+			<div className="absolute inset-0 bg-linear-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
 
 			{/* Ambient light */}
-			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 rounded-full blur-3xl" />
+			<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-200 h-200 bg-amber-500/5 rounded-full blur-3xl" />
 
 			<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
 				<motion.div
@@ -106,7 +106,7 @@ export default function Services() {
 						<span className="inline-block px-4 py-1.5 text-sm font-medium text-amber-400 bg-amber-500/10 rounded-full border border-amber-500/20 mb-4">
 							Mes Services
 						</span>
-						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold mb-4">
 							Ce que je peux faire{" "}
 							<span className="text-gradient-warm">
 								pour vous
@@ -143,7 +143,7 @@ export default function Services() {
 											fill
 											className="object-cover transition-transform duration-500 group-hover:scale-110"
 										/>
-										<div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
+										<div className="absolute inset-0 bg-linear-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
 
 										{/* Icon Badge */}
 										<motion.div
@@ -168,37 +168,46 @@ export default function Services() {
 									</div>
 
 									{/* Content */}
-									<div className="p-4 sm:p-6">
-										<h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-amber-400 transition-colors">
-											{service.title}
-										</h3>
-										<p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4">
-											{service.description}
-										</p>
-
-										{/* Features */}
-										<div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5">
-											{service.features.map((feature) => (
-												<span
-													key={feature}
-													className="px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs bg-zinc-800 text-zinc-400 rounded-md border border-zinc-700 hover:border-amber-500/30 hover:text-amber-400 transition-colors"
-												>
-													{feature}
-												</span>
-											))}
+									<div
+										className="p-4 sm:p-6 flex flex-col justify-between"
+										style={{ height: "calc(100% - 180px)" }}
+									>
+										<div>
+											<h3 className="text-lg sm:text-xl font-bold text-white mb-2 sm:mb-3 group-hover:text-amber-400 transition-colors">
+												{service.title}
+											</h3>
+											<p className="text-zinc-400 text-xs sm:text-sm leading-relaxed mb-3 sm:mb-4">
+												{service.description}
+											</p>
 										</div>
 
-										{/* CTA */}
-										<Link
-											href="/contact"
-											className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-amber-400 hover:text-amber-300 transition-colors group/link"
-										>
-											Demander un devis
-											<ArrowRight
-												size={14}
-												className="group-hover/link:translate-x-1 transition-transform sm:w-4 sm:h-4"
-											/>
-										</Link>
+										<div>
+											{/* Features */}
+											<div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-5">
+												{service.features.map(
+													(feature) => (
+														<span
+															key={feature}
+															className="px-2 py-0.5 sm:py-1 text-[10px] sm:text-xs bg-zinc-800 text-zinc-400 rounded-md border border-zinc-700 hover:border-amber-500/30 hover:text-amber-400 transition-colors"
+														>
+															{feature}
+														</span>
+													),
+												)}
+											</div>
+
+											{/* CTA */}
+											<Link
+												href="/contact"
+												className="inline-flex items-center gap-2 text-xs sm:text-sm font-medium text-amber-400 hover:text-amber-300 transition-colors group/link"
+											>
+												Demander un devis
+												<ArrowRight
+													size={14}
+													className="group-hover/link:translate-x-1 transition-transform sm:w-4 sm:h-4"
+												/>
+											</Link>
+										</div>
 									</div>
 								</motion.article>
 							);

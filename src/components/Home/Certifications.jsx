@@ -59,7 +59,7 @@ export default function Certifications() {
 							<GraduationCap size={16} />
 							Formation
 						</span>
-						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+						<h2 className="text-3xl md:text-4xl lg:text-5xl font-space font-bold mb-4">
 							Ma{" "}
 							<span className="text-gradient-warm">
 								Formation

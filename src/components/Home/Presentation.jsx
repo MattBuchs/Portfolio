@@ -4,45 +4,11 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import BarLink from "../utils/BarLink";
 import DownloadCV from "../utils/DownloadCV";
 import "./Card.css";
 
 export default function Presentation() {
-	const [isBarVisible, setIsBarVisible] = useState(true);
-	const [lastScrollTop, setLastScrollTop] = useState(0);
-
-	const handleScroll = () => {
-		const technosSection = document.querySelector("#technos");
-		const barLink = document.querySelector("#barLink");
-
-		if (technosSection && barLink) {
-			const technosRect = technosSection.getBoundingClientRect();
-			const mainRect = barLink.getBoundingClientRect();
-			const currentScrollTop =
-				window.pageYOffset || document.documentElement.scrollTop;
-			const isScrollingDown = currentScrollTop > lastScrollTop;
-
-			if (isScrollingDown) {
-				const technosInView =
-					technosRect.top <= window.innerHeight &&
-					technosRect.bottom >= 0;
-				setIsBarVisible(!technosInView);
-			} else {
-				const barLinkInView =
-					mainRect.top <= window.innerHeight && mainRect.bottom >= 0;
-				setIsBarVisible(barLinkInView);
-			}
-			setLastScrollTop(currentScrollTop <= 0 ? 0 : currentScrollTop);
-		}
-	};
-
-	useEffect(() => {
-		document.addEventListener("scroll", handleScroll);
-		return () => document.removeEventListener("scroll", handleScroll);
-	}, [lastScrollTop]);
-
 	const containerVariants = {
 		hidden: { opacity: 0 },
 		visible: {
@@ -372,7 +338,7 @@ export default function Presentation() {
 				</div>
 			</motion.div>
 
-			<BarLink isBarVisible={isBarVisible} />
+			<BarLink />
 		</motion.section>
 	);
 }

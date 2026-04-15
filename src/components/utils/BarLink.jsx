@@ -1,9 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { FileText, Github, Linkedin, Mail } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ChevronRight, FileText, Github, Linkedin, Mail } from "lucide-react";
+import { useState } from "react";
 
-export default function BarLink({ isBarVisible }) {
+export default function BarLink() {
+	const [isOpen, setIsOpen] = useState(false);
+
 	const links = [
 		{
 			icon: Linkedin,
@@ -31,60 +34,100 @@ export default function BarLink({ isBarVisible }) {
 		},
 	];
 
-	return (
-		<motion.div
-			id="barLink"
-			initial={{ x: -100, opacity: 0 }}
-			animate={{
-				x: isBarVisible ? 0 : -100,
-				opacity: isBarVisible ? 1 : 0,
-			}}
-			transition={{ duration: 0.3, ease: "easeOut" }}
-			className="hidden xl:flex fixed bottom-6 left-6 z-50"
+	const LinksPanel = ({ className = "" }) => (
+		<div
+			className={`flex flex-col gap-2 p-2 bg-zinc-900/90 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl shadow-black/20 ${className}`}
 		>
-			<div className="flex flex-col gap-2 p-2 bg-zinc-900/80 backdrop-blur-xl rounded-2xl border border-zinc-700/50 shadow-2xl shadow-black/20">
-				{links.map((link, idx) => {
-					const Icon = link.icon;
-					return (
-						<motion.a
-							key={idx}
-							href={link.href}
-							target={
-								link.href.startsWith("http")
-									? "_blank"
-									: undefined
-							}
-							rel={
-								link.href.startsWith("http")
-									? "noopener noreferrer"
-									: undefined
-							}
-							aria-label={link.label}
-							title={link.label}
-							whileHover={{ scale: 1.1 }}
-							whileTap={{ scale: 0.95 }}
-							className={`w-11 h-11 flex items-center justify-center rounded-xl bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 transition-all duration-200 ${link.color}`}
-						>
-							<Icon size={20} />
-						</motion.a>
-					);
-				})}
+			{links.map((link, idx) => {
+				const Icon = link.icon;
+				return (
+					<motion.a
+						key={idx}
+						href={link.href}
+						target={
+							link.href.startsWith("http") ? "_blank" : undefined
+						}
+						rel={
+							link.href.startsWith("http")
+								? "noopener noreferrer"
+								: undefined
+						}
+						aria-label={link.label}
+						title={link.label}
+						whileHover={{ scale: 1.1 }}
+						whileTap={{ scale: 0.95 }}
+						className={`w-11 h-11 flex items-center justify-center rounded-xl bg-zinc-800/50 border border-zinc-700/50 text-zinc-400 transition-all duration-200 ${link.color}`}
+					>
+						<Icon size={20} />
+					</motion.a>
+				);
+			})}
 
-				{/* Decorative line */}
-				<div className="w-6 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent mx-auto my-1" />
+			{/* Decorative line */}
+			<div className="w-6 h-px bg-linear-to-r from-transparent via-amber-500/50 to-transparent mx-auto my-1" />
 
-				{/* Status indicator */}
-				<div className="flex items-center justify-center gap-1.5 px-2 py-1">
-					<motion.div
-						className="w-2 h-2 bg-green-400 rounded-full"
-						animate={{ scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] }}
-						transition={{ duration: 2, repeat: Infinity }}
-					/>
-					<span className="text-[10px] text-zinc-500 font-medium">
-						Dispo
-					</span>
-				</div>
+			{/* Status indicator */}
+			<div className="flex items-center justify-center gap-1.5 px-2 py-1">
+				<motion.div
+					className="w-2 h-2 bg-green-400 rounded-full"
+					animate={{
+						scale: [1, 1.2, 1],
+						opacity: [0.7, 1, 0.7],
+					}}
+					transition={{ duration: 2, repeat: Infinity }}
+				/>
+				<span className="text-[10px] text-zinc-500 font-medium">
+					Dispo
+				</span>
 			</div>
-		</motion.div>
+		</div>
+	);
+
+	return (
+		<>
+			{/* Version toujours visible sur grands écrans */}
+			<div className="hidden 1.5xl:block fixed bottom-6 left-6 z-50">
+				<LinksPanel />
+			</div>
+
+			{/* Version avec toggle sur écrans moyens */}
+			<div
+				className={`hidden md:block 1.5xl:hidden fixed bottom-12 left-0 z-50`}
+			>
+				{/* Toggle Button */}
+				<motion.button
+					onClick={() => setIsOpen(!isOpen)}
+					className="absolute z-30 left-0 top-1/2 -translate-y-1/2 w-6 h-16 bg-zinc-900/90 backdrop-blur-xl border border-l-0 border-zinc-700/50 rounded-r-xl flex items-center justify-center text-zinc-400 hover:text-amber-400 transition-colors cursor-pointer 1.5xl:hidden"
+					animate={{ x: isOpen ? 68 : 0 }}
+					transition={{ duration: 0.3, ease: "easeOut" }}
+					aria-label={
+						isOpen ? "Fermer les liens" : "Ouvrir les liens"
+					}
+					title={isOpen ? "Fermer" : "Liens rapides"}
+				>
+					<motion.div
+						animate={{ rotate: isOpen ? 180 : 0 }}
+						transition={{ duration: 0.3 }}
+					>
+						<ChevronRight size={16} />
+					</motion.div>
+				</motion.button>
+
+				{/* Links Panel */}
+				<AnimatePresence>
+					{isOpen && (
+						<motion.div
+							id="barLink"
+							initial={{ x: -80, opacity: 0 }}
+							animate={{ x: 6, opacity: 1 }}
+							exit={{ x: -80, opacity: 0 }}
+							transition={{ duration: 0.3, ease: "easeOut" }}
+						>
+							<LinksPanel />
+						</motion.div>
+					)}
+				</AnimatePresence>
+			</div>
+		</>
 	);
 }

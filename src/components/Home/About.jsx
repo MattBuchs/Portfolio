@@ -96,10 +96,30 @@ export default function About() {
 						<span className="inline-block px-4 py-1.5 text-sm font-medium text-amber-400 bg-amber-500/10 rounded-full border border-amber-500/20 mb-4">
 							À propos
 						</span>
-						<h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+						<motion.h2
+							className="text-3xl md:text-4xl lg:text-5xl font-space font-bold mb-6 cursor-default"
+							whileHover="hover"
+						>
 							Qui suis-je
-							<span className="text-gradient-warm"> ?</span>
-						</h2>
+							<motion.span
+								className="text-gradient-warm inline-block origin-top ml-1"
+								variants={{
+									hover: {
+										rotate: [0, -20, 15, -10, 8, -5, 3, 0],
+										y: [0, -8, 4, -6, 3, -2, 1, 0],
+										scale: [
+											1, 1.2, 1.1, 1.15, 1.05, 1.1, 1,
+										],
+										transition: {
+											duration: 0.8,
+											ease: "easeOut",
+										},
+									},
+								}}
+							>
+								?
+							</motion.span>
+						</motion.h2>
 					</motion.div>
 
 					{/* Content Grid */}
