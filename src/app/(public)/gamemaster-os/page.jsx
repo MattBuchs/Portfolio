@@ -338,9 +338,10 @@ export default function GameMasterOSPage() {
 							className="mb-8"
 						>
 							<Image
-								src="/img/logo_gamemaster-og_black.png"
+								src="/img/logo_gamemaster-os_white.png"
 								width={500}
 								height={200}
+								loading="eager"
 								alt="GameMaster OS Logo"
 								className="w-72 md:w-112.5 mx-auto"
 							/>
@@ -491,18 +492,18 @@ export default function GameMasterOSPage() {
 						<div className="flex flex-wrap justify-center items-center gap-8 md:gap-0 text-center">
 							{[
 								{
-									value: "100+",
-									label: "Escape Games équipés",
+									value: "Gratuit",
+									label: "Version de base sans coût",
 									hasStar: false,
 								},
 								{
-									value: "4.9/5",
-									label: "Satisfaction client",
-									hasStar: true,
+									value: "100% Offline",
+									label: "Aucune dépendance internet",
+									hasStar: false,
 								},
 								{
-									value: "0€/mois",
-									label: "Aucun abonnement",
+									value: "Support réactif",
+									label: "Assistance dédiée",
 									hasStar: false,
 								},
 							].map((stat, i) => (
@@ -633,8 +634,11 @@ export default function GameMasterOSPage() {
 
 					<div className="max-w-7xl mx-auto relative z-10">
 						<div className="text-center mb-16">
-							<h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-								Aperçu de l&apos;interface
+							<h2 className="text-4xl md:text-5xl font-bold mb-6">
+								<span className="text-white">Aperçu de </span>
+								<span className="text-gradient-warm">
+									l&apos;interface
+								</span>
 							</h2>
 							<p className="text-xl text-zinc-400 max-w-2xl mx-auto">
 								Découvrez une interface pensée pour
@@ -685,7 +689,7 @@ export default function GameMasterOSPage() {
 
 					{/* Grid Pattern */}
 					<div
-						className="absolute inset-0 opacity-[0.03]"
+						className="absolute inset-0 opacity-[0.025]"
 						style={{
 							backgroundImage: `linear-gradient(rgba(251,191,36,1) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,1) 1px, transparent 1px)`,
 							backgroundSize: "60px 60px",
@@ -701,8 +705,11 @@ export default function GameMasterOSPage() {
 							<span className="inline-block px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium mb-6">
 								Au-delà des Escape Games
 							</span>
-							<h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-								Un outil polyvalent
+							<h2 className="text-4xl md:text-5xl font-bold mb-6">
+								<span className="text-white">Un outil </span>
+								<span className="text-gradient-warm">
+									polyvalent
+								</span>
 							</h2>
 							<p className="text-xl text-zinc-400 max-w-2xl mx-auto">
 								Dès qu&apos;il faut gérer un timing ou envoyer
@@ -947,7 +954,7 @@ export default function GameMasterOSPage() {
 									href="/gamemaster-os/checkout?plan=enterprise"
 									className="block w-full py-4 bg-zinc-700 text-white rounded-xl font-semibold text-center transition-all duration-300 hover:bg-zinc-600 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 								>
-									Acheter Entreprise
+									Acheter la version Entreprise
 								</a>
 							</div>
 						</div>
@@ -978,8 +985,13 @@ export default function GameMasterOSPage() {
 
 					<div className="max-w-4xl mx-auto relative z-10">
 						<div className="text-center mb-16">
-							<h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-								Installation en 3 clics
+							<h2 className="text-4xl md:text-5xl font-bold mb-6">
+								<span className="text-white">
+									Installation en{" "}
+								</span>
+								<span className="text-gradient-warm">
+									3 clics
+								</span>
 							</h2>
 							<p className="text-xl text-zinc-400">
 								Prêt à l&apos;emploi en moins de 2 minutes
