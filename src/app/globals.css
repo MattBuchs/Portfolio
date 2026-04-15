@@ -179,6 +179,7 @@ body::-webkit-scrollbar-thumb:hover {
 	position: relative;
 	overflow: hidden;
 	will-change: transform;
+	isolation: isolate;
 }
 
 .btn-warm::before {
@@ -192,6 +193,7 @@ body::-webkit-scrollbar-thumb:hover {
 	);
 	opacity: 0;
 	transition: opacity 0.2s ease;
+	z-index: -1;
 }
 
 .btn-warm:hover::before {

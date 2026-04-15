@@ -4,16 +4,7 @@ import Footer from "@/components/Footer";
 import Form from "@/components/Form";
 import NavBar from "@/components/Header/NavBar";
 import { motion } from "framer-motion";
-import {
-	ArrowLeft,
-	Clock,
-	Github,
-	Linkedin,
-	Mail,
-	MapPin,
-	Phone,
-	Send,
-} from "lucide-react";
+import { ArrowLeft, Clock, Mail, MapPin, Phone, Send } from "lucide-react";
 import Link from "next/link";
 
 export default function Contact() {
@@ -69,10 +60,10 @@ export default function Contact() {
 	return (
 		<>
 			<NavBar />
-			<main className="min-h-screen pt-24 pb-16 overflow-hidden">
+			<main className="min-h-screen py-24 overflow-hidden">
 				{/* Background */}
 				<div className="fixed inset-0 -z-10">
-					<div className="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
+					<div className="absolute inset-0 bg-linear-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
 					<div
 						className="absolute inset-0 opacity-[0.02]"
 						style={{
@@ -81,8 +72,8 @@ export default function Contact() {
 						}}
 					/>
 					{/* Ambient lights */}
-					<div className="absolute top-20 -right-40 w-[500px] h-[500px] bg-amber-500/10 rounded-full blur-3xl" />
-					<div className="absolute bottom-20 -left-40 w-[400px] h-[400px] bg-orange-500/10 rounded-full blur-3xl" />
+					<div className="absolute top-20 -right-40 w-125 h-125 bg-amber-500/10 rounded-full blur-3xl" />
+					<div className="absolute bottom-20 -left-40 w-100 h-100 bg-orange-500/10 rounded-full blur-3xl" />
 				</div>
 
 				<div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 lg:px-12">
@@ -101,7 +92,7 @@ export default function Contact() {
 									size={18}
 									className="group-hover:-translate-x-1 transition-transform"
 								/>
-								Retour à l'accueil
+								Retour à l&apos;accueil
 							</Link>
 						</motion.div>
 
@@ -126,7 +117,7 @@ export default function Contact() {
 								<span className="text-gradient-warm">-moi</span>
 							</h1>
 							<p className="text-lg text-zinc-400 max-w-2xl mx-auto">
-								Un projet en tête ? N'hésitez pas à me
+								Un projet en tête ? N&apos;hésitez pas à me
 								contacter. Je réponds généralement sous 24h.
 							</p>
 						</motion.div>
@@ -179,64 +170,6 @@ export default function Contact() {
 										</motion.div>
 									);
 								})}
-
-								{/* Social Links */}
-								<motion.div
-									variants={itemVariants}
-									className="card-dark p-5 border-amber-500/20"
-								>
-									<h3 className="font-semibold text-white mb-4">
-										Suivez-moi
-									</h3>
-									<div className="flex gap-3">
-										<motion.a
-											href="https://github.com/MattBuchs"
-											target="_blank"
-											rel="noopener noreferrer"
-											className="w-11 h-11 bg-zinc-800 rounded-xl flex items-center justify-center hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
-											whileHover={{ scale: 1.05, y: -2 }}
-											whileTap={{ scale: 0.95 }}
-											aria-label="GitHub"
-										>
-											<Github size={20} />
-										</motion.a>
-										<motion.a
-											href="https://www.linkedin.com/in/matt-buchs/"
-											target="_blank"
-											rel="noopener noreferrer"
-											className="w-11 h-11 bg-zinc-800 rounded-xl flex items-center justify-center hover:bg-blue-600 text-zinc-400 hover:text-white transition-colors"
-											whileHover={{ scale: 1.05, y: -2 }}
-											whileTap={{ scale: 0.95 }}
-											aria-label="LinkedIn"
-										>
-											<Linkedin size={20} />
-										</motion.a>
-									</div>
-								</motion.div>
-
-								{/* Availability Badge */}
-								<motion.div
-									variants={itemVariants}
-									className="card-dark p-5 border-green-500/20"
-								>
-									<div className="flex items-center gap-3">
-										<motion.div
-											className="w-3 h-3 bg-green-400 rounded-full"
-											animate={{
-												scale: [1, 1.2, 1],
-												opacity: [1, 0.7, 1],
-											}}
-											transition={{
-												duration: 2,
-												repeat: Infinity,
-											}}
-										/>
-										<span className="text-zinc-300 font-medium">
-											Disponible pour de nouvelles
-											missions
-										</span>
-									</div>
-								</motion.div>
 							</motion.div>
 
 							{/* Form */}

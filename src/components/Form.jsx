@@ -241,7 +241,9 @@ export default function Form() {
 					type="submit"
 					disabled={isSubmitting}
 					className={`btn-warm w-full flex justify-center items-center gap-2 ${
-						isSubmitting ? "opacity-70 cursor-not-allowed" : ""
+						isSubmitting
+							? "opacity-70 cursor-not-allowed"
+							: "cursor-pointer"
 					}`}
 					whileHover={!isSubmitting ? { scale: 1.02, y: -2 } : {}}
 					whileTap={!isSubmitting ? { scale: 0.98 } : {}}
