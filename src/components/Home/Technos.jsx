@@ -12,28 +12,53 @@ export default function Technos() {
 		{
 			id: 1,
 			title: "JavaScript",
-			img: "Javascript.png",
+			img: "javascript-icon.svg",
 			category: "Language",
 		},
 		{
 			id: 2,
 			title: "TypeScript",
-			img: "Typescript.png",
+			img: "typescript-icon.svg",
 			category: "Language",
 		},
-		{ id: 3, title: "React", img: "React.png", category: "Frontend" },
-		{ id: 4, title: "Next.js", img: "Nextjs.png", category: "Framework" },
-		{ id: 5, title: "Tailwind", img: "Tailwind.png", category: "Styling" },
-		{ id: 6, title: "Node.js", img: "Node.png", category: "Backend" },
+		{
+			id: 3,
+			title: "React",
+			img: "react-js-icon.svg",
+			category: "Frontend",
+		},
+		{
+			id: 4,
+			title: "Next.js",
+			img: "nextjs-icon.svg",
+			category: "Framework",
+		},
+		{
+			id: 5,
+			title: "Tailwind",
+			img: "tailwind-css-icon.svg",
+			category: "Styling",
+		},
+		{ id: 6, title: "Sass", img: "sass-icon.svg", category: "Styling" },
 		{
 			id: 7,
+			title: "Framer Motion",
+			img: "framer-motion-icon.svg",
+			category: "Animation",
+		},
+		{
+			id: 8,
+			title: "Node.js",
+			img: "node-js-icon.svg",
+			category: "Backend",
+		},
+		{
+			id: 9,
 			title: "PostgreSQL",
-			img: "Postgres.png",
+			img: "postgresql-icon.svg",
 			category: "Database",
 		},
-		{ id: 8, title: "MongoDB", img: "Mongo.png", category: "Database" },
-		{ id: 9, title: "Sass", img: "Sass.png", category: "Styling" },
-		{ id: 10, title: "Git", img: "Git.png", category: "Tools" },
+		{ id: 10, title: "Git", img: "git-icon.svg", category: "Tools" },
 	];
 
 	const rotateToMouse = (e, index) => {
@@ -111,7 +136,7 @@ export default function Technos() {
 			className="relative py-24 md:py-32 overflow-hidden"
 		>
 			{/* Background */}
-			<div className="absolute inset-0 bg-gradient-to-b from-transparent via-zinc-900/80 to-transparent" />
+			<div className="absolute inset-0 bg-linear-to-b from-transparent via-zinc-900/80 to-transparent" />
 
 			{/* Grid pattern */}
 			<div
@@ -123,8 +148,8 @@ export default function Technos() {
 			/>
 
 			{/* Decorative */}
-			<div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
-			<div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent" />
+			<div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
+			<div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/20 to-transparent" />
 
 			<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
 				<motion.div
@@ -149,8 +174,8 @@ export default function Technos() {
 							</span>
 						</h2>
 						<p className="text-zinc-400 max-w-2xl mx-auto">
-							Les outils et frameworks que j'utilise au quotidien
-							pour créer des applications performantes
+							Les outils et frameworks que j&apos;utilise au
+							quotidien pour créer des applications performantes
 						</p>
 					</motion.div>
 
@@ -176,7 +201,7 @@ export default function Technos() {
 								<div className="relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 mb-2 sm:mb-3 md:mb-4 group-hover:scale-110 transition-transform duration-200">
 									<Image
 										src={`/img/technos/${techno.img}`}
-										alt={techno.title}
+										alt=""
 										fill
 										className="object-contain drop-shadow-lg"
 									/>

@@ -17,8 +17,9 @@ export default function CTA() {
 			<div className="absolute inset-0">
 				<div className="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
 				<motion.div
-					className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-amber-500/10 rounded-full blur-3xl"
-					animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
+					className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-amber-500/10 rounded-full blur-3xl will-change-transform backface-hidden"
+					style={{ transform: "translate(-50%, -50%) translateZ(0)" }}
+					animate={{ opacity: [0.3, 0.5, 0.3] }}
 					transition={{
 						duration: 6,
 						repeat: Infinity,
@@ -26,7 +27,8 @@ export default function CTA() {
 					}}
 				/>
 				<motion.div
-					className="absolute top-10 sm:top-20 -left-10 sm:-left-20 w-48 sm:w-72 h-48 sm:h-72 bg-orange-500/10 rounded-full blur-3xl"
+					className="absolute top-10 sm:top-20 -left-10 sm:-left-20 w-48 sm:w-72 h-48 sm:h-72 bg-orange-500/10 rounded-full blur-3xl will-change-transform backface-hidden"
+					style={{ transform: "translateZ(0)" }}
 					animate={{ x: [0, 30, 0], y: [0, -20, 0] }}
 					transition={{
 						duration: 8,
@@ -35,7 +37,8 @@ export default function CTA() {
 					}}
 				/>
 				<motion.div
-					className="absolute bottom-10 sm:bottom-20 -right-10 sm:-right-20 w-48 sm:w-72 h-48 sm:h-72 bg-amber-500/10 rounded-full blur-3xl"
+					className="absolute bottom-10 sm:bottom-20 -right-10 sm:-right-20 w-48 sm:w-72 h-48 sm:h-72 bg-amber-500/10 rounded-full blur-3xl will-change-transform backface-hidden"
+					style={{ transform: "translateZ(0)" }}
 					animate={{ x: [0, -30, 0], y: [0, 20, 0] }}
 					transition={{
 						duration: 10,

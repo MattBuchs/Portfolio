@@ -77,11 +77,12 @@ export default function Presentation() {
 			<div className="absolute inset-0 overflow-hidden">
 				{/* Gradient Orbs */}
 				<motion.div
-					className="absolute top-20 -left-32 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl"
+					className="absolute top-20 -left-32 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl will-change-transform backface-hidden"
+					style={{ transform: "translateZ(0)" }}
 					animate={{
 						x: [0, 50, 0],
 						y: [0, 30, 0],
-						scale: [1, 1.1, 1],
+						opacity: [0.8, 1, 0.8],
 					}}
 					transition={{
 						duration: 10,
@@ -90,11 +91,12 @@ export default function Presentation() {
 					}}
 				/>
 				<motion.div
-					className="absolute bottom-20 -right-32 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl"
+					className="absolute bottom-20 -right-32 w-96 h-96 bg-orange-600/15 rounded-full blur-3xl will-change-transform backface-hidden"
+					style={{ transform: "translateZ(0)" }}
 					animate={{
 						x: [0, -40, 0],
 						y: [0, -20, 0],
-						scale: [1, 1.15, 1],
+						opacity: [0.8, 1, 0.8],
 					}}
 					transition={{
 						duration: 12,
@@ -103,8 +105,9 @@ export default function Presentation() {
 					}}
 				/>
 				<motion.div
-					className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/5 rounded-full blur-3xl"
-					animate={{ scale: [1, 1.2, 1] }}
+					className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-150 h-150 bg-amber-500/5 rounded-full blur-3xl will-change-transform backface-hidden"
+					style={{ transform: "translateZ(0)" }}
+					animate={{ opacity: [0.5, 0.8, 0.5] }}
 					transition={{
 						duration: 8,
 						repeat: Infinity,
@@ -123,7 +126,7 @@ export default function Presentation() {
 			</div>
 
 			{/* Content */}
-			<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 min-h-screen flex items-center py-32 sm:py-20">
+			<div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 min-h-screen flex items-center py-32 md:py-40 lg:py-20">
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center w-full">
 					{/* Left Content */}
 					<motion.div
@@ -157,9 +160,9 @@ export default function Presentation() {
 								<strong className="text-white">
 									Développeur Web Full-Stack
 								</strong>{" "}
-								passionné, je crée des expériences digitales
-								modernes et performantes. Spécialisé en React,
-								Next.js et Node.js.
+								passionné, je crée des sites internet modernes
+								et performants. Spécialisé en React, Next.js et
+								Node.js.
 							</motion.p>
 						</div>
 
@@ -223,9 +226,9 @@ export default function Presentation() {
 										damping: 25,
 									}}
 								>
-									<p className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient-warm">
+									<h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gradient-warm">
 										{stat.value}
-									</p>
+									</h2>
 									<p className="text-xs sm:text-sm text-zinc-500 mt-1">
 										{stat.label}
 									</p>
@@ -277,7 +280,7 @@ export default function Presentation() {
 							}}
 						>
 							<div className="w-full flex justify-center">
-								<div className="card w-3/4 sm:w-full">
+								<div className="card w-3/4 lg:w-full">
 									<Image
 										src="/img/me.png"
 										alt="Photo de Matt Buchs"
@@ -290,7 +293,7 @@ export default function Presentation() {
 
 							{/* Decorative floating elements */}
 							<motion.div
-								className="absolute -top-3 -right-3 sm:-top-6 sm:-right-6 w-12 h-12 sm:w-20 sm:h-20 border-2 border-amber-500/40 rounded-full hidden sm:block"
+								className="absolute z-20 -top-3 -right-3 sm:-top-6 sm:-right-6 w-12 h-12 sm:w-20 sm:h-20 border-2 border-amber-600/40 rounded-full hidden lg:block"
 								animate={{ rotate: 360 }}
 								transition={{
 									duration: 20,
@@ -299,7 +302,7 @@ export default function Presentation() {
 								}}
 							/>
 							<motion.div
-								className="absolute -bottom-4 -left-4 sm:-bottom-7 sm:-left-7 w-10 h-10 sm:w-14 sm:h-14 bg-linear-to-br from-amber-500/40 to-orange-500/30 rounded-xl backdrop-blur-sm border border-amber-500/30 hidden sm:block"
+								className="absolute z-20 -bottom-4 -left-4 sm:top-16 sm:-left-7 w-10 h-10 sm:w-14 sm:h-14 border-2 border-amber-800/40 rounded-xl backdrop-blur-sm hidden lg:block will-change-transform"
 								animate={{ y: [0, -12, 0], rotate: [0, 8, 0] }}
 								transition={{
 									duration: 3.5,
@@ -309,14 +312,20 @@ export default function Presentation() {
 							/>
 							<motion.div
 								className="absolute top-1/3 -right-6 sm:-right-10 w-2 h-2 sm:w-3 sm:h-3 bg-amber-400 rounded-full shadow-lg shadow-amber-500/50"
+								style={{ transform: "translateZ(0)" }}
 								animate={{
-									scale: [1, 1.5, 1],
-									opacity: [0.6, 1, 0.6],
+									scale: [1, 1.3, 1],
+									opacity: [0.5, 1, 0.5],
 								}}
-								transition={{ duration: 2, repeat: Infinity }}
+								transition={{
+									duration: 2.2,
+									repeat: Infinity,
+									ease: [0.4, 0, 0.2, 1],
+								}}
 							/>
 							<motion.div
 								className="absolute bottom-1/4 -left-4 sm:-left-8 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-orange-400 rounded-full shadow-lg shadow-orange-500/50"
+								style={{ transform: "translateZ(0)" }}
 								animate={{
 									scale: [1, 1.3, 1],
 									opacity: [0.5, 0.9, 0.5],
@@ -324,11 +333,13 @@ export default function Presentation() {
 								transition={{
 									duration: 2.5,
 									repeat: Infinity,
+									ease: [0.4, 0, 0.2, 1],
 									delay: 0.5,
 								}}
 							/>
 							<motion.div
-								className="absolute -top-1 left-1/4 w-3 h-3 sm:w-4 sm:h-4 border border-amber-400/50 rounded-full hidden sm:block"
+								className="absolute -bottom-7 left-2/7 w-3.5 h-3.5 border border-amber-400/50 rounded-full hidden lg:block"
+								style={{ transform: "translateZ(0)" }}
 								animate={{ y: [0, -8, 0] }}
 								transition={{
 									duration: 2.8,

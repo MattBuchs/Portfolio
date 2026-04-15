@@ -69,7 +69,7 @@
 }
 
 /* Full width on larger screens */
-@media (min-width: 640px) {
+@media (min-width: 1024px) {
 	.card-wrapper::before,
 	.card-wrapper::after {
 		width: 100%;

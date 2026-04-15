@@ -16,7 +16,7 @@ export default function NavBar({ isProjectPage }) {
 	const [disableParallax, setdisableParallax] = useState(false);
 
 	useEffect(() => {
-		if (screenWidth <= 640) setdisableParallax(true);
+		if (screenWidth <= 768) setdisableParallax(true);
 		else setdisableParallax(false);
 
 		setToggle(false);
@@ -86,7 +86,7 @@ export default function NavBar({ isProjectPage }) {
 	return (
 		<header
 			className={`w-full mx-auto mt-3 absolute z-40 flex justify-center${
-				isProjectPage ? "" : " sm:mt-8"
+				isProjectPage ? "" : " md:mt-8"
 			}`}
 		>
 			<div className="max-w-312.5 md:w-[90%] flex justify-between items-center w-full px-5">
@@ -111,7 +111,7 @@ export default function NavBar({ isProjectPage }) {
 				<nav ref={navRef} className="h-full rounded-bl flex">
 					{disableParallax && (
 						<motion.button
-							className="sm:hidden w-12 h-12 flex items-center justify-center bg-zinc-800/80 hover:bg-zinc-700/80 backdrop-blur-sm border border-zinc-700/50 rounded-xl transition-colors"
+							className="md:hidden w-12 h-12 flex items-center justify-center bg-zinc-800/80 hover:bg-zinc-700/80 backdrop-blur-sm border border-zinc-700/50 rounded-xl transition-colors"
 							onClick={() => setToggle(!toggle)}
 							whileTap={{ scale: 0.95 }}
 							aria-label="Ouvrir le menu"

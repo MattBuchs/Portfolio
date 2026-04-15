@@ -93,6 +93,7 @@ export default function DownloadCV() {
 			{!isComplete && !isDownloading && (
 				<motion.div
 					className="relative z-10"
+					style={{ transform: "translateZ(0)" }}
 					animate={{ y: [0, 2, 0] }}
 					transition={{
 						duration: 1.5,

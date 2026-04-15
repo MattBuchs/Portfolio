@@ -1,908 +1,1111 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import {
-    Download,
-    Shield,
-    Zap,
-    Clock,
-    Check,
-    Crown,
-    Timer,
-    MessageSquare,
-    Music,
-    Palette,
-    Building2,
-    X,
-} from "lucide-react";
-import NavBar from "@/components/Header/NavBar";
 import Footer from "@/components/Footer";
+import NavBar from "@/components/Header/NavBar";
+import {
+	AnimatePresence,
+	motion,
+	useScroll,
+	useTransform,
+} from "framer-motion";
+import {
+	ArrowRight,
+	Building2,
+	Check,
+	Clock,
+	Crown,
+	Download,
+	MessageSquare,
+	Monitor,
+	Music,
+	Palette,
+	Search,
+	Shield,
+	Sparkles,
+	Star,
+	Timer,
+	X,
+	Zap,
+} from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 
 export default function GameMasterOSPage() {
-    const [pricing, setPricing] = useState(null);
-    const [loadingPricing, setLoadingPricing] = useState(true);
-    const [zoomedImage, setZoomedImage] = useState(null);
-    const [latestVersion, setLatestVersion] = useState(null);
-    const [loadingVersion, setLoadingVersion] = useState(true);
+	const [pricing, setPricing] = useState(null);
+	const [loadingPricing, setLoadingPricing] = useState(true);
+	const [zoomedImage, setZoomedImage] = useState(null);
+	const [latestVersion, setLatestVersion] = useState(null);
+	const [loadingVersion, setLoadingVersion] = useState(true);
+	const heroRef = useRef(null);
 
-    useEffect(() => {
-        const fetchPricing = async () => {
-            try {
-                const res = await fetch("/api/pricing");
-                const data = await res.json();
-                setPricing(data);
-            } catch (error) {
-                console.error("Error fetching pricing:", error);
-            }
-            setLoadingPricing(false);
-        };
+	const { scrollYProgress } = useScroll({
+		target: heroRef,
+		offset: ["start start", "end start"],
+	});
 
-        const fetchLatestVersion = async () => {
-            try {
-                const res = await fetch("/api/versions?latest=true");
-                if (res.ok) {
-                    const data = await res.json();
-                    setLatestVersion(data);
-                }
-            } catch (error) {
-                console.error("Error fetching version:", error);
-            }
-            setLoadingVersion(false);
-        };
+	const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0]);
+	const heroY = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
-        fetchPricing();
-        fetchLatestVersion();
-    }, []);
+	useEffect(() => {
+		const fetchPricing = async () => {
+			try {
+				const res = await fetch("/api/pricing");
+				const data = await res.json();
+				setPricing(data);
+			} catch (error) {
+				console.error("Error fetching pricing:", error);
+			}
+			setLoadingPricing(false);
+		};
 
-    const getPlanPrice = (planName) => {
-        if (!pricing) return planName === "PRO" ? 119 : 199;
-        const plan = pricing.find((p) => p.plan === planName);
-        if (!plan) return planName === "PRO" ? 119 : 199;
+		const fetchLatestVersion = async () => {
+			try {
+				const res = await fetch("/api/versions?latest=true");
+				if (res.ok) {
+					const data = await res.json();
+					setLatestVersion(data);
+				}
+			} catch (error) {
+				console.error("Error fetching version:", error);
+			}
+			setLoadingVersion(false);
+		};
 
-        const now = new Date();
-        const isPromoExpired =
-            plan.saleEndDate && now > new Date(plan.saleEndDate);
+		fetchPricing();
+		fetchLatestVersion();
+	}, []);
 
-        if (isPromoExpired && plan.isOnSale) {
-            return plan.basePrice;
-        }
-        return plan.currentPrice;
-    };
+	const getPlanPrice = (planName) => {
+		if (!pricing) return planName === "PRO" ? 119 : 199;
+		const plan = pricing.find((p) => p.plan === planName);
+		if (!plan) return planName === "PRO" ? 119 : 199;
 
-    const isPlanOnSale = (planName) => {
-        if (!pricing) return false;
-        const plan = pricing.find((p) => p.plan === planName);
-        if (!plan) return false;
+		const now = new Date();
+		const isPromoExpired =
+			plan.saleEndDate && now > new Date(plan.saleEndDate);
 
-        const now = new Date();
-        const isPromoExpired =
-            plan.saleEndDate && now > new Date(plan.saleEndDate);
+		if (isPromoExpired && plan.isOnSale) {
+			return plan.basePrice;
+		}
+		return plan.currentPrice;
+	};
 
-        return (
-            plan.isOnSale &&
-            !isPromoExpired &&
-            plan.currentPrice < plan.basePrice
-        );
-    };
+	const isPlanOnSale = (planName) => {
+		if (!pricing) return false;
+		const plan = pricing.find((p) => p.plan === planName);
+		if (!plan) return false;
 
-    const getBasePrice = (planName) => {
-        if (!pricing) return null;
-        const plan = pricing.find((p) => p.plan === planName);
-        return plan?.basePrice;
-    };
-    const features = [
-        {
-            icon: Timer,
-            title: "Contrôle total en temps réel",
-            description:
-                "Gestion de plusieurs timers, pause, alarmes personnalisées, dépassement géré automatiquement",
-        },
-        {
-            icon: MessageSquare,
-            title: "Messages et indices prêts à l'emploi",
-            description:
-                "Envoi d'indices en un clic, catégories personnalisées, icônes visuelles pour plus d'impact",
-        },
-        {
-            icon: Music,
-            title: "Gestion audio intégrée",
-            description:
-                "Musiques d'ambiance, sons d'indices, alarme de fin personnalisable, import libre de MP3",
-        },
-        {
-            icon: Palette,
-            title: "Thèmes professionnels",
-            description:
-                "Personnalisation avancée, éditeur de thème, interface cohérente avec votre marque",
-        },
-        {
-            icon: Shield,
-            title: "Fiabilité avant tout",
-            description:
-                "Fonctionnement entièrement hors ligne, à l’exception de l’activation de la licence et des mises à jour, stabilité garantie",
-        },
-        {
-            icon: Zap,
-            title: "Interface joueur immersive",
-            description:
-                "Affichage automatique du plein écran sur second écran, timer lisible à distance, messages clairs",
-        },
-    ];
+		const now = new Date();
+		const isPromoExpired =
+			plan.saleEndDate && now > new Date(plan.saleEndDate);
 
-    const freeFeatures = [
-        "1 timer",
-        "1 thème",
-        "Double écran",
-        "Gestion audio",
-        "Français / Anglais",
-        "Gratuit, sans limite de durée",
-    ];
+		return (
+			plan.isOnSale &&
+			!isPromoExpired &&
+			plan.currentPrice < plan.basePrice
+		);
+	};
 
-    const proFeatures = [
-        "Installation sur 1 poste",
-        "Timers illimités",
-        "Tous les thèmes",
-        "Éditeur de thème",
-        "Indices pré-configurés",
-        "Mises à jour incluses",
-        "Licence perpétuelle",
-    ];
+	const getBasePrice = (planName) => {
+		if (!pricing) return null;
+		const plan = pricing.find((p) => p.plan === planName);
+		return plan?.basePrice;
+	};
 
-    const enterpriseFeatures = [
-        "Toutes les fonctionnalités PRO",
-        "Installation sur 3 postes",
-        "Support prioritaire",
-    ];
+	const features = [
+		{
+			icon: Timer,
+			title: "Contrôle total en temps réel",
+			description:
+				"Gestion de plusieurs timers, pause, alarmes personnalisées, dépassement géré automatiquement",
+		},
+		{
+			icon: MessageSquare,
+			title: "Messages et indices",
+			description:
+				"Envoi d'indices en un clic, catégories personnalisées, icônes visuelles pour plus d'impact",
+		},
+		{
+			icon: Music,
+			title: "Gestion audio intégrée",
+			description:
+				"Musiques d'ambiance, sons d'indices, alarme de fin personnalisable, import libre de MP3",
+		},
+		{
+			icon: Palette,
+			title: "Thèmes professionnels",
+			description:
+				"Personnalisation avancée, éditeur de thème, interface cohérente avec votre marque",
+		},
+		{
+			icon: Shield,
+			title: "Fiabilité avant tout",
+			description:
+				"Fonctionnement entièrement hors ligne, stabilité garantie, pas de dépendance internet",
+		},
+		{
+			icon: Monitor,
+			title: "Interface joueur immersive",
+			description:
+				"Affichage automatique plein écran sur second écran, timer lisible à distance",
+		},
+	];
 
-    const screenshots = [
-        {
-            src: "/img/screenshots/dashboard.png",
-            alt: "Dashboard Game Master - Vue d'ensemble de l'application",
-            label: "Dashboard Game Master",
-            description:
-                "Vue d'ensemble : timers, salles actives, contrôles rapides",
-        },
-        {
-            src: "/img/screenshots/gestion-timer.png",
-            alt: "Gestion des timers en temps réel",
-            label: "Gestion des timers",
-            description: "Ajout/retrait de temps, pause, reset, alarmes",
-        },
-        {
-            src: "/img/screenshots/ecran-joueur.png",
-            alt: "Interface joueur sur TV",
-            label: "Écran joueurs",
-            description: "Affichage immersif sur TV : timer + messages",
-        },
-    ];
+	const freeFeatures = [
+		"1 timer",
+		"1 thème",
+		"Double écran",
+		"Gestion audio",
+		"Français / Anglais",
+		"Sans limite de durée",
+	];
 
-    const beyondEscapeUseCases = [
-        {
-            icon: Timer,
-            title: "Quiz, blind tests et soirées",
-            description:
-                "Affichez un compte à rebours, des annonces, et déclenchez des sons au bon moment.",
-        },
-        {
-            icon: MessageSquare,
-            title: "Formations et ateliers",
-            description:
-                "Timebox de sessions, rappels visuels, consignes et messages projetés sur écran.",
-        },
-        {
-            icon: Music,
-            title: "Événements et animations",
-            description:
-                "Ambiances, jingles, alarmes, transitions… le tout piloté depuis une interface unique.",
-        },
-        {
-            icon: Shield,
-            title: "Bars, associations, lieux offline",
-            description:
-                "Fonctionne sans connexion internet : parfait pour les lieux avec réseau instable.",
-        },
-        {
-            icon: Palette,
-            title: "Scénarios custom (murder, GN, jeux)",
-            description:
-                "Thèmes, catégories d'indices, icônes : adaptez facilement à votre univers.",
-        },
-        {
-            icon: Zap,
-            title: "Toute activité minutée",
-            description:
-                "Tournois, challenges, examens, compétitions… dès qu'il faut gérer le rythme.",
-        },
-    ];
+	const proFeatures = [
+		"Installation sur 1 poste",
+		"Timers illimités",
+		"Tous les thèmes",
+		"Éditeur de thème",
+		"Indices pré-configurés",
+		"Mises à jour incluses",
+		"Licence perpétuelle",
+	];
 
-    return (
-        <>
-            <NavBar />
-            <main className="min-h-screen bg-linear-to-b from-gray-50 via-white to-gray-50 overflow-x-hidden">
-                {/* Hero Section */}
-                <section className="relative pt-32 pb-20 px-6 bg-indigo-50">
-                    <div className="max-w-7xl mx-auto">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6 }}
-                            className="text-center"
-                        >
-                            <motion.h1
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ duration: 0.5, type: "spring" }}
-                                className="inline-block mb-6"
-                                aria-label="GameMaster OS Logo"
-                            >
-                                <Image
-                                    src="/img/logo_gamemaster-og_black.png"
-                                    // sizes="(max-width: 768px) 100vw, 500px"
-                                    width={450}
-                                    height={200}
-                                    alt="GameMaster OS Logo"
-                                    className="w-64 md:w-md mx-auto"
-                                />
-                            </motion.h1>
+	const enterpriseFeatures = [
+		"Toutes les fonctionnalités PRO",
+		"Installation sur 3 postes",
+		"Support prioritaire",
+	];
 
-                            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                                Le centre de contrôle des Game Masters.
-                            </h2>
+	const screenshots = [
+		{
+			src: "/img/screenshots/dashboard.png",
+			alt: "Dashboard Game Master - Vue d'ensemble de l'application",
+			label: "Dashboard Game Master",
+			description:
+				"Vue d'ensemble : timers, salles actives, contrôles rapides",
+		},
+		{
+			src: "/img/screenshots/gestion-timer.png",
+			alt: "Gestion des timers en temps réel",
+			label: "Gestion des timers",
+			description: "Ajout/retrait de temps, pause, reset, alarmes",
+		},
+		{
+			src: "/img/screenshots/ecran-joueur.png",
+			alt: "Interface joueur sur TV",
+			label: "Écran joueurs",
+			description: "Affichage immersif sur TV : timer + messages",
+		},
+	];
 
-                            <p className="text-lg md:text-xl text-gray-700 mb-8 max-w-3xl mx-auto">
-                                Gérez vos timers, vos messages et vos ambiances
-                                sonores depuis une seule interface, conçue
-                                spécifiquement pour les Games Master.
-                                <br />
-                                <strong>Stable, local, sans abonnement.</strong>
-                            </p>
+	const useCases = [
+		{
+			icon: Timer,
+			title: "Quiz & Soirées",
+			description: "Compte à rebours, annonces, sons synchronisés",
+		},
+		{
+			icon: MessageSquare,
+			title: "Formations",
+			description: "Timeboxing, rappels visuels, consignes projetées",
+		},
+		{
+			icon: Music,
+			title: "Événements",
+			description: "Ambiances, jingles, transitions pilotées",
+		},
+		{
+			icon: Shield,
+			title: "Lieux offline",
+			description: "Fonctionne sans connexion internet",
+		},
+	];
 
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                                <motion.a
-                                    href={
-                                        latestVersion
-                                            ? `/downloads/${latestVersion.fileName}`
-                                            : "/downloads/GameMasterOS_Setup.exe"
-                                    }
-                                    download
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-lg flex items-center gap-2 shadow-xl hover:shadow-blue-500/50 transition-shadow"
-                                >
-                                    <Download className="w-5 h-5" />
-                                    Télécharger la version gratuite
-                                </motion.a>
+	const springTransition = {
+		type: "spring",
+		stiffness: 100,
+		damping: 20,
+	};
 
-                                <motion.a
-                                    href="#pricing"
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="px-8 py-4 bg-gray-100 text-gray-800 rounded-full font-semibold text-lg border border-gray-300 hover:bg-gray-200 transition-colors"
-                                >
-                                    Voir les offres PRO
-                                </motion.a>
-                            </div>
+	const hoverTransition = {
+		type: "spring",
+		stiffness: 400,
+		damping: 25,
+	};
 
-                            <p className="mt-6 text-sm text-gray-600">
-                                Compatible Windows 10/11 •{" "}
-                                {loadingVersion
-                                    ? "Version 1.0.0"
-                                    : `Version ${latestVersion?.version}`}{" "}
-                                •{" "}
-                                <a
-                                    href="/gamemaster-os/versions"
-                                    className="text-blue-600 hover:text-blue-700 font-semibold"
-                                >
-                                    Voir les versions
-                                </a>
-                            </p>
-                        </motion.div>
-                    </div>
+	const fadeInUp = {
+		initial: { opacity: 0, y: 30 },
+		animate: { opacity: 1, y: 0 },
+		transition: springTransition,
+	};
 
-                    {/* Animated background */}
-                    <div className="absolute inset-0 -z-10 overflow-hidden">
-                        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-200/40 rounded-full blur-3xl animate-pulse" />
-                        <div
-                            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-200/40 rounded-full blur-3xl animate-pulse"
-                            style={{ animationDelay: "1s" }}
-                        />
-                    </div>
-                </section>
+	return (
+		<>
+			<NavBar />
+			<main className="min-h-screen bg-zinc-900 overflow-x-hidden">
+				{/* Hero Section */}
+				<section
+					ref={heroRef}
+					className="relative min-h-[90vh] flex items-center justify-center pt-28 pb-20 px-6 overflow-hidden"
+				>
+					{/* Background Effects */}
+					<div className="absolute inset-0 -z-10">
+						<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-900/20 via-zinc-900 to-zinc-900" />
+						<div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-amber-500/10 rounded-full blur-[120px]" />
+						<div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-orange-500/10 rounded-full blur-[100px]" />
+						{/* Grid pattern */}
+						<div
+							className="absolute inset-0 opacity-[0.03]"
+							style={{
+								backgroundImage: `linear-gradient(rgba(251, 191, 36, 0.5) 1px, transparent 1px),
+                                                  linear-gradient(90deg, rgba(251, 191, 36, 0.5) 1px, transparent 1px)`,
+								backgroundSize: "60px 60px",
+							}}
+						/>
+					</div>
 
-                {/* Features Section */}
-                <section className="py-28 px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="text-4xl md:text-5xl font-bold text-center mb-8 text-gray-900"
-                        >
-                            Vous gérez un Escape Game ?
-                        </motion.h2>
+					<motion.div
+						style={{ opacity: heroOpacity, y: heroY }}
+						className="max-w-6xl mx-auto text-center relative z-10"
+					>
+						{/* Badge */}
+						<motion.div
+							initial={{ opacity: 0, scale: 0.9 }}
+							animate={{ opacity: 1, scale: 1 }}
+							transition={{
+								type: "spring",
+								stiffness: 150,
+								damping: 20,
+								delay: 0.05,
+							}}
+							className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-sm font-medium mb-8"
+						>
+							<Sparkles className="w-4 h-4" />
+							Application de gestion pour Escape Games
+						</motion.div>
 
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            className="text-center text-xl text-gray-700 mb-16 max-w-3xl mx-auto"
-                        >
-                            GameMaster OS résout les vrais problèmes du terrain
-                        </motion.p>
+						{/* Logo */}
+						<motion.div
+							initial={{
+								opacity: 0,
+								scale: 0.9,
+								filter: "blur(10px)",
+							}}
+							animate={{
+								opacity: 1,
+								scale: 1,
+								filter: "blur(0px)",
+							}}
+							transition={{
+								type: "spring",
+								stiffness: 80,
+								damping: 20,
+								delay: 0.15,
+							}}
+							className="mb-8"
+						>
+							<Image
+								src="/img/logo_gamemaster-og_black.png"
+								width={500}
+								height={200}
+								alt="GameMaster OS Logo"
+								className="w-72 md:w-[450px] mx-auto"
+							/>
+						</motion.div>
 
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                            {features.map((feature, index) => (
-                                <motion.div
-                                    key={index}
-                                    whileHover={{ y: -10 }}
-                                    className="bg-white border border-gray-200 rounded-2xl p-8 hover:border-blue-400 hover:shadow-xl transition-all"
-                                >
-                                    <div className="w-16 h-16 bg-linear-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mb-6">
-                                        <feature.icon className="w-8 h-8 text-white" />
-                                    </div>
-                                    <h3 className="text-2xl font-bold mb-4 text-gray-900">
-                                        {feature.title}
-                                    </h3>
-                                    <p className="text-gray-600">
-                                        {feature.description}
-                                    </p>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+						{/* Headline */}
+						<motion.h1
+							initial={{ opacity: 0, y: 30, filter: "blur(6px)" }}
+							animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+							transition={{
+								type: "spring",
+								stiffness: 80,
+								damping: 18,
+								delay: 0.25,
+							}}
+							className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+						>
+							<span className="text-white">
+								Le centre de contrôle
+							</span>
+							<br />
+							<span className="text-gradient-warm">
+								des Game Masters
+							</span>
+						</motion.h1>
 
-                {/* Beyond Escape Rooms */}
-                <section className="py-28 px-6 bg-linear-to-br from-orange-50 via-amber-50/50 to-yellow-50/40">
-                    <div className="max-w-5xl mx-auto">
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="text-center mb-12"
-                        >
-                            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-                                Pas seulement pour les Escape Games
-                            </h2>
-                            <p className="text-xl text-gray-700 max-w-3xl mx-auto">
-                                GameMaster OS est un outil de pilotage
-                                temps-réel : dès qu&apos;il faut gérer un
-                                timing, envoyer des indices, ou déclencher une
-                                ambiance, il fait le job.
-                            </p>
-                        </motion.div>
+						{/* Subheadline */}
+						<motion.p
+							initial={{ opacity: 0, y: 20, filter: "blur(4px)" }}
+							animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+							transition={{
+								type: "spring",
+								stiffness: 80,
+								damping: 18,
+								delay: 0.35,
+							}}
+							className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+						>
+							Gérez vos timers, messages et ambiances sonores
+							depuis une seule interface.
+							<span className="text-white font-medium">
+								{" "}
+								Stable, local, sans abonnement.
+							</span>
+						</motion.p>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.2 }}
-                            className="bg-white rounded-3xl shadow-xl border border-orange-200 p-8 md:p-12"
-                        >
-                            <div className="grid md:grid-cols-2 gap-8">
-                                {beyondEscapeUseCases.map((useCase, index) => (
-                                    <motion.div
-                                        key={index}
-                                        initial={{
-                                            opacity: 0,
-                                            x: index % 2 === 0 ? -10 : 10,
-                                        }}
-                                        whileInView={{ opacity: 1, x: 0 }}
-                                        viewport={{ once: true }}
-                                        transition={{
-                                            delay: 0.3 + index * 0.08,
-                                        }}
-                                        className="flex gap-4 items-start"
-                                    >
-                                        <div className="shrink-0 w-12 h-12 bg-linear-to-br from-orange-500 to-amber-600 rounded-xl flex items-center justify-center shadow-lg">
-                                            <useCase.icon className="w-6 h-6 text-white" />
-                                        </div>
-                                        <div>
-                                            <h3 className="text-lg font-bold text-gray-900 mb-1">
-                                                {useCase.title}
-                                            </h3>
-                                            <p className="text-gray-600 text-sm leading-relaxed">
-                                                {useCase.description}
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </motion.div>
-                    </div>
-                </section>
+						{/* CTA Buttons */}
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{
+								type: "spring",
+								stiffness: 100,
+								damping: 20,
+								delay: 0.45,
+							}}
+							className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8"
+						>
+							<motion.div
+								whileHover={{ scale: 1.02, y: -2 }}
+								whileTap={{ scale: 0.98 }}
+								transition={hoverTransition}
+							>
+								<a
+									href={
+										latestVersion
+											? `/downloads/${latestVersion.fileName}`
+											: "/downloads/GameMasterOS_Setup.exe"
+									}
+									download
+									className="btn-warm group flex items-center gap-2 text-lg px-8 py-4"
+								>
+									<Download className="w-5 h-5" />
+									Télécharger gratuitement
+									<ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+								</a>
+							</motion.div>
 
-                {/* Screenshots */}
-                <section className="py-28 px-6">
-                    <div className="max-w-7xl mx-auto">
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="text-4xl md:text-5xl font-bold text-center mb-6 text-gray-900"
-                        >
-                            Aperçu de l&apos;application
-                        </motion.h2>
+							<motion.div
+								whileHover={{ scale: 1.02, y: -2 }}
+								whileTap={{ scale: 0.98 }}
+								transition={hoverTransition}
+							>
+								<a
+									href="#pricing"
+									className="btn-outline flex items-center gap-2 text-lg px-8 py-4"
+								>
+									<Crown className="w-5 h-5" />
+									Voir les offres PRO
+								</a>
+							</motion.div>
+						</motion.div>
 
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            className="text-center text-xl text-gray-700 mb-14 max-w-3xl mx-auto"
-                        >
-                            Découvrez l&apos;interface en action : tableau de
-                            bord intuitif, gestion des timers, messages et
-                            personnalisation.
-                        </motion.p>
+						{/* Version info */}
+						<motion.div
+							initial={{ opacity: 0, y: 10 }}
+							animate={{ opacity: 1, y: 0 }}
+							transition={{
+								type: "spring",
+								stiffness: 100,
+								damping: 20,
+								delay: 0.6,
+							}}
+							className="flex flex-wrap justify-center gap-4 text-sm text-zinc-500"
+						>
+							<span className="flex items-center gap-1.5">
+								<Check className="w-4 h-4 text-green-500" />
+								Windows 10/11
+							</span>
+							<span className="flex items-center gap-1.5">
+								<Check className="w-4 h-4 text-green-500" />
+								{loadingVersion
+									? "v1.0.0"
+									: `v${latestVersion?.version}`}
+							</span>
+							<Link
+								href="/gamemaster-os/versions"
+								className="text-amber-500 hover:text-amber-400 font-medium transition-colors"
+							>
+								Notes de version →
+							</Link>
+						</motion.div>
 
-                        <div className="grid md:grid-cols-3 gap-6">
-                            {screenshots.map((shot, index) => (
-                                <motion.div
-                                    key={index}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    whileInView={{ opacity: 1, y: 0 }}
-                                    viewport={{ once: true }}
-                                    transition={{ delay: index * 0.1 }}
-                                    onClick={() => setZoomedImage(shot)}
-                                    className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow cursor-pointer group"
-                                >
-                                    <div className="relative aspect-video bg-gray-50 overflow-hidden">
-                                        <Image
-                                            src={shot.src}
-                                            alt={shot.alt}
-                                            fill
-                                            className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                        />
-                                    </div>
-                                    <div className="p-6">
-                                        <h3 className="text-lg font-bold text-gray-900 mb-2">
-                                            {shot.label}
-                                        </h3>
-                                        <p className="text-sm text-gray-600 leading-relaxed">
-                                            {shot.description}
-                                        </p>
-                                    </div>
-                                </motion.div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
+						{/* Scroll Indicator */}
+						<motion.div
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ delay: 1, duration: 0.5 }}
+							className="mt-12 hidden sm:block"
+						>
+							<motion.div
+								animate={{ y: [0, 8, 0] }}
+								transition={{ duration: 2, repeat: Infinity }}
+								className="flex flex-col items-center gap-2"
+							>
+								<span className="text-xs text-zinc-500 uppercase tracking-widest">
+									Scroll
+								</span>
+								<div className="w-5 h-8 border border-zinc-600 rounded-full flex justify-center pt-2">
+									<motion.div
+										className="w-1 h-2 bg-amber-400 rounded-full"
+										animate={{
+											y: [0, 6, 0],
+											opacity: [1, 0.3, 1],
+										}}
+										transition={{
+											duration: 2,
+											repeat: Infinity,
+										}}
+									/>
+								</div>
+							</motion.div>
+						</motion.div>
+					</motion.div>
+				</section>
 
-                {/* Pricing Section */}
-                <section id="pricing" className="py-28 px-6 bg-gray-50">
-                    <div className="max-w-7xl mx-auto">
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="text-4xl md:text-5xl font-bold text-center mb-4 text-gray-900"
-                        >
-                            Offres & Tarifs
-                        </motion.h2>
+				{/* Social Proof */}
+				<section className="py-12 px-6 border-b border-zinc-800 bg-zinc-900/50">
+					<div className="max-w-5xl mx-auto">
+						<div className="flex flex-wrap justify-center items-center gap-8 md:gap-0 text-center">
+							{[
+								{
+									value: "100+",
+									label: "Escape Games équipés",
+									hasStar: false,
+								},
+								{
+									value: "4.9/5",
+									label: "Satisfaction client",
+									hasStar: true,
+								},
+								{
+									value: "0€/mois",
+									label: "Aucun abonnement",
+									hasStar: false,
+								},
+							].map((stat, i) => (
+								<motion.div
+									key={stat.label}
+									whileHover={{ scale: 1.05, y: -2 }}
+									transition={hoverTransition}
+									className={`flex items-center cursor-default ${i < 2 ? "md:border-r md:border-zinc-700" : ""}`}
+								>
+									<div className="flex flex-col items-center px-8 md:px-12">
+										<div className="text-3xl md:text-4xl font-bold text-white mb-1">
+											{stat.value}
+										</div>
+										<div className="text-zinc-500 text-sm flex items-center justify-center gap-1">
+											{stat.hasStar && (
+												<Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+											)}
+											{stat.label}
+										</div>
+									</div>
+								</motion.div>
+							))}
+						</div>
+					</div>
+				</section>
 
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            className="text-center text-gray-600 mb-16"
-                        >
-                            Choisissez la licence adaptée à votre structure
-                        </motion.p>
+				{/* Feature highlights */}
+				<section className="py-16 px-6 border-b border-zinc-800">
+					<div className="max-w-4xl mx-auto">
+						<div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+							{[
+								{
+									icon: Timer,
+									label: "Multi-timers",
+									desc: "Gérez plusieurs salles",
+								},
+								{
+									icon: Monitor,
+									label: "Double écran",
+									desc: "GM + Joueurs",
+								},
+								{
+									icon: Music,
+									label: "Audio intégré",
+									desc: "Sons & ambiances",
+								},
+								{
+									icon: Shield,
+									label: "100% Offline",
+									desc: "Aucune dépendance",
+								},
+							].map((item, i) => (
+								<motion.div
+									key={item.label}
+									whileHover={{ y: -5, scale: 1.03 }}
+									transition={hoverTransition}
+									className="flex flex-col items-center gap-3 p-6 rounded-xl bg-zinc-800/50 border border-zinc-700/50 hover:border-amber-500/30 hover:bg-zinc-800 transition-all cursor-default"
+								>
+									<div className="w-12 h-12 rounded-xl bg-amber-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+										<item.icon className="w-6 h-6 text-amber-500" />
+									</div>
+									<div className="text-center">
+										<span className="block text-white font-semibold">
+											{item.label}
+										</span>
+										<span className="text-xs text-zinc-500">
+											{item.desc}
+										</span>
+									</div>
+								</motion.div>
+							))}
+						</div>
+					</div>
+				</section>
 
-                        <div className="grid md:grid-cols-3 gap-8 max-w-7xl mx-auto">
-                            {/* Free Plan */}
-                            <div className="flex flex-col justify-between bg-white border border-gray-200 rounded-3xl p-8 hover:border-blue-400 hover:shadow-xl transition-all">
-                                <div>
-                                    <div className="flex items-center gap-3 mb-6">
-                                        <Download className="w-8 h-8 text-blue-600" />
-                                        <h3 className="text-3xl font-bold text-gray-900">
-                                            Version Gratuite
-                                        </h3>
-                                    </div>
+				{/* Features Section */}
+				<section className="py-28 px-6 relative">
+					<div className="absolute inset-0 -z-10">
+						<div className="absolute top-1/2 left-0 w-[400px] h-[400px] bg-amber-500/5 rounded-full blur-[100px]" />
+					</div>
 
-                                    <p className="text-gray-600 mb-6">
-                                        Pour tester l&apos;application en
-                                        conditions réelles.
-                                    </p>
+					<div className="max-w-7xl mx-auto">
+						<div className="text-center mb-16">
+							<h2 className="text-4xl md:text-5xl font-bold mb-6">
+								<span className="text-white">
+									Conçu pour les{" "}
+								</span>
+								<span className="text-gradient-warm">
+									vrais besoins du terrain
+								</span>
+							</h2>
+							<p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+								GameMaster OS résout les problèmes que vous
+								rencontrez chaque jour
+							</p>
+						</div>
 
-                                    <div className="mb-8">
-                                        <h4 className="text-5xl font-bold text-gray-900 mb-2">
-                                            0€
-                                        </h4>
-                                        <p className="text-gray-600">
-                                            Sans limite de durée
-                                        </p>
-                                    </div>
+						<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+							{features.map((feature, index) => (
+								<motion.div
+									key={index}
+									whileHover={{ y: -8, scale: 1.02 }}
+									transition={hoverTransition}
+									className="card-dark group cursor-default"
+								>
+									<div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300">
+										<feature.icon className="w-7 h-7 text-white" />
+									</div>
+									<h3 className="text-xl font-bold text-white mb-3">
+										{feature.title}
+									</h3>
+									<p className="text-zinc-400 leading-relaxed">
+										{feature.description}
+									</p>
+								</motion.div>
+							))}
+						</div>
+					</div>
+				</section>
 
-                                    <ul className="space-y-4 mb-8">
-                                        {freeFeatures.map((feature, index) => (
-                                            <li
-                                                key={index}
-                                                className="flex items-start gap-3 text-gray-700"
-                                            >
-                                                <Check className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
-                                                <span>{feature}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+				{/* Screenshots Gallery */}
+				<section className="py-28 px-6 bg-zinc-800/30">
+					<div className="max-w-7xl mx-auto">
+						<div className="text-center mb-16">
+							<h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+								Aperçu de l&apos;interface
+							</h2>
+							<p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+								Découvrez une interface pensée pour
+								l&apos;efficacité
+							</p>
+						</div>
 
-                                <motion.a
-                                    href={
-                                        latestVersion
-                                            ? `/downloads/${latestVersion.fileName}`
-                                            : "/downloads/GameMasterOS_Setup.exe"
-                                    }
-                                    download
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className="block w-full py-4 bg-gray-100 hover:bg-gray-200 text-gray-800 rounded-full font-semibold text-center transition-colors border border-gray-300"
-                                >
-                                    Télécharger
-                                </motion.a>
-                            </div>
+						<div className="grid md:grid-cols-3 gap-6">
+							{screenshots.map((shot, index) => (
+								<motion.div
+									key={index}
+									whileHover={{ y: -8, scale: 1.02 }}
+									transition={hoverTransition}
+									onClick={() => setZoomedImage(shot)}
+									className="group cursor-pointer"
+								>
+									<div className="relative rounded-xl overflow-hidden border border-zinc-700/50 bg-zinc-800 hover:border-amber-500/50 transition-all">
+										<div className="aspect-video relative overflow-hidden">
+											<Image
+												src={shot.src}
+												alt={shot.alt}
+												fill
+												className="object-cover group-hover:scale-105 transition-transform duration-500"
+											/>
+											<div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
+											<div className="absolute bottom-3 right-3 px-3 py-1.5 bg-zinc-900/80 backdrop-blur-sm rounded-lg text-xs text-zinc-300 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1.5">
+												<Search className="w-3.5 h-3.5" />
+												Cliquez pour agrandir
+											</div>
+										</div>
+										<div className="p-5">
+											<h3 className="text-lg font-bold text-white mb-1">
+												{shot.label}
+											</h3>
+											<p className="text-sm text-zinc-400">
+												{shot.description}
+											</p>
+										</div>
+									</div>
+								</motion.div>
+							))}
+						</div>
+					</div>
+				</section>
 
-                            {/* PRO Plan */}
-                            <div className="flex flex-col justify-between bg-linear-to-br from-blue-50 to-purple-50 border-2 border-blue-500 rounded-3xl p-8 relative overflow-hidden shadow-xl">
-                                <div className="w-8 h-6 bg-blue-900 absolute top-0 right-0"></div>
-                                <div className="absolute z-10 right-0 top-0 text-sm bg-blue-500 text-white px-4 py-1 rounded-bl-lg font-semibold flex items-center gap-2 shadow-md">
-                                    {/* <Crown className="w-4 h-4" /> */}
-                                    Populaire
-                                </div>
+				{/* Use Cases */}
+				<section className="py-28 px-6 relative">
+					<div className="absolute inset-0 -z-10">
+						<div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-orange-500/5 rounded-full blur-[120px]" />
+					</div>
 
-                                <div>
-                                    <div className="flex items-center gap-3 mb-6 relative z-0">
-                                        <Crown className="w-8 h-8 text-blue-600" />
-                                        <h3 className="text-3xl font-bold text-gray-900">
-                                            Version PRO
-                                        </h3>
-                                    </div>
+					<div className="max-w-5xl mx-auto">
+						<div className="text-center mb-16">
+							<span className="inline-block px-4 py-1.5 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm font-medium mb-6">
+								Au-delà des Escape Games
+							</span>
+							<h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+								Un outil polyvalent
+							</h2>
+							<p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+								Dès qu&apos;il faut gérer un timing ou envoyer
+								des messages, GameMaster OS fait le job
+							</p>
+						</div>
 
-                                    <p className="text-gray-700 mb-6">
-                                        Pour un poste maître du jeu.
-                                    </p>
+						<div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+							{useCases.map((useCase, index) => (
+								<motion.div
+									key={index}
+									whileHover={{ y: -5, scale: 1.02 }}
+									transition={hoverTransition}
+									className="bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-5 hover:border-orange-500/30 hover:bg-zinc-800 transition-all cursor-default"
+								>
+									<div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4">
+										<useCase.icon className="w-5 h-5 text-orange-400" />
+									</div>
+									<h3 className="font-bold text-white mb-1">
+										{useCase.title}
+									</h3>
+									<p className="text-sm text-zinc-400">
+										{useCase.description}
+									</p>
+								</motion.div>
+							))}
+						</div>
+					</div>
+				</section>
 
-                                    <div className="mb-8">
-                                        {isPlanOnSale("PRO") &&
-                                            getBasePrice("PRO") && (
-                                                <h4 className="text-2xl font-semibold text-gray-400 line-through">
-                                                    {getBasePrice("PRO")}€{" "}
-                                                    <span className="text-xs">
-                                                        TTC
-                                                    </span>
-                                                </h4>
-                                            )}
-                                        <h4 className="text-5xl font-bold text-gray-900 -mt-1.5 mb-2">
-                                            {loadingPricing
-                                                ? "..."
-                                                : `${getPlanPrice("PRO")}€`}
-                                            <span className="text-2xl text-gray-600 ml-2">
-                                                TTC
-                                            </span>
-                                        </h4>
-                                        <p className="text-gray-700">
-                                            Paiement unique • Licence
-                                            perpétuelle
-                                        </p>
-                                        {isPlanOnSale("PRO") &&
-                                            pricing &&
-                                            (() => {
-                                                const plan = pricing.find(
-                                                    (p) => p.plan === "PRO"
-                                                );
-                                                if (plan?.saleEndDate) {
-                                                    return (
-                                                        <p className="text-sm text-red-600 font-semibold mt-2 flex items-center gap-1">
-                                                            <Clock className="w-4 h-4" />
-                                                            Offre valable
-                                                            jusqu&apos;au{" "}
-                                                            {new Date(
-                                                                plan.saleEndDate
-                                                            ).toLocaleDateString(
-                                                                "fr-FR",
-                                                                {
-                                                                    day: "numeric",
-                                                                    month: "long",
-                                                                    year: "numeric",
-                                                                }
-                                                            )}
-                                                        </p>
-                                                    );
-                                                }
-                                                return null;
-                                            })()}
-                                    </div>
+				{/* Pricing Section */}
+				<section
+					id="pricing"
+					className="py-28 px-6 bg-zinc-800/30 relative"
+				>
+					<div className="absolute inset-0 -z-10">
+						<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-amber-500/5 rounded-full blur-[150px]" />
+					</div>
 
-                                    <ul className="space-y-4 mb-8">
-                                        {proFeatures.map((feature, index) => (
-                                            <li
-                                                key={index}
-                                                className="flex items-start gap-3 text-gray-700"
-                                            >
-                                                <Check className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                                                <span>{feature}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+					<div className="max-w-7xl mx-auto">
+						<div className="text-center mb-16">
+							<h2 className="text-4xl md:text-5xl font-bold mb-6">
+								<span className="text-white">Offres & </span>
+								<span className="text-gradient-warm">
+									Tarifs
+								</span>
+							</h2>
+							<p className="text-xl text-zinc-400">
+								Paiement unique, licence perpétuelle, pas
+								d&apos;abonnement
+							</p>
+						</div>
 
-                                <motion.a
-                                    href="/gamemaster-os/checkout?plan=pro"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className="block w-full py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold text-center shadow-xl hover:shadow-blue-500/50 transition-shadow"
-                                >
-                                    Acheter la version PRO
-                                </motion.a>
-                            </div>
+						<div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+							{/* Free Plan */}
+							<motion.div
+								whileHover={{ y: -8 }}
+								transition={hoverTransition}
+								className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 hover:border-zinc-600 transition-all flex flex-col"
+							>
+								<div className="flex items-center gap-3 mb-4">
+									<div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
+										<Download className="w-6 h-6 text-zinc-300" />
+									</div>
+									<h3 className="text-2xl font-bold text-white">
+										Gratuit
+									</h3>
+								</div>
 
-                            {/* Enterprise Plan */}
-                            <div className="flex flex-col justify-between bg-white border border-gray-200 rounded-3xl p-8 hover:border-blue-400 hover:shadow-xl transition-all relative">
-                                <div>
-                                    <div className="flex items-center gap-3 mb-6 relative z-0">
-                                        <Building2 className="w-8 h-8 text-blue-600" />
-                                        <h3 className="text-3xl font-bold text-gray-900">
-                                            Entreprise
-                                        </h3>
-                                    </div>
+								<p className="text-zinc-400 mb-6">
+									Pour tester en conditions réelles
+								</p>
 
-                                    <p className="text-gray-600 mb-6">
-                                        Pour 3 postes maître du jeu.
-                                    </p>
+								<div className="mb-6">
+									<span className="text-5xl font-bold text-white">
+										0€
+									</span>
+									<span className="text-zinc-500 ml-2">
+										à vie
+									</span>
+								</div>
 
-                                    <div className="mb-8">
-                                        {isPlanOnSale("BUSINESS") &&
-                                            getBasePrice("BUSINESS") && (
-                                                <h4 className="text-2xl font-semibold text-gray-400 line-through mb-1">
-                                                    {getBasePrice("BUSINESS")}€{" "}
-                                                    <span className="text-xs">
-                                                        TTC
-                                                    </span>
-                                                </h4>
-                                            )}
-                                        <h4 className="text-5xl font-bold text-gray-900 -mt-1.5 mb-2">
-                                            {loadingPricing
-                                                ? "..."
-                                                : `${getPlanPrice(
-                                                      "BUSINESS"
-                                                  )}€`}
-                                            <span className="text-2xl text-gray-600 ml-2">
-                                                TTC
-                                            </span>
-                                        </h4>
-                                        <p className="text-gray-600">
-                                            Paiement unique • Multi-postes
-                                        </p>
-                                        {isPlanOnSale("BUSINESS") &&
-                                            pricing &&
-                                            (() => {
-                                                const plan = pricing.find(
-                                                    (p) => p.plan === "BUSINESS"
-                                                );
-                                                if (plan?.saleEndDate) {
-                                                    return (
-                                                        <p className="text-sm text-red-600 font-semibold mt-2 flex items-center gap-1">
-                                                            <Clock className="w-4 h-4" />
-                                                            Offre valable
-                                                            jusqu&apos;au{" "}
-                                                            {new Date(
-                                                                plan.saleEndDate
-                                                            ).toLocaleDateString(
-                                                                "fr-FR",
-                                                                {
-                                                                    day: "numeric",
-                                                                    month: "long",
-                                                                    year: "numeric",
-                                                                }
-                                                            )}
-                                                        </p>
-                                                    );
-                                                }
-                                                return null;
-                                            })()}
-                                    </div>
+								<ul className="space-y-3 mb-8 flex-1">
+									{freeFeatures.map((feature, index) => (
+										<li
+											key={index}
+											className="flex items-start gap-3 text-zinc-300"
+										>
+											<Check className="w-5 h-5 text-zinc-500 shrink-0 mt-0.5" />
+											<span>{feature}</span>
+										</li>
+									))}
+								</ul>
 
-                                    <ul className="space-y-4 mb-8">
-                                        {enterpriseFeatures.map(
-                                            (feature, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="flex items-start gap-3 text-gray-700"
-                                                >
-                                                    <Check className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-                                                    <span>{feature}</span>
-                                                </li>
-                                            )
-                                        )}
-                                    </ul>
-                                </div>
+								<motion.div
+									whileHover={{ scale: 1.02, y: -2 }}
+									whileTap={{ scale: 0.98 }}
+									transition={hoverTransition}
+								>
+									<a
+										href={
+											latestVersion
+												? `/downloads/${latestVersion.fileName}`
+												: "/downloads/GameMasterOS_Setup.exe"
+										}
+										download
+										className="block w-full py-4 bg-zinc-700 hover:bg-zinc-600 text-white rounded-xl font-semibold text-center transition-colors"
+									>
+										Télécharger
+									</a>
+								</motion.div>
+							</motion.div>
 
-                                <motion.a
-                                    href="/gamemaster-os/checkout?plan=enterprise"
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
-                                    className="block w-full py-4 bg-gray-800 hover:bg-gray-900 text-white rounded-full font-semibold text-center transition-colors"
-                                >
-                                    Acheter la version Entreprise
-                                </motion.a>
-                            </div>
-                        </div>
+							{/* PRO Plan - highlighted */}
+							<motion.div
+								whileHover={{ y: -8, scale: 1.02 }}
+								transition={hoverTransition}
+								className="relative bg-gradient-to-b from-amber-500/10 to-zinc-800/50 border-2 border-amber-500/50 rounded-2xl p-8 flex flex-col hover:border-amber-500/80 transition-all"
+							>
+								{/* Popular badge */}
+								<div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-full flex items-center gap-1.5">
+									<Crown className="w-4 h-4" />
+									Populaire
+								</div>
 
-                        <motion.p
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            className="text-center text-gray-600 mt-8"
-                        >
-                            👉 Besoin de plus de postes ?{" "}
-                            <a
-                                href="/contact"
-                                className="text-blue-600 hover:text-blue-700 font-semibold"
-                            >
-                                Contactez-moi pour une offre sur mesure
-                            </a>
-                        </motion.p>
-                    </div>
-                </section>
+								<div className="flex items-center gap-3 mb-4 mt-2">
+									<div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+										<Crown className="w-6 h-6 text-white" />
+									</div>
+									<h3 className="text-2xl font-bold text-white">
+										PRO
+									</h3>
+								</div>
 
-                {/* Installation Requirements */}
-                <section className="py-28 px-6">
-                    <div className="max-w-4xl mx-auto">
-                        <motion.h2
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-900"
-                        >
-                            Installation simple et rapide
-                        </motion.h2>
+								<p className="text-zinc-400 mb-6">
+									Pour un poste Game Master
+								</p>
 
-                        <div className="grid md:grid-cols-2 gap-8">
-                            <motion.div
-                                initial={{ opacity: 0, x: -20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                className="bg-white rounded-2xl p-6 border border-gray-200"
-                            >
-                                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                                    Configuration requise
-                                </h3>
-                                <ul className="space-y-3 text-gray-700">
-                                    <li className="flex items-center gap-2">
-                                        <Check className="w-5 h-5 text-blue-600" />
-                                        Windows 10 / 11 (64 bits)
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <Check className="w-5 h-5 text-blue-600" />
-                                        4 Go de RAM recommandés
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <Check className="w-5 h-5 text-blue-600" />
-                                        2 écrans conseillés
-                                    </li>
-                                </ul>
-                            </motion.div>
+								<div className="mb-6">
+									{isPlanOnSale("PRO") &&
+										getBasePrice("PRO") && (
+											<div className="text-xl text-zinc-500 line-through mb-1">
+												{getBasePrice("PRO")}€
+											</div>
+										)}
+									<span className="text-5xl font-bold text-white">
+										{loadingPricing
+											? "..."
+											: `${getPlanPrice("PRO")}€`}
+									</span>
+									<span className="text-zinc-400 ml-2">
+										TTC
+									</span>
+									{isPlanOnSale("PRO") && pricing && (
+										<div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-sm font-medium">
+											<Clock className="w-3.5 h-3.5" />
+											Offre limitée
+										</div>
+									)}
+								</div>
 
-                            <motion.div
-                                initial={{ opacity: 0, x: 20 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                className="bg-white rounded-2xl p-6 border border-gray-200"
-                            >
-                                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                                    Mise en route
-                                </h3>
-                                <ul className="space-y-3 text-gray-700">
-                                    <li className="flex items-center gap-2">
-                                        <Check className="w-5 h-5 text-blue-600" />
-                                        Installation en 3 clics
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <Check className="w-5 h-5 text-blue-600" />
-                                        Aucune connexion internet requise
-                                    </li>
-                                    <li className="flex items-center gap-2">
-                                        <Check className="w-5 h-5 text-blue-600" />
-                                        Configuration automatique
-                                    </li>
-                                </ul>
-                            </motion.div>
-                        </div>
-                    </div>
-                </section>
+								<ul className="space-y-3 mb-8 flex-1">
+									{proFeatures.map((feature, index) => (
+										<li
+											key={index}
+											className="flex items-start gap-3 text-zinc-200"
+										>
+											<Check className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" />
+											<span>{feature}</span>
+										</li>
+									))}
+								</ul>
 
-                {/* CTA Final */}
-                <section className="py-28 px-6 bg-gray-50">
-                    <div className="max-w-4xl mx-auto text-center">
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="bg-linear-to-r from-blue-600 to-purple-600 rounded-3xl p-12 shadow-2xl"
-                        >
-                            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white lg:px-24">
-                                Essayez GameMaster OS dès maintenant
-                            </h2>
-                            <p className="text-xl text-white mb-8 md:px-10">
-                                Téléchargez la version gratuite et découvrez un
-                                outil pensé pour les exploitants d&apos;Escape
-                                Games
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                <motion.a
-                                    href={
-                                        latestVersion
-                                            ? `/downloads/${latestVersion.fileName}`
-                                            : "/downloads/GameMasterOS_Setup.exe"
-                                    }
-                                    download
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-white text-blue-600 rounded-full font-semibold text-lg shadow-xl hover:shadow-2xl transition-shadow"
-                                >
-                                    <Download className="w-5 h-5" />
-                                    Télécharger la version gratuite
-                                </motion.a>
-                                <motion.a
-                                    href="#pricing"
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
-                                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-blue-700 hover:bg-blue-800 text-white rounded-full font-semibold text-lg transition-colors"
-                                >
-                                    Passer à la version PRO
-                                </motion.a>
-                            </div>
-                        </motion.div>
-                    </div>
-                </section>
-            </main>
+								<motion.div
+									whileHover={{ scale: 1.02, y: -2 }}
+									whileTap={{ scale: 0.98 }}
+									transition={hoverTransition}
+								>
+									<a
+										href="/gamemaster-os/checkout?plan=pro"
+										className="btn-warm w-full flex justify-center"
+									>
+										Acheter la version PRO
+									</a>
+								</motion.div>
+							</motion.div>
 
-            {/* Modal de zoom pour les screenshots */}
-            {zoomedImage && (
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={() => setZoomedImage(null)}
-                    className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 cursor-zoom-out"
-                >
-                    <button
-                        onClick={() => setZoomedImage(null)}
-                        className="absolute top-4 right-4 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
-                        aria-label="Fermer"
-                    >
-                        <X className="w-6 h-6 text-white" />
-                    </button>
+							{/* Enterprise Plan */}
+							<motion.div
+								whileHover={{ y: -8 }}
+								transition={hoverTransition}
+								className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 hover:border-zinc-600 transition-all flex flex-col"
+							>
+								<div className="flex items-center gap-3 mb-4">
+									<div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
+										<Building2 className="w-6 h-6 text-zinc-300" />
+									</div>
+									<h3 className="text-2xl font-bold text-white">
+										Entreprise
+									</h3>
+								</div>
 
-                    <motion.div
-                        initial={{ scale: 0.9 }}
-                        animate={{ scale: 1 }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="relative max-w-6xl w-full bg-white rounded-2xl overflow-hidden shadow-2xl cursor-default"
-                    >
-                        <div className="relative aspect-video">
-                            <Image
-                                src={zoomedImage.src}
-                                alt={zoomedImage.alt}
-                                fill
-                                className="object-contain"
-                            />
-                        </div>
-                        <div className="p-6 bg-gray-50">
-                            <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                                {zoomedImage.label}
-                            </h3>
-                            <p className="text-gray-600">
-                                {zoomedImage.description}
-                            </p>
-                        </div>
-                    </motion.div>
-                </motion.div>
-            )}
+								<p className="text-zinc-400 mb-6">
+									Pour 3 postes Game Master
+								</p>
 
-            <Footer />
-        </>
-    );
+								<div className="mb-6">
+									{isPlanOnSale("BUSINESS") &&
+										getBasePrice("BUSINESS") && (
+											<div className="text-xl text-zinc-500 line-through mb-1">
+												{getBasePrice("BUSINESS")}€
+											</div>
+										)}
+									<span className="text-5xl font-bold text-white">
+										{loadingPricing
+											? "..."
+											: `${getPlanPrice("BUSINESS")}€`}
+									</span>
+									<span className="text-zinc-400 ml-2">
+										TTC
+									</span>
+								</div>
+
+								<ul className="space-y-3 mb-8 flex-1">
+									{enterpriseFeatures.map(
+										(feature, index) => (
+											<li
+												key={index}
+												className="flex items-start gap-3 text-zinc-300"
+											>
+												<Check className="w-5 h-5 text-zinc-500 shrink-0 mt-0.5" />
+												<span>{feature}</span>
+											</li>
+										),
+									)}
+								</ul>
+
+								<motion.div
+									whileHover={{ scale: 1.02, y: -2 }}
+									whileTap={{ scale: 0.98 }}
+									transition={hoverTransition}
+								>
+									<a
+										href="/gamemaster-os/checkout?plan=enterprise"
+										className="block w-full py-4 bg-zinc-700 hover:bg-zinc-600 text-white rounded-xl font-semibold text-center transition-colors"
+									>
+										Acheter Entreprise
+									</a>
+								</motion.div>
+							</motion.div>
+						</div>
+
+						<p className="text-center text-zinc-500 mt-10">
+							Besoin de plus de postes ?{" "}
+							<Link
+								href="/contact"
+								className="text-amber-500 hover:text-amber-400 font-medium transition-colors"
+							>
+								Contactez-moi pour une offre sur mesure →
+							</Link>
+						</p>
+					</div>
+				</section>
+
+				{/* Installation */}
+				<section className="py-28 px-6">
+					<div className="max-w-4xl mx-auto">
+						<div className="text-center mb-16">
+							<h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
+								Installation en 3 clics
+							</h2>
+							<p className="text-xl text-zinc-400">
+								Prêt à l&apos;emploi en moins de 2 minutes
+							</p>
+						</div>
+
+						<div className="grid md:grid-cols-2 gap-6">
+							<motion.div
+								whileHover={{ y: -5, scale: 1.02 }}
+								transition={hoverTransition}
+								className="bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-6 hover:border-amber-500/30 transition-all cursor-default"
+							>
+								<h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+									<Monitor className="w-5 h-5 text-amber-500" />
+									Configuration requise
+								</h3>
+								<ul className="space-y-3 text-zinc-300">
+									<li className="flex items-center gap-3">
+										<Check className="w-5 h-5 text-green-500" />
+										Windows 10 / 11 (64 bits)
+									</li>
+									<li className="flex items-center gap-3">
+										<Check className="w-5 h-5 text-green-500" />
+										4 Go de RAM recommandés
+									</li>
+									<li className="flex items-center gap-3">
+										<Check className="w-5 h-5 text-green-500" />
+										2 écrans conseillés
+									</li>
+								</ul>
+							</motion.div>
+
+							<motion.div
+								whileHover={{ y: -5, scale: 1.02 }}
+								transition={hoverTransition}
+								className="bg-zinc-800/50 border border-zinc-700/50 rounded-xl p-6 hover:border-amber-500/30 transition-all cursor-default"
+							>
+								<h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+									<Zap className="w-5 h-5 text-amber-500" />
+									Mise en route
+								</h3>
+								<ul className="space-y-3 text-zinc-300">
+									<li className="flex items-center gap-3">
+										<Check className="w-5 h-5 text-green-500" />
+										Installation en 3 clics
+									</li>
+									<li className="flex items-center gap-3">
+										<Check className="w-5 h-5 text-green-500" />
+										Aucune connexion requise
+									</li>
+									<li className="flex items-center gap-3">
+										<Check className="w-5 h-5 text-green-500" />
+										Configuration automatique
+									</li>
+								</ul>
+							</motion.div>
+						</div>
+					</div>
+				</section>
+
+				{/* Final CTA */}
+				<section className="py-28 px-6">
+					<div className="max-w-4xl mx-auto">
+						<div className="relative rounded-3xl overflow-hidden border border-zinc-700/50">
+							{/* Background */}
+							<div className="absolute inset-0 bg-zinc-800" />
+							<div className="absolute inset-0 bg-gradient-to-br from-amber-500/10 via-transparent to-orange-500/5" />
+
+							<div className="relative p-12 md:p-16 text-center">
+								<h2 className="text-3xl md:text-5xl font-bold mb-6">
+									<span className="text-white">
+										Prêt à améliorer{" "}
+									</span>
+									<span className="text-gradient-warm">
+										vos sessions ?
+									</span>
+								</h2>
+								<p className="text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto">
+									Téléchargez la version gratuite et découvrez
+									un outil pensé pour les professionnels de
+									l&apos;Escape Game
+								</p>
+
+								<div className="flex flex-col sm:flex-row gap-4 justify-center">
+									<motion.div
+										whileHover={{ scale: 1.02, y: -2 }}
+										whileTap={{ scale: 0.98 }}
+										transition={hoverTransition}
+									>
+										<a
+											href={
+												latestVersion
+													? `/downloads/${latestVersion.fileName}`
+													: "/downloads/GameMasterOS_Setup.exe"
+											}
+											download
+											className="btn-warm flex items-center justify-center gap-2 px-8 py-4 text-lg"
+										>
+											<Download className="w-5 h-5" />
+											Télécharger gratuitement
+										</a>
+									</motion.div>
+									<motion.div
+										whileHover={{ scale: 1.02, y: -2 }}
+										whileTap={{ scale: 0.98 }}
+										transition={hoverTransition}
+									>
+										<a
+											href="#pricing"
+											className="btn-outline flex items-center justify-center gap-2 px-8 py-4 text-lg"
+										>
+											<Crown className="w-5 h-5" />
+											Passer à la version PRO
+										</a>
+									</motion.div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</section>
+			</main>
+
+			{/* Image Zoom Modal */}
+			<AnimatePresence>
+				{zoomedImage && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						onClick={() => setZoomedImage(null)}
+						className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 cursor-zoom-out"
+					>
+						<button
+							onClick={() => setZoomedImage(null)}
+							className="absolute top-4 right-4 w-12 h-12 bg-white/10 hover:bg-white/20 rounded-full flex items-center justify-center transition-colors z-10"
+							aria-label="Fermer"
+						>
+							<X className="w-6 h-6 text-white" />
+						</button>
+
+						<motion.div
+							initial={{ scale: 0.9, opacity: 0 }}
+							animate={{ scale: 1, opacity: 1 }}
+							exit={{ scale: 0.9, opacity: 0 }}
+							onClick={(e) => e.stopPropagation()}
+							className="relative max-w-6xl w-full bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl cursor-default border border-zinc-700"
+						>
+							<div className="relative aspect-video">
+								<Image
+									src={zoomedImage.src}
+									alt={zoomedImage.alt}
+									fill
+									className="object-contain"
+								/>
+							</div>
+							<div className="p-6 border-t border-zinc-800">
+								<h3 className="text-xl font-bold text-white mb-2">
+									{zoomedImage.label}
+								</h3>
+								<p className="text-zinc-400">
+									{zoomedImage.description}
+								</p>
+							</div>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
+
+			<Footer />
+		</>
+	);
 }

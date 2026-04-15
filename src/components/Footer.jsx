@@ -33,7 +33,7 @@ export default function Footer() {
 	return (
 		<footer className="relative bg-zinc-950 border-t border-zinc-800/50">
 			{/* Gradient line */}
-			<div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+			<div className="absolute top-0 left-0 w-full h-px bg-linear-to-r from-transparent via-amber-500/50 to-transparent" />
 
 			<div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
 				{/* Main Footer */}
@@ -43,32 +43,32 @@ export default function Footer() {
 						<div className="flex items-center gap-3">
 							<Image
 								src="/img/Logo-Skroma.jpg"
-								alt="Matt Buchs"
+								alt=""
 								width={48}
 								height={48}
 								className="rounded-xl border border-zinc-700"
 							/>
 							<div>
-								<p className="font-bold text-white">
+								<h1 className="font-bold text-white">
 									Matt Buchs
-								</p>
-								<p className="text-xs text-zinc-500">
+								</h1>
+								<h2 className="text-xs text-zinc-500">
 									Développeur Full-Stack
-								</p>
+								</h2>
 							</div>
 						</div>
 						<p className="text-sm text-zinc-400 leading-relaxed max-w-xs">
-							Création d'applications web modernes et performantes
-							avec une attention particulière au design et à
-							l'expérience utilisateur.
+							Création d&apos;applications web modernes et
+							performantes avec une attention particulière au
+							design et à l&apos;expérience utilisateur.
 						</p>
 					</div>
 
 					{/* Navigation */}
 					<div className="space-y-4">
-						<h4 className="text-sm font-semibold text-white uppercase tracking-wider">
+						<h3 className="text-sm font-semibold text-white uppercase tracking-wider">
 							Navigation
-						</h4>
+						</h3>
 						<nav className="flex flex-col gap-3">
 							{links.map((link) => (
 								<Link
@@ -88,9 +88,9 @@ export default function Footer() {
 
 					{/* Social & Contact */}
 					<div className="space-y-4">
-						<h4 className="text-sm font-semibold text-white uppercase tracking-wider">
+						<h3 className="text-sm font-semibold text-white uppercase tracking-wider">
 							Contact
-						</h4>
+						</h3>
 						<div className="flex gap-3">
 							{socials.map((social) => {
 								const Icon = social.icon;
