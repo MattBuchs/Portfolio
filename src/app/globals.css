@@ -39,6 +39,7 @@
 	--drop-shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 
 	--breakpoint-1.5xl: 1440px;
+	--breakpoint-3xl: 1920px;
 }
 
 /* ===== BASE STYLES ===== */

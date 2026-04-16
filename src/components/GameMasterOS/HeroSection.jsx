@@ -100,7 +100,7 @@ export default function HeroSection({
 						</div>
 					</motion.div>
 
-					<div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-24 items-center">
+					<div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-24 3xl:gap-32 items-center">
 						{/* Left Column - Text Content */}
 						<motion.div
 							style={{ opacity: heroOpacity, y: heroY }}
@@ -277,7 +277,7 @@ export default function HeroSection({
 								damping: 20,
 								delay: 0.3,
 							}}
-							className="relative order-2 lg:order-2 w-full sm:w-3/4 lg:w-full mx-auto sm:my-8 lg:my-0 group/screenshot"
+							className="relative order-2 lg:order-2 w-full sm:w-3/4 xl:w-[80%] 2xl:w-full mx-auto sm:my-8 lg:my-0 group/screenshot"
 						>
 							{/* Glow effect behind screenshot */}
 							<div className="absolute -inset-4 bg-linear-to-r from-amber-500/20 via-orange-500/10 to-transparent rounded-3xl blur-2xl transition-all duration-500 group-hover/screenshot:from-amber-500/30 group-hover/screenshot:via-orange-500/20" />

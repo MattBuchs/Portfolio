@@ -274,7 +274,7 @@ export default function PricingSection({
 
 						<a
 							href="/gamemaster-os/checkout?plan=pro"
-							className="btn-warm-gmos w-full flex justify-center"
+							className="btn-warm-gmos w-full flex justify-center text-center"
 						>
 							Acheter la version PRO
 						</a>
