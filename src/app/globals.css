@@ -204,6 +204,82 @@ body::-webkit-scrollbar-thumb:hover {
 	box-shadow: 0 10px 40px -10px rgba(251, 191, 36, 0.5);
 }
 
+/* Enhanced btn-warm for GameMaster OS page */
+.btn-warm-gmos {
+	background: linear-gradient(
+		135deg,
+		var(--color-amber-500),
+		var(--color-orange-600)
+	);
+	color: var(--color-dark-900);
+	font-weight: 600;
+	padding: 0.875rem 2rem;
+	border-radius: 0.75rem;
+	position: relative;
+	overflow: hidden;
+	will-change: transform;
+	isolation: isolate;
+	transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.btn-warm-gmos::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(
+		135deg,
+		var(--color-amber-400),
+		var(--color-orange-500)
+	);
+	opacity: 0;
+	transition: opacity 0.3s ease;
+	z-index: -1;
+}
+
+.btn-warm-gmos::after {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 0;
+	height: 0;
+	background: radial-gradient(
+		circle,
+		rgba(255, 255, 255, 0.3) 0%,
+		transparent 70%
+	);
+	transform: translate(-50%, -50%);
+	transition:
+		width 0.6s ease,
+		height 0.6s ease,
+		opacity 0.6s ease;
+	opacity: 0;
+	z-index: 1;
+}
+
+.btn-warm-gmos:hover {
+	transform: translateY(-3px) scale(1.03);
+	box-shadow:
+		0 15px 35px -10px rgba(251, 191, 36, 0.5),
+		0 0 0 1px rgba(251, 191, 36, 0.3),
+		inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-warm-gmos:hover::before {
+	opacity: 1;
+}
+
+.btn-warm-gmos:hover::after {
+	width: 300px;
+	height: 300px;
+	opacity: 1;
+}
+
+.btn-warm-gmos:active {
+	transform: translateY(-1px) scale(1.01);
+	transition: all 0.1s ease;
+}
+
 .btn-outline {
 	position: relative;
 	background: transparent;

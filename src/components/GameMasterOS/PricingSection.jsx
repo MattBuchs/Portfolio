@@ -110,7 +110,18 @@ export default function PricingSection({
 			/>
 
 			<div className="max-w-7xl mx-auto relative z-10">
-				<div className="text-center mb-16">
+				{/* Header with animation */}
+				<motion.div
+					initial={{ opacity: 0, y: 30 }}
+					whileInView={{ opacity: 1, y: 0 }}
+					viewport={{ once: true, margin: "-100px" }}
+					transition={{
+						type: "spring",
+						stiffness: 80,
+						damping: 20,
+					}}
+					className="text-center mb-16"
+				>
 					<h2 className="text-4xl md:text-5xl font-bold mb-6">
 						<span className="text-white">Offres & </span>
 						<span className="text-gradient-warm">Tarifs</span>
@@ -119,11 +130,30 @@ export default function PricingSection({
 						Paiement unique, licence perpétuelle, pas
 						d&apos;abonnement
 					</p>
-				</div>
+				</motion.div>
 
 				<div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
 					{/* Free Plan */}
-					<div className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:border-zinc-600 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.3)]">
+					<motion.div
+						initial={{ opacity: 0, y: 50, rotateY: -10 }}
+						whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+						viewport={{ once: true, margin: "-50px" }}
+						transition={{
+							type: "spring",
+							stiffness: 80,
+							damping: 15,
+							delay: 0,
+						}}
+						whileHover={{
+							y: -8,
+							transition: {
+								type: "spring",
+								stiffness: 400,
+								damping: 25,
+							},
+						}}
+						className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 flex flex-col transition-colors duration-300 hover:border-zinc-600 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.3)]"
+					>
 						<div className="flex items-center gap-3 mb-4">
 							<div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
 								<Download className="w-6 h-6 text-zinc-300" />
@@ -167,10 +197,30 @@ export default function PricingSection({
 						>
 							Télécharger
 						</a>
-					</div>
+					</motion.div>
 
 					{/* PRO Plan - highlighted */}
-					<div className="relative bg-linear-to-b from-amber-500/10 to-zinc-800/50 border-2 border-amber-500/50 rounded-2xl p-8 flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-amber-500/80 hover:shadow-[0_25px_60px_-15px_rgba(251,191,36,0.2)]">
+					<motion.div
+						initial={{ opacity: 0, y: 50, scale: 0.95 }}
+						whileInView={{ opacity: 1, y: 0, scale: 1 }}
+						viewport={{ once: true, margin: "-50px" }}
+						transition={{
+							type: "spring",
+							stiffness: 80,
+							damping: 15,
+							delay: 0.1,
+						}}
+						whileHover={{
+							y: -8,
+							scale: 1.02,
+							transition: {
+								type: "spring",
+								stiffness: 400,
+								damping: 25,
+							},
+						}}
+						className="relative bg-linear-to-b from-amber-500/10 to-zinc-800/50 border-2 border-amber-500/50 rounded-2xl p-8 flex flex-col transition-colors duration-300 hover:border-amber-500/80 hover:shadow-[0_25px_60px_-15px_rgba(251,191,36,0.2)]"
+					>
 						{/* Popular badge */}
 						<div className="absolute -top-4 left-1/2 -translate-x-1/2 px-4 py-1.5 bg-linear-to-r from-amber-500 to-orange-500 text-white text-sm font-bold rounded-full flex items-center gap-1.5">
 							<Crown className="w-4 h-4" />
@@ -224,14 +274,33 @@ export default function PricingSection({
 
 						<a
 							href="/gamemaster-os/checkout?plan=pro"
-							className="btn-warm w-full flex justify-center transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
+							className="btn-warm-gmos w-full flex justify-center"
 						>
 							Acheter la version PRO
 						</a>
-					</div>
+					</motion.div>
 
 					{/* Enterprise Plan */}
-					<div className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 flex flex-col transition-all duration-300 ease-out hover:-translate-y-2 hover:border-zinc-600 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.3)]">
+					<motion.div
+						initial={{ opacity: 0, y: 50, rotateY: 10 }}
+						whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+						viewport={{ once: true, margin: "-50px" }}
+						transition={{
+							type: "spring",
+							stiffness: 80,
+							damping: 15,
+							delay: 0.2,
+						}}
+						whileHover={{
+							y: -8,
+							transition: {
+								type: "spring",
+								stiffness: 400,
+								damping: 25,
+							},
+						}}
+						className="bg-zinc-800/50 border border-zinc-700/50 rounded-2xl p-8 flex flex-col transition-colors duration-300 hover:border-zinc-600 hover:shadow-[0_25px_50px_-15px_rgba(0,0,0,0.3)]"
+					>
 						<div className="flex items-center gap-3 mb-4">
 							<div className="w-12 h-12 rounded-xl bg-zinc-700 flex items-center justify-center">
 								<Building2 className="w-6 h-6 text-zinc-300" />
@@ -278,10 +347,16 @@ export default function PricingSection({
 						>
 							Acheter la version Entreprise
 						</a>
-					</div>
+					</motion.div>
 				</div>
 
-				<p className="text-center text-zinc-500 mt-10">
+				<motion.p
+					initial={{ opacity: 0, y: 20 }}
+					whileInView={{ opacity: 1, y: 0 }}
+					viewport={{ once: true }}
+					transition={{ delay: 0.3 }}
+					className="text-center text-zinc-500 mt-10"
+				>
 					Besoin de plus de postes ?{" "}
 					<Link
 						href="/contact"
@@ -289,7 +364,7 @@ export default function PricingSection({
 					>
 						Contactez-moi pour une offre sur mesure →
 					</Link>
-				</p>
+				</motion.p>
 			</div>
 		</section>
 	);

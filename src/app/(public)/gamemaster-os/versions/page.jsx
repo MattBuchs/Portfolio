@@ -1,20 +1,20 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import Footer from "@/components/Footer";
+import NavBar from "@/components/Header/NavBar";
 import { motion } from "framer-motion";
 import {
-	Download,
+	ArrowLeft,
 	Calendar,
-	FileCode,
 	CheckCircle,
 	ChevronDown,
 	ChevronUp,
-	ArrowLeft,
+	Download,
+	FileCode,
 	Sparkles,
 } from "lucide-react";
 import Link from "next/link";
-import NavBar from "@/components/Header/NavBar";
-import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 export default function VersionsPage() {
@@ -204,7 +204,9 @@ export default function VersionsPage() {
 														<div className="flex items-center gap-3 flex-wrap">
 															<h2 className="text-2xl font-bold text-white">
 																Version{" "}
-																{version.version}
+																{
+																	version.version
+																}
 															</h2>
 															{version.isLatest && (
 																<span className="bg-amber-500 text-zinc-900 text-xs px-3 py-1 rounded-full font-semibold flex items-center gap-1">
@@ -218,12 +220,12 @@ export default function VersionsPage() {
 															<span className="flex items-center gap-1">
 																<Calendar className="w-4 h-4" />
 																{formatDate(
-																	version.releaseDate
+																	version.releaseDate,
 																)}
 															</span>
 															<span>
 																{formatFileSize(
-																	version.fileSize
+																	version.fileSize,
 																)}
 															</span>
 														</div>
@@ -234,7 +236,7 @@ export default function VersionsPage() {
 													onClick={() =>
 														handleDownload(
 															version.id,
-															version.fileName
+															version.fileName,
 														)
 													}
 													className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-zinc-900 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer"
@@ -459,7 +461,7 @@ export default function VersionsPage() {
 								<div className="flex flex-col sm:flex-row gap-4 justify-center">
 									<Link
 										href="/gamemaster-os"
-										className="btn-warm flex items-center justify-center gap-2 px-8 py-4 text-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
+										className="btn-warm-gmos flex items-center justify-center gap-2 px-8 py-4 text-lg"
 									>
 										En savoir plus
 									</Link>

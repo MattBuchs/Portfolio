@@ -1,11 +1,29 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Crown, Download } from "lucide-react";
+import { useRef } from "react";
 
 export default function FinalCTA({ latestVersion }) {
+	const sectionRef = useRef(null);
+	const { scrollYProgress } = useScroll({
+		target: sectionRef,
+		offset: ["start end", "end start"],
+	});
+
+	// Parallax for the card
+	const cardY = useTransform(scrollYProgress, [0, 1], [60, -60]);
+	const cardScale = useTransform(
+		scrollYProgress,
+		[0, 0.5, 1],
+		[0.95, 1, 0.95],
+	);
+
 	return (
-		<section className="py-28 px-6 relative overflow-hidden bg-zinc-900/80">
+		<section
+			ref={sectionRef}
+			className="py-28 px-6 relative overflow-hidden bg-zinc-900/80"
+		>
 			{/* Animated orbs */}
 			<motion.div
 				className="absolute top-10 left-1/4 w-72 h-72 bg-amber-500/10 rounded-full blur-3xl will-change-transform backface-hidden"
@@ -37,27 +55,62 @@ export default function FinalCTA({ latestVersion }) {
 			/>
 
 			<div className="max-w-4xl mx-auto relative z-10">
-				<div className="relative rounded-3xl overflow-hidden border border-zinc-700/50">
+				<motion.div
+					style={{ y: cardY, scale: cardScale }}
+					className="relative rounded-3xl overflow-hidden border border-zinc-700/50"
+				>
 					{/* Background */}
 					<div className="absolute inset-0 bg-zinc-800" />
 					<div className="absolute inset-0 bg-linear-to-br from-amber-500/10 via-transparent to-orange-500/5" />
 
 					<div className="relative p-12 md:p-16 text-center">
-						<h2 className="text-3xl md:text-5xl font-bold mb-6">
+						<motion.h2
+							initial={{ opacity: 0, y: 30 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{
+								type: "spring",
+								stiffness: 80,
+								damping: 20,
+							}}
+							className="text-3xl md:text-5xl font-bold mb-6"
+						>
 							<span className="text-white">
 								Prêt à améliorer{" "}
 							</span>
 							<span className="text-gradient-warm">
 								vos sessions ?
 							</span>
-						</h2>
-						<p className="text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto">
+						</motion.h2>
+						<motion.p
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{
+								type: "spring",
+								stiffness: 80,
+								damping: 20,
+								delay: 0.1,
+							}}
+							className="text-lg md:text-xl text-zinc-400 mb-10 max-w-2xl mx-auto"
+						>
 							Téléchargez la version gratuite et découvrez un
 							outil pensé pour les professionnels de l&apos;Escape
 							Game
-						</p>
+						</motion.p>
 
-						<div className="flex flex-col sm:flex-row gap-4 justify-center">
+						<motion.div
+							initial={{ opacity: 0, y: 20 }}
+							whileInView={{ opacity: 1, y: 0 }}
+							viewport={{ once: true }}
+							transition={{
+								type: "spring",
+								stiffness: 80,
+								damping: 20,
+								delay: 0.2,
+							}}
+							className="flex flex-col sm:flex-row gap-4 justify-center"
+						>
 							<a
 								href={
 									latestVersion
@@ -65,9 +118,9 @@ export default function FinalCTA({ latestVersion }) {
 										: "/downloads/GameMasterOS_Setup.exe"
 								}
 								download
-								className="btn-warm flex items-center justify-center gap-2 px-8 py-4 text-lg transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
+								className="btn-warm-gmos group flex items-center justify-center gap-2 px-8 py-4 text-lg"
 							>
-								<Download className="w-5 h-5" />
+								<Download className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
 								Télécharger gratuitement
 							</a>
 							<a
@@ -77,9 +130,9 @@ export default function FinalCTA({ latestVersion }) {
 								<Crown className="w-5 h-5" />
 								Passer à la version PRO
 							</a>
-						</div>
+						</motion.div>
 					</div>
-				</div>
+				</motion.div>
 			</div>
 		</section>
 	);

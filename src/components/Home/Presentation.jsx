@@ -180,7 +180,10 @@ export default function Presentation() {
 							{[
 								{ value: "3+", label: "Années d'exp." },
 								{ value: "10+", label: "Projets" },
-								{ value: "24/7", label: "Support" },
+								{
+									value: "12+",
+									label: "Technologies maîtrisées",
+								},
 							].map((stat, idx) => (
 								<motion.div
 									key={idx}
@@ -259,8 +262,8 @@ export default function Presentation() {
 
 							{/* Decorative floating elements */}
 							<motion.div
-								className="absolute z-20 -top-3 -right-3 sm:-top-6 sm:-right-6 w-12 h-12 sm:w-20 sm:h-20 border-2 border-amber-600/40 rounded-full hidden lg:block"
-								animate={{ rotate: 360 }}
+								className="absolute z-20 -top-3 -right-3 sm:-top-6 sm:-right-6 w-12 h-12 sm:w-20 sm:h-20 border-2 border-amber-600/40 rounded-full backdrop-blur-sm hidden lg:block"
+								animate={{ y: [0, -12, 0] }}
 								transition={{
 									duration: 20,
 									repeat: Infinity,

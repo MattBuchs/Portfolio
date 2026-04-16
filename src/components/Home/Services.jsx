@@ -39,7 +39,7 @@ const services = [
 		icon: Settings,
 		title: "Maintenance & Support",
 		description:
-			"Pour assurer la pérennité de votre site, j'offre des services de maintenance régulière : mises à jour, sécurité, corrections et support technique réactif.",
+			"Pour assurer la pérennité de votre site, j'offre des services de maintenance régulière : mises à jour mineures, sécurité et corrections de bugs, ainsi qu'un support technique réactif.",
 		image: "/img/illustration/illustration-maintenance.jpg",
 		features: ["Mises à jour", "Sécurité", "Backups", "Support 24/7"],
 	},

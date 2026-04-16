@@ -2,15 +2,15 @@
 
 import Footer from "@/components/Footer";
 import {
-    FeatureHighlights,
-    FeaturesSection,
-    FinalCTA,
-    HeroSection,
-    ImageZoomModal,
-    InstallationSection,
-    PricingSection,
-    ScreenshotsGallery,
-    UseCases,
+	FeatureHighlights,
+	FeaturesSection,
+	FinalCTA,
+	HeroSection,
+	ImageZoomModal,
+	InstallationSection,
+	PricingSection,
+	ScreenshotsGallery,
+	UseCases,
 } from "@/components/GameMasterOS";
 import NavBar from "@/components/Header/NavBar";
 import { useScroll, useTransform } from "framer-motion";
@@ -72,6 +72,7 @@ export default function GameMasterOSPage() {
 	return (
 		<>
 			<NavBar />
+
 			<main className="min-h-screen">
 				<HeroSection
 					heroRef={heroRef}
@@ -80,23 +81,16 @@ export default function GameMasterOSPage() {
 					latestVersion={latestVersion}
 					loadingVersion={loadingVersion}
 				/>
-
 				<FeatureHighlights />
-
 				<FeaturesSection />
-
 				<ScreenshotsGallery onImageClick={handleImageClick} />
-
 				<UseCases />
-
 				<PricingSection
 					pricing={pricing}
 					loadingPricing={loadingPricing}
 					latestVersion={latestVersion}
 				/>
-
 				<InstallationSection />
-
 				<FinalCTA latestVersion={latestVersion} />
 			</main>
 
