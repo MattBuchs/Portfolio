@@ -150,9 +150,9 @@ export default function Contact() {
 													/>
 												</div>
 												<div className="flex-1 min-w-0">
-													<h3 className="font-semibold text-white mb-1">
+													<h2 className="font-semibold text-white mb-1">
 														{info.label}
-													</h3>
+													</h2>
 													{info.href ? (
 														<a
 															href={info.href}

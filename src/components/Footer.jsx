@@ -52,12 +52,12 @@ export default function Footer() {
 								<h1 className="font-bold text-white">
 									Matt Buchs
 								</h1>
-								<h2 className="text-xs text-zinc-500">
+								<h2 className="text-xs text-zinc-400/80">
 									Développeur Full-Stack
 								</h2>
 							</div>
 						</div>
-						<p className="text-sm text-zinc-400 leading-relaxed max-w-xs">
+						<p className="text-sm text-zinc-400/80 leading-relaxed max-w-xs">
 							Création d&apos;applications web modernes et
 							performantes avec une attention particulière au
 							design et à l&apos;expérience utilisateur.
@@ -74,7 +74,7 @@ export default function Footer() {
 								<Link
 									key={link.href}
 									href={link.href}
-									className="text-sm text-zinc-400 hover:text-amber-400 transition-colors inline-flex items-center gap-1 group w-fit"
+									className="text-sm text-zinc-400/80 hover:text-amber-400 transition-colors inline-flex items-center gap-1 group w-fit"
 								>
 									{link.label}
 									<ArrowUpRight
@@ -115,13 +115,13 @@ export default function Footer() {
 									>
 										<Icon
 											size={18}
-											className="text-zinc-400 group-hover:text-amber-400"
+											className="text-zinc-400/80 group-hover:text-amber-400"
 										/>
 									</motion.a>
 								);
 							})}
 						</div>
-						<p className="text-sm text-zinc-500">
+						<p className="text-sm text-zinc-400/80">
 							mattbuchs25@gmail.com
 						</p>
 					</div>
@@ -129,10 +129,10 @@ export default function Footer() {
 
 				{/* Bottom Bar */}
 				<div className="py-6 border-t border-zinc-800/50 flex flex-col md:flex-row items-center justify-between gap-4">
-					<p className="text-sm text-zinc-500">
+					<p className="text-sm text-zinc-400/80">
 						© {currentYear} Matt Buchs. Tous droits réservés.
 					</p>
-					<nav className="flex flex-wrap items-center gap-4 text-xs text-zinc-500">
+					<nav className="flex flex-wrap items-center gap-4 text-xs text-zinc-400/80">
 						{legal.map((item, idx) => (
 							<span
 								key={item.href}

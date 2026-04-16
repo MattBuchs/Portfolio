@@ -15,9 +15,9 @@ export default function CTA() {
 		<section className="relative py-20 sm:py-24 md:py-32 overflow-hidden">
 			{/* Background Effects */}
 			<div className="absolute inset-0">
-				<div className="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
+				<div className="absolute inset-0 bg-linear-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
 				<motion.div
-					className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] sm:w-[600px] h-[400px] sm:h-[600px] bg-amber-500/10 rounded-full blur-3xl will-change-transform backface-hidden"
+					className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-100 sm:w-150 h-100 sm:h-150 bg-amber-500/10 rounded-full blur-3xl will-change-transform backface-hidden"
 					style={{ transform: "translate(-50%, -50%) translateZ(0)" }}
 					animate={{ opacity: [0.3, 0.5, 0.3] }}
 					transition={{

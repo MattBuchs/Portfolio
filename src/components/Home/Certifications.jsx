@@ -41,7 +41,7 @@ export default function Certifications() {
 	return (
 		<section className="relative py-24 md:py-32 overflow-hidden">
 			{/* Background */}
-			<div className="absolute inset-0 bg-gradient-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
+			<div className="absolute inset-0 bg-linear-to-b from-zinc-900/50 via-transparent to-zinc-900/50" />
 
 			<div className="relative z-10 max-w-4xl mx-auto px-5 sm:px-8 lg:px-12">
 				<motion.div
