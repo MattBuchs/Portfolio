@@ -1,123 +1,184 @@
-import Stripe from "stripe";
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import {
-    generateLicenseKey,
-    encryptLicenseKey,
-    decryptLicenseKey,
-    generateLicenseSecret,
+	decryptLicenseKey,
+	encryptLicenseKey,
+	generateLicenseKey,
+	generateLicenseSecret,
 } from "@/lib/crypto";
+import { prisma } from "@/lib/prisma";
+import { NextResponse } from "next/server";
+import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+// Plans valides dans l'enum Prisma
+const VALID_PLANS = ["PRO", "BUSINESS"];
+
 // Nombre d'utilisations par plan
 const PLAN_USAGES = {
-    PRO: 1, // 1 installation
-    BUSINESS: 3, // 3 installations
+	PRO: 1, // 1 installation
+	BUSINESS: 3, // 3 installations
 };
 
+// Mapping des plans invalides vers des plans valides
+const PLAN_MAPPING = {
+	ENTERPRISE: "BUSINESS", // Enterprise n'existe pas, mapper vers Business
+	FREE: "PRO", // Free n'est pas payant, mapper vers Pro par défaut
+};
+
+// Configuration de sécurité pour la consultation de la clé
+const MAX_VIEW_COUNT = 5; // Nombre maximum de consultations
+const VIEW_EXPIRY_HOURS = 24; // Durée de validité en heures
+
 export async function POST(request) {
-    try {
-        const { sessionId } = await request.json();
+	try {
+		const { sessionId } = await request.json();
 
-        console.log("sessionId", sessionId);
+		if (!sessionId) {
+			return NextResponse.json(
+				{ error: "Session ID manquant" },
+				{ status: 400 },
+			);
+		}
 
-        if (!sessionId) {
-            return NextResponse.json(
-                { error: "Session ID manquant" },
-                { status: 400 }
-            );
-        }
+		// Vérifier si une licence existe déjà dans la base de données
+		let existingLicense = await prisma.license.findUnique({
+			where: { sessionId },
+		});
 
-        // Vérifier si une licence existe déjà dans la base de données
-        let existingLicense = await prisma.license.findUnique({
-            where: { sessionId },
-        });
+		if (existingLicense) {
+			// Vérifier si la consultation est encore autorisée
+			const now = new Date();
 
-        if (existingLicense) {
-            // Déchiffrer la clé de licence
-            const decryptedKey = decryptLicenseKey(existingLicense.licenseKey);
+			// Vérifier l'expiration temporelle
+			if (
+				existingLicense.viewableUntil &&
+				now > existingLicense.viewableUntil
+			) {
+				return NextResponse.json(
+					{
+						error: "Lien expiré",
+						message:
+							"Ce lien a expiré. Votre clé de licence vous a été envoyée par email.",
+						expired: true,
+					},
+					{ status: 403 },
+				);
+			}
 
-            return NextResponse.json({
-                success: true,
-                licenseKey: decryptedKey,
-                email: existingLicense.email,
-            });
-        }
+			// Vérifier le nombre de consultations
+			if (existingLicense.viewCount >= MAX_VIEW_COUNT) {
+				return NextResponse.json(
+					{
+						error: "Limite de consultations atteinte",
+						message:
+							"Vous avez atteint le nombre maximum de consultations. Votre clé de licence vous a été envoyée par email.",
+						limitReached: true,
+					},
+					{ status: 403 },
+				);
+			}
 
-        // Vérifier le paiement auprès de Stripe
-        const session = await stripe.checkout.sessions.retrieve(sessionId, {
-            expand: ["line_items"],
-        });
+			// Incrémenter le compteur de vues
+			await prisma.license.update({
+				where: { sessionId },
+				data: { viewCount: { increment: 1 } },
+			});
 
-        if (session.payment_status !== "paid") {
-            return NextResponse.json(
-                { error: "Paiement non confirmé" },
-                { status: 400 }
-            );
-        }
+			// Déchiffrer la clé de licence
+			const decryptedKey = decryptLicenseKey(existingLicense.licenseKey);
 
-        console.log("SESSION", session);
+			return NextResponse.json({
+				success: true,
+				licenseKey: decryptedKey,
+				email: existingLicense.email,
+				viewsRemaining: MAX_VIEW_COUNT - existingLicense.viewCount - 1,
+			});
+		}
 
-        // Générer une nouvelle clé de licence
-        const licenseKey = generateLicenseKey();
-        const encryptedKey = encryptLicenseKey(licenseKey);
-        const licenseSecret = generateLicenseSecret();
+		// Vérifier le paiement auprès de Stripe
+		const session = await stripe.checkout.sessions.retrieve(sessionId, {
+			expand: ["line_items"],
+		});
 
-        // Récupérer le plan depuis les metadata et le convertir en majuscules
-        const planLower = session.metadata.plan || "pro";
-        const plan = planLower.toUpperCase(); // Convertir en majuscules pour matcher l'enum Prisma
-        const maxUsages = PLAN_USAGES[plan] || 1;
+		if (session.payment_status !== "paid") {
+			return NextResponse.json(
+				{ error: "Paiement non confirmé" },
+				{ status: 400 },
+			);
+		}
 
-        // Récupérer les prix depuis Stripe (en centimes)
-        const amountTotal = session.amount_total / 100; // Convertir en euros
-        const originalPrice = session.metadata.originalPrice
-            ? parseFloat(session.metadata.originalPrice)
-            : amountTotal;
-        const promoCode = session.metadata.promoCode || null;
-        const discount = originalPrice - amountTotal;
+		// Générer une nouvelle clé de licence
+		const licenseKey = generateLicenseKey();
+		const encryptedKey = encryptLicenseKey(licenseKey);
+		const licenseSecret = generateLicenseSecret();
 
-        // Créer la licence dans la base de données
-        const license = await prisma.license.create({
-            data: {
-                sessionId,
-                email: session.customer_email,
-                licenseKey: encryptedKey,
-                licenseSecret,
-                plan,
-                maxUsages,
-                remainingUsages: maxUsages,
-                customerName: session.metadata.name || null,
-                company: session.metadata.company || null,
-                price: amountTotal, // Prix final payé
-                originalPrice: originalPrice, // Prix avant réduction
-                promoCode: promoCode,
-                discount: discount > 0 ? discount : null,
-            },
-        });
+		// Récupérer le plan depuis les metadata et le convertir en majuscules
+		const planLower = session.metadata.plan || "pro";
+		let plan = planLower.toUpperCase(); // Convertir en majuscules pour matcher l'enum Prisma
 
-        // Si un code promo a été utilisé, incrémenter son compteur d'utilisations
-        if (promoCode) {
-            await prisma.promoCode.update({
-                where: { code: promoCode },
-                data: {
-                    usedCount: {
-                        increment: 1,
-                    },
-                },
-            });
-        }
+		// Valider et mapper le plan si nécessaire
+		if (!VALID_PLANS.includes(plan)) {
+			plan = PLAN_MAPPING[plan] || "PRO"; // Mapper vers un plan valide ou PRO par défaut
+		}
 
-        return NextResponse.json({
-            success: true,
-            licenseKey: licenseKey, // Retourner la clé déchiffrée
-            email: license.email,
-        });
-    } catch (error) {
-        console.error("Verification error:", error);
-        return NextResponse.json(
-            { error: "Erreur lors de la vérification" },
-            { status: 500 }
-        );
-    }
+		const maxUsages = PLAN_USAGES[plan] || 1;
+
+		// Récupérer les prix depuis Stripe (en centimes)
+		const amountTotal = session.amount_total / 100; // Convertir en euros
+		const originalPrice = session.metadata.originalPrice
+			? parseFloat(session.metadata.originalPrice)
+			: amountTotal;
+		const promoCode = session.metadata.promoCode || null;
+		const discount = originalPrice - amountTotal;
+
+		// Calculer la date d'expiration pour la consultation de la clé
+		const viewableUntil = new Date();
+		viewableUntil.setHours(viewableUntil.getHours() + VIEW_EXPIRY_HOURS);
+
+		// Créer la licence dans la base de données
+		const license = await prisma.license.create({
+			data: {
+				sessionId,
+				email: session.customer_email,
+				licenseKey: encryptedKey,
+				licenseSecret,
+				plan,
+				maxUsages,
+				remainingUsages: maxUsages,
+				customerName: session.metadata.name || null,
+				company: session.metadata.company || null,
+				price: amountTotal, // Prix final payé
+				originalPrice: originalPrice, // Prix avant réduction
+				promoCode: promoCode,
+				discount: discount > 0 ? discount : null,
+				viewCount: 1, // Première consultation
+				viewableUntil,
+			},
+		});
+
+		// Si un code promo a été utilisé, incrémenter son compteur d'utilisations
+		if (promoCode) {
+			await prisma.promoCode.update({
+				where: { code: promoCode },
+				data: {
+					usedCount: {
+						increment: 1,
+					},
+				},
+			});
+		}
+
+		return NextResponse.json({
+			success: true,
+			licenseKey: licenseKey, // Retourner la clé déchiffrée
+			email: license.email,
+			viewsRemaining: MAX_VIEW_COUNT - 1,
+		});
+	} catch (error) {
+		console.error("Verification error:", error);
+		return NextResponse.json(
+			{ error: "Erreur lors de la vérification" },
+			{ status: 500 },
+		);
+	}
 }

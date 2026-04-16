@@ -15,24 +15,26 @@ enum Plan {
 }
 
 model License {
-  id              String   @id @default(cuid())
+  id              String    @id @default(cuid())
   email           String
-  licenseKey      String   @unique // Clé chiffrée
-  licenseSecret   String   // Secret chiffré
-  plan            Plan     @default(FREE)
-  maxUsages       Int      // Nombre maximum d'utilisations
-  remainingUsages Int      // Nombre d'utilisations restantes
-  sessionId       String   @unique // ID de session Stripe
-  machineIds      String[] // Liste des IDs de machines
+  licenseKey      String    @unique // Clé chiffrée
+  licenseSecret   String    // Secret chiffré
+  plan            Plan      @default(FREE)
+  maxUsages       Int       // Nombre maximum d'utilisations
+  remainingUsages Int       // Nombre d'utilisations restantes
+  sessionId       String    @unique // ID de session Stripe
+  machineIds      String[]  // Liste des IDs de machines
   customerName    String?
   company         String?
-  price           Float?   // Prix payé (après réduction)
-  originalPrice   Float?   // Prix original avant réduction
-  promoCode       String?  // Code promo utilisé
-  discount        Float?   // Montant de la réduction appliquée
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  price           Float?    // Prix payé (après réduction)
+  originalPrice   Float?    // Prix original avant réduction
+  promoCode       String?   // Code promo utilisé
+  discount        Float?    // Montant de la réduction appliquée
+  viewCount       Int       @default(0) // Nombre de fois que la clé a été consultée
+  viewableUntil   DateTime? // Date limite pour consulter la clé via l'URL
+  isActive        Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@index([email])
   @@index([sessionId])

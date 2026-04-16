@@ -3,7 +3,16 @@
 import Footer from "@/components/Footer";
 import NavBar from "@/components/Header/NavBar";
 import { motion } from "framer-motion";
-import { ArrowLeft, Check, Copy, Download, Mail, Sparkles } from "lucide-react";
+import {
+	AlertTriangle,
+	ArrowLeft,
+	Check,
+	Clock,
+	Copy,
+	Download,
+	Mail,
+	Sparkles,
+} from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -13,31 +22,52 @@ function SuccessContent() {
 	const [licenseKey, setLicenseKey] = useState("");
 	const [email, setEmail] = useState("");
 	const [copied, setCopied] = useState(false);
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
+	const [errorType, setErrorType] = useState(null); // 'expired', 'limitReached', 'notFound'
+	const [errorMessage, setErrorMessage] = useState("");
+	const [viewsRemaining, setViewsRemaining] = useState(null);
 
 	useEffect(() => {
 		const sessionId = searchParams.get("session_id");
 
 		if (!sessionId) {
+			setErrorType("notFound");
+			setLoading(false);
 			return;
 		}
 
-		fetch(`/api/verify-payment`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ sessionId }),
-		})
-			.then((res) => res.json())
-			.then((data) => {
+		const verifyPayment = async () => {
+			try {
+				const res = await fetch(`/api/verify-payment`, {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ sessionId }),
+				});
+				const data = await res.json();
+
 				if (data.success) {
 					setLicenseKey(data.licenseKey);
 					setEmail(data.email);
+					setViewsRemaining(data.viewsRemaining);
+				} else if (data.expired) {
+					setErrorType("expired");
+					setErrorMessage(data.message);
+				} else if (data.limitReached) {
+					setErrorType("limitReached");
+					setErrorMessage(data.message);
+				} else {
+					setErrorType("notFound");
 				}
-			})
-			.catch(() => {})
-			.finally(() => setLoading(false));
+			} catch {
+				setErrorType("notFound");
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		verifyPayment();
 	}, [searchParams]);
 
 	const copyToClipboard = () => {
@@ -63,27 +93,76 @@ function SuccessContent() {
 	}
 
 	if (!licenseKey) {
+		// Déterminer le contenu en fonction du type d'erreur
+		const errorContent = {
+			expired: {
+				icon: <Clock className="w-10 h-10 text-amber-500" />,
+				title: "Lien expiré",
+				description:
+					errorMessage ||
+					"Ce lien a expiré. Votre clé de licence vous a été envoyée par email lors de votre achat.",
+				bgGradient: "from-amber-900/20",
+				borderColor: "border-amber-500/20",
+				bgColor: "bg-amber-500/10",
+			},
+			limitReached: {
+				icon: <AlertTriangle className="w-10 h-10 text-orange-500" />,
+				title: "Limite de consultations atteinte",
+				description:
+					errorMessage ||
+					"Vous avez atteint le nombre maximum de consultations de cette page. Votre clé de licence vous a été envoyée par email.",
+				bgGradient: "from-orange-900/20",
+				borderColor: "border-orange-500/20",
+				bgColor: "bg-orange-500/10",
+			},
+			notFound: {
+				icon: <span className="text-4xl">❌</span>,
+				title: "Paiement non trouvé",
+				description:
+					"Nous n'avons pas pu vérifier votre paiement. Si vous pensez qu'il s'agit d'une erreur, contactez-nous.",
+				bgGradient: "from-red-900/20",
+				borderColor: "border-red-500/20",
+				bgColor: "bg-red-500/10",
+			},
+		};
+
+		const content = errorContent[errorType] || errorContent.notFound;
+
 		return (
 			<>
 				<NavBar />
 				<main className="min-h-screen bg-zinc-900 flex items-center justify-center px-6 relative overflow-hidden">
 					{/* Background Effects */}
 					<div className="absolute inset-0 -z-10">
-						<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] from-red-900/20 via-zinc-900 to-zinc-900" />
+						<div
+							className={`absolute inset-0 bg-[radial-gradient(ellipse_at_center,var(--tw-gradient-stops))] ${content.bgGradient} via-zinc-900 to-zinc-900`}
+						/>
 					</div>
 
 					<div className="max-w-md text-center">
-						<div className="w-20 h-20 bg-red-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/20">
-							<span className="text-4xl">❌</span>
+						<div
+							className={`w-20 h-20 ${content.bgColor} rounded-full flex items-center justify-center mx-auto mb-6 border ${content.borderColor}`}
+						>
+							{content.icon}
 						</div>
 						<h1 className="text-2xl font-bold text-white mb-4">
-							Paiement non trouvé
+							{content.title}
 						</h1>
 						<p className="text-zinc-400 mb-6">
-							Nous n&apos;avons pas pu vérifier votre paiement. Si
-							vous pensez qu&apos;il s&apos;agit d&apos;une
-							erreur, contactez-nous.
+							{content.description}
 						</p>
+
+						{(errorType === "expired" ||
+							errorType === "limitReached") && (
+							<div className="mb-6 p-4 bg-zinc-800/50 border border-zinc-700/50 rounded-xl">
+								<p className="text-sm text-zinc-300 flex items-center justify-center gap-2">
+									<Mail className="w-4 h-4 text-amber-500" />
+									Vérifiez votre boîte mail pour retrouver
+									votre clé
+								</p>
+							</div>
+						)}
+
 						<Link
 							href="/gamemaster-os"
 							className="inline-flex items-center gap-2 px-6 py-3 bg-amber-500 hover:bg-amber-400 text-zinc-900 rounded-full font-semibold transition-all duration-300"
@@ -221,6 +300,20 @@ function SuccessContent() {
 								</span>
 							</p>
 						</div>
+
+						{viewsRemaining !== null && viewsRemaining <= 3 && (
+							<div className="mt-4 p-4 bg-orange-500/10 border border-orange-500/20 rounded-xl">
+								<p className="text-sm text-orange-200 flex items-start gap-2">
+									<AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+									<span>
+										<strong>Attention :</strong> Cette page
+										ne peut être consultée que{" "}
+										<strong>{viewsRemaining} fois</strong>{" "}
+										de plus. Conservez bien votre clé !
+									</span>
+								</p>
+							</div>
+						)}
 					</motion.div>
 
 					<motion.div
