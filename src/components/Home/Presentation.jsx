@@ -256,6 +256,7 @@ export default function Presentation() {
 										width={400}
 										height={400}
 										className="w-full h-auto"
+										loading="eager"
 									/>
 								</div>
 							</div>

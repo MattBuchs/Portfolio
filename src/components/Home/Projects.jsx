@@ -123,6 +123,7 @@ export default function Projects() {
 										src={`/img/${project.img}`}
 										alt={project.title}
 										fill
+										sizes="(max-width: 768px) 100vw, 50vw"
 										className="object-contain p-6 transition-transform duration-500 group-hover:scale-105"
 									/>
 									<div className="absolute inset-0 bg-linear-to-t from-zinc-900 via-zinc-900/20 to-transparent" />

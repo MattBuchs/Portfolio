@@ -38,7 +38,7 @@ export default function ProjectDetail({ project }) {
 		<main className="min-h-screen pt-24 pb-16 overflow-hidden">
 			{/* Background */}
 			<div className="fixed inset-0 -z-10">
-				<div className="absolute inset-0 bg-gradient-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
+				<div className="absolute inset-0 bg-linear-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
 				<div
 					className="absolute inset-0 opacity-[0.02]"
 					style={{
@@ -48,10 +48,10 @@ export default function ProjectDetail({ project }) {
 				/>
 				{/* Ambient light with project color */}
 				<div
-					className="absolute top-20 -right-40 w-[600px] h-[600px] rounded-full blur-3xl opacity-20"
+					className="absolute top-20 -right-40 w-150 h-150 rounded-full blur-3xl opacity-20"
 					style={{ background: project.bgColor }}
 				/>
-				<div className="absolute bottom-20 -left-40 w-[400px] h-[400px] bg-amber-500/10 rounded-full blur-3xl" />
+				<div className="absolute bottom-20 -left-40 w-100 h-100 bg-amber-500/10 rounded-full blur-3xl" />
 			</div>
 
 			<div className="relative z-10 max-w-5xl mx-auto px-5 sm:px-8 lg:px-12">
@@ -89,10 +89,11 @@ export default function ProjectDetail({ project }) {
 								src={`/img/${project.img}`}
 								alt={project.title}
 								fill
+								sizes="100vw"
 								className="object-contain p-6 sm:p-10"
 								priority
 							/>
-							<div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent" />
+							<div className="absolute inset-0 bg-linear-to-t from-zinc-900 via-transparent to-transparent" />
 						</div>
 
 						{/* Project badge */}

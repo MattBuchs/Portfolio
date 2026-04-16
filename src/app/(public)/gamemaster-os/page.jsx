@@ -5,6 +5,7 @@ import {
 	FeatureHighlights,
 	FeaturesSection,
 	FinalCTA,
+	GameMasterOSStructuredData,
 	HeroSection,
 	ImageZoomModal,
 	InstallationSection,
@@ -71,9 +72,10 @@ export default function GameMasterOSPage() {
 
 	return (
 		<>
+			<GameMasterOSStructuredData pricing={pricing} />
 			<NavBar />
 
-			<main className="min-h-screen">
+			<main className="min-h-screen relative">
 				<HeroSection
 					heroRef={heroRef}
 					heroOpacity={heroOpacity}

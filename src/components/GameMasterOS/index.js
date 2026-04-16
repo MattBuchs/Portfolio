@@ -1,6 +1,7 @@
 export { default as FeatureHighlights } from "./FeatureHighlights";
 export { default as FeaturesSection } from "./FeaturesSection";
 export { default as FinalCTA } from "./FinalCTA";
+export { default as GameMasterOSStructuredData } from "./GameMasterOSStructuredData";
 export { default as HeroSection } from "./HeroSection";
 export { default as ImageZoomModal } from "./ImageZoomModal";
 export { default as InstallationSection } from "./InstallationSection";

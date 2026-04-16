@@ -35,6 +35,7 @@ export default function ImageZoomModal({ zoomedImage, onClose }) {
 								src={zoomedImage.src}
 								alt={zoomedImage.alt}
 								fill
+								sizes="(max-width: 1280px) 100vw, 1280px"
 								className="object-contain"
 							/>
 						</div>
