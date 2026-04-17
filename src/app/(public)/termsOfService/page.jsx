@@ -68,7 +68,7 @@ export default function TermsOfService() {
 							Conditions Générales d&apos;Utilisation
 						</h1>
 						<p className="text-lg text-zinc-400">
-							Dernière mise à jour : 21 novembre 2025
+							Dernière mise à jour : 17 avril 2026
 						</p>
 					</motion.div>
 
@@ -214,7 +214,70 @@ export default function TermsOfService() {
 
 						<section>
 							<h2 className="text-2xl font-bold mb-4 text-white">
-								7. Liens hypertextes
+								7. Conditions d&apos;achat - GameMaster OS
+							</h2>
+							<div className="text-zinc-300 space-y-4">
+								<p>
+									L&apos;achat d&apos;une licence GameMaster
+									OS est soumis aux conditions suivantes :
+								</p>
+								<ul className="list-disc list-inside space-y-2 ml-4">
+									<li>
+										<strong className="text-white">
+											Licence personnelle (Pro) :
+										</strong>{" "}
+										Valable pour 1 installation sur un seul
+										ordinateur
+									</li>
+									<li>
+										<strong className="text-white">
+											Licence Business :
+										</strong>{" "}
+										Valable pour 3 installations sur des
+										ordinateurs différents
+									</li>
+									<li>
+										La clé de licence est envoyée par email
+										après paiement
+									</li>
+									<li>
+										Le transfert de licence vers une autre
+										machine est possible depuis
+										l&apos;application, mais limité à 5 fois
+										par licence pour éviter les abus
+									</li>
+								</ul>
+								<p className="pt-2">
+									<strong className="text-white">
+										Paiement :
+									</strong>{" "}
+									Les paiements sont traités de manière
+									sécurisée par Stripe. Nous n&apos;avons pas
+									accès à vos informations bancaires
+									complètes.
+								</p>
+								<p className="pt-2">
+									<strong className="text-white">
+										Remboursement :
+									</strong>{" "}
+									Conformément à la législation sur les
+									produits numériques, le droit de
+									rétractation ne s&apos;applique pas une fois
+									la clé de licence délivrée. Pour toute
+									réclamation, contactez-nous à{" "}
+									<a
+										href="mailto:mattbuchs25@gmail.com"
+										className="text-amber-400 hover:text-amber-300 hover:underline"
+									>
+										mattbuchs25@gmail.com
+									</a>
+								</p>
+							</div>
+						</section>
+
+						<section>
+							<h2 className="text-2xl font-bold mb-4 text-white">
+								8. Liens hypertextes
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
 								Le site peut contenir des liens vers
@@ -235,7 +298,7 @@ export default function TermsOfService() {
 
 						<section>
 							<h2 className="text-2xl font-bold mb-4 text-white">
-								8. Données personnelles
+								9. Données personnelles
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
 								Les données personnelles collectées sur le site
@@ -253,7 +316,7 @@ export default function TermsOfService() {
 
 						<section>
 							<h2 className="text-2xl font-bold mb-4 text-white">
-								9. Modification des CGU
+								10. Modification des CGU
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
 								L&apos;éditeur se réserve le droit de modifier
@@ -267,7 +330,7 @@ export default function TermsOfService() {
 
 						<section>
 							<h2 className="text-2xl font-bold mb-4 text-white">
-								10. Droit applicable et juridiction compétente
+								11. Droit applicable et juridiction compétente
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
 								Les présentes CGU sont régies par le droit
@@ -280,7 +343,7 @@ export default function TermsOfService() {
 
 						<section>
 							<h2 className="text-2xl font-bold mb-4 text-white">
-								11. Contact
+								12. Contact
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
 								Pour toute question concernant les présentes

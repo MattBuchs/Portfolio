@@ -71,6 +71,19 @@ export default function PricingSection({
 		return plan?.basePrice;
 	};
 
+	const getSaleEndDate = (planName) => {
+		if (!pricing) return null;
+		const plan = pricing.find((p) => p.plan === planName);
+		if (!plan?.saleEndDate) return null;
+
+		const endDate = new Date(plan.saleEndDate);
+		return endDate.toLocaleDateString("fr-FR", {
+			day: "numeric",
+			month: "long",
+			year: "numeric",
+		});
+	};
+
 	return (
 		<section
 			id="pricing"
@@ -252,13 +265,18 @@ export default function PricingSection({
 									: `${getPlanPrice("PRO")}€`}
 							</span>
 							<span className="text-zinc-400 ml-2">TTC</span>
-							{isPlanOnSale("PRO") && pricing && (
-								<div className="mt-2 inline-flex items-center gap-1.5 px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-sm font-medium">
-									<Clock className="w-3.5 h-3.5" />
-									Offre limitée
-								</div>
-							)}
 						</div>
+
+						{isPlanOnSale("PRO") && (
+							<div className="mb-6 flex items-center gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg">
+								<Clock className="w-4 h-4 text-red-400 shrink-0" />
+								<span className="text-red-400 text-sm font-medium">
+									Offre limitée
+									{getSaleEndDate("PRO") &&
+										` jusqu'au ${getSaleEndDate("PRO")}`}
+								</span>
+							</div>
+						)}
 
 						<ul className="space-y-3 mb-8 flex-1">
 							{proFeatures.map((feature, index) => (
@@ -328,6 +346,17 @@ export default function PricingSection({
 							</span>
 							<span className="text-zinc-400 ml-2">TTC</span>
 						</div>
+
+						{isPlanOnSale("BUSINESS") && (
+							<div className="mb-6 flex items-center gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 rounded-lg">
+								<Clock className="w-4 h-4 text-red-400 shrink-0" />
+								<span className="text-red-400 text-sm font-medium">
+									Offre limitée
+									{getSaleEndDate("BUSINESS") &&
+										` jusqu'au ${getSaleEndDate("BUSINESS")}`}
+								</span>
+							</div>
+						)}
 
 						<ul className="space-y-3 mb-8 flex-1">
 							{enterpriseFeatures.map((feature, index) => (

@@ -68,7 +68,7 @@ export default function LegalNotice() {
 							Mentions Légales
 						</h1>
 						<p className="text-lg text-zinc-400">
-							Dernière mise à jour : 21 novembre 2025
+							Dernière mise à jour : 17 avril 2026
 						</p>
 					</motion.div>
 
@@ -140,22 +140,28 @@ export default function LegalNotice() {
 								<p>Ce site est hébergé par :</p>
 								<p>
 									<strong className="text-white">
-										GitHub Pages
+										Vercel Inc.
 									</strong>
 								</p>
 								<p>
-									88 Colin P Kelly Jr Street, San Francisco,
-									CA 94107, États-Unis
+									440 N Barranca Ave #4133, Covina, CA 91723,
+									États-Unis
+								</p>
+								<p>
+									<strong className="text-white">
+										Localisation des serveurs :
+									</strong>{" "}
+									Paris, France (eu-west-3)
 								</p>
 								<p>
 									Site web :{" "}
 									<a
-										href="https://pages.github.com"
+										href="https://vercel.com"
 										target="_blank"
 										rel="noopener noreferrer"
 										className="text-amber-400 hover:text-amber-300 hover:underline"
 									>
-										https://pages.github.com
+										https://vercel.com
 									</a>
 								</p>
 							</div>
@@ -227,8 +233,8 @@ export default function LegalNotice() {
 							<p className="text-zinc-300 leading-relaxed">
 								Site conçu et développé par Matt Buchs.
 								<br />
-								Technologies utilisées : React, Vite, Tailwind
-								CSS, Framer Motion.
+								Technologies utilisées : Next.js, Tailwind CSS,
+								Framer Motion.
 							</p>
 						</section>
 

@@ -68,7 +68,7 @@ export default function PrivacyPolicy() {
 							Politique de Confidentialité
 						</h1>
 						<p className="text-lg text-zinc-400">
-							Dernière mise à jour : 21 novembre 2025
+							Dernière mise à jour : 17 avril 2026
 						</p>
 					</motion.div>
 
@@ -154,6 +154,27 @@ export default function PrivacyPolicy() {
 									navigation n&apos;est collectée à des fins
 									publicitaires.
 								</p>
+								<p className="pt-4">
+									<strong className="text-white">
+										Données liées aux achats (GameMaster OS)
+										:
+									</strong>{" "}
+									Lors de l&apos;achat d&apos;une licence
+									GameMaster OS, nous collectons :
+								</p>
+								<ul className="list-disc list-inside space-y-2 ml-4 mt-2">
+									<li>Nom et prénom</li>
+									<li>Adresse email</li>
+									<li>Société (optionnel)</li>
+									<li>
+										Informations de paiement (traitées par
+										Stripe)
+									</li>
+									<li>
+										Identifiant machine (pour
+										l&apos;activation de la licence)
+									</li>
+								</ul>
 							</div>
 						</section>
 
@@ -174,6 +195,15 @@ export default function PrivacyPolicy() {
 									<li>
 										Établir une relation commerciale dans le
 										cadre de projets freelance
+									</li>
+									<li>
+										Traiter vos achats de licences
+										GameMaster OS (facturation, envoi de clé
+										de licence, support)
+									</li>
+									<li>
+										Vérifier et activer les licences
+										logicielles
 									</li>
 								</ul>
 							</div>
@@ -207,25 +237,73 @@ export default function PrivacyPolicy() {
 
 						<section>
 							<h2 className="text-2xl font-bold mb-4 text-white">
-								7. Destinataires des données
+								7. Destinataires des données et sous-traitants
 							</h2>
 							<div className="text-zinc-300 space-y-2">
 								<p>
-									Vos données personnelles sont destinées
-									uniquement à :
+									Vos données personnelles peuvent être
+									traitées par les prestataires suivants :
 								</p>
 								<ul className="list-disc list-inside space-y-2 ml-4">
 									<li>Matt Buchs (responsable du site)</li>
 									<li>
-										EmailJS (service d&apos;envoi
-										d&apos;emails) - Les données sont
-										transmises de manière sécurisée
+										<strong className="text-white">
+											Vercel Inc.
+										</strong>{" "}
+										(hébergement) - Serveurs situés à Paris,
+										France (eu-west-3)
+									</li>
+									<li>
+										<strong className="text-white">
+											Supabase Inc.
+										</strong>{" "}
+										(base de données) - Serveurs situés à
+										Francfort, Allemagne (eu-central-1)
+									</li>
+									<li>
+										<strong className="text-white">
+											Stripe Inc.
+										</strong>{" "}
+										(paiement) - Traitement sécurisé des
+										paiements (certifié PCI-DSS). Vos
+										informations bancaires sont gérées
+										uniquement par Stripe selon leur{" "}
+										<a
+											href="https://stripe.com/fr/privacy"
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-amber-400 hover:text-amber-300 hover:underline"
+										>
+											politique de confidentialité
+										</a>
+									</li>
+									<li>
+										<strong className="text-white">
+											Resend Inc.
+										</strong>{" "}
+										(envoi d&apos;emails) - Envoi des emails
+										transactionnels (confirmations,
+										factures)
 									</li>
 								</ul>
 								<p className="pt-4">
+									<strong className="text-white">
+										Stockage des données :
+									</strong>{" "}
+									Vos données sont hébergées exclusivement au
+									sein de l&apos;Union Européenne (France et
+									Allemagne), garantissant une conformité
+									optimale avec le RGPD.
+								</p>
+								<p className="pt-4">
+									<strong className="text-white">
+										Non-revente des données :
+									</strong>{" "}
 									Nous ne vendons, ne louons ni ne partageons
 									vos données avec des tiers à des fins
-									commerciales.
+									commerciales. Vos informations sont
+									uniquement utilisées pour le fonctionnement
+									de nos services.
 								</p>
 							</div>
 						</section>

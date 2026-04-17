@@ -29,8 +29,84 @@ const PLAN_MAPPING = {
 };
 
 // Configuration de sécurité pour la consultation de la clé
-const MAX_VIEW_COUNT = 5; // Nombre maximum de consultations
+const MAX_VIEW_COUNT = 3; // Nombre maximum de consultations
 const VIEW_EXPIRY_HOURS = 24; // Durée de validité en heures
+
+// Discord Webhook URL (à définir dans .env)
+const DISCORD_WEBHOOK_URL = process.env.DISCORD_WEBHOOK_URL;
+
+/**
+ * Envoie une notification Discord lors d'un achat
+ */
+async function sendDiscordNotification({
+	plan,
+	price,
+	originalPrice,
+	discount,
+	promoCode,
+}) {
+	if (!DISCORD_WEBHOOK_URL) {
+		console.warn("Discord webhook URL non configurée");
+		return;
+	}
+
+	const planEmoji = plan === "PRO" ? "👑" : "🏢";
+	const planLabel = plan === "PRO" ? "Pro" : "Business";
+
+	// Construire les champs de l'embed
+	const fields = [
+		{
+			name: `${planEmoji} Plan`,
+			value: planLabel,
+			inline: true,
+		},
+		{
+			name: "💰 Prix payé",
+			value: `${price.toFixed(2)}€`,
+			inline: true,
+		},
+	];
+
+	// Ajouter les infos de réduction si présentes
+	if (discount && discount > 0) {
+		fields.push({
+			name: "🏷️ Code promo",
+			value: promoCode || "N/A",
+			inline: true,
+		});
+		fields.push({
+			name: "💸 Réduction",
+			value: `-${discount.toFixed(2)}€ (prix initial: ${originalPrice.toFixed(2)}€)`,
+			inline: false,
+		});
+	}
+
+	const embed = {
+		title: "🎉 Nouvelle vente GameMaster OS !",
+		color: 0xf59e0b, // Amber color
+		fields,
+		thumbnail: {
+			url: "https://matt-buchs.me/img/logo_gamemaster-os_white.png",
+		},
+		footer: {
+			text: "GameMaster OS • matt-buchs.me",
+		},
+		timestamp: new Date().toISOString(),
+	};
+
+	await fetch(DISCORD_WEBHOOK_URL, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			username: "GameMaster OS",
+			avatar_url:
+				"https://matt-buchs.me/img/logo_gamemaster-os_white.png",
+			embeds: [embed],
+		}),
+	});
+}
 
 export async function POST(request) {
 	try {
@@ -61,7 +137,7 @@ export async function POST(request) {
 					{
 						error: "Lien expiré",
 						message:
-							"Ce lien a expiré. Votre clé de licence vous a été envoyée par email.",
+							"Ce lien a expiré. Votre clé de licence vous a été envoyée par email lors de votre achat.",
 						expired: true,
 					},
 					{ status: 403 },
@@ -74,7 +150,7 @@ export async function POST(request) {
 					{
 						error: "Limite de consultations atteinte",
 						message:
-							"Vous avez atteint le nombre maximum de consultations. Votre clé de licence vous a été envoyée par email.",
+							"Vous avez atteint le nombre maximum de consultations. Votre clé de licence vous a été envoyée par email lors de votre achat.",
 						limitReached: true,
 					},
 					{ status: 403 },
@@ -222,6 +298,20 @@ export async function POST(request) {
 		} catch (emailError) {
 			// Log l'erreur mais ne pas faire échouer la requête
 			console.error("Erreur lors de l'envoi de l'email:", emailError);
+		}
+
+		// ===== NOTIFICATION DISCORD WEBHOOK =====
+		try {
+			await sendDiscordNotification({
+				plan,
+				price: amountTotal,
+				originalPrice,
+				discount: discount > 0 ? discount : null,
+				promoCode,
+			});
+		} catch (discordError) {
+			// Log l'erreur mais ne pas faire échouer la requête
+			console.error("Erreur Discord webhook:", discordError);
 		}
 
 		return NextResponse.json({
