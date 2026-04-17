@@ -1,6 +1,5 @@
 "use client";
 
-import emailjs from "@emailjs/browser";
 import * as EmailValidator from "email-validator";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, CheckCircle, Loader2, Send, X } from "lucide-react";
@@ -37,7 +36,7 @@ export default function Form() {
 		});
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
 		if (
@@ -57,32 +56,34 @@ export default function Form() {
 		setIsSubmitting(true);
 		setErrorMessage("");
 
-		emailjs
-			.send(
-				process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID,
-				process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID,
-				formData,
-				{
-					publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+		try {
+			const response = await fetch("/api/contact", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
 				},
-			)
-			.then(
-				() => {
-					resetForm();
-					setSuccessMessage(true);
-					setTimeout(() => {
-						setSuccessMessage(false);
-					}, 5000);
-				},
-				() => {
-					setErrorMessage(
-						"Une erreur s'est produite. Veuillez réessayer.",
-					);
-				},
-			)
-			.finally(() => {
-				setIsSubmitting(false);
+				body: JSON.stringify(formData),
 			});
+
+			const data = await response.json();
+
+			if (!response.ok) {
+				throw new Error(data.error || "Erreur lors de l'envoi");
+			}
+
+			resetForm();
+			setSuccessMessage(true);
+			setTimeout(() => {
+				setSuccessMessage(false);
+			}, 5000);
+		} catch (error) {
+			setErrorMessage(
+				error.message ||
+					"Une erreur s'est produite. Veuillez réessayer.",
+			);
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	const inputClasses =

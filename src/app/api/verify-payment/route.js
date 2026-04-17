@@ -4,7 +4,10 @@ import {
 	generateLicenseKey,
 	generateLicenseSecret,
 } from "@/lib/crypto";
+import { LicensePurchaseEmail } from "@/lib/email-templates";
+import { generateInvoiceNumber, generateInvoicePDF } from "@/lib/invoice-pdf";
 import { prisma } from "@/lib/prisma";
+import { FROM_EMAIL, getRecipientEmail, resend } from "@/lib/resend";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 
@@ -166,6 +169,59 @@ export async function POST(request) {
 					},
 				},
 			});
+		}
+
+		// ===== ENVOI DE L'EMAIL AVEC FACTURE PDF =====
+		try {
+			const invoiceNumber = generateInvoiceNumber();
+			const purchaseDate = new Date();
+
+			// Générer la facture PDF
+			const invoicePDF = await generateInvoicePDF({
+				invoiceNumber,
+				purchaseDate,
+				customerName: license.customerName || "Client",
+				customerEmail: license.email,
+				company: license.company,
+				licenseKey,
+				plan,
+				price: amountTotal,
+				originalPrice,
+				discount: discount > 0 ? discount : null,
+				promoCode,
+			});
+
+			// Envoyer l'email avec la facture en pièce jointe
+			await resend.emails.send({
+				from: FROM_EMAIL,
+				to: getRecipientEmail(license.email),
+				subject: `Votre licence GameMaster OS ${plan === "PRO" ? "Pro" : "Business"} - Facture ${invoiceNumber}`,
+				react: LicensePurchaseEmail({
+					customerName: license.customerName || "Client",
+					email: license.email,
+					licenseKey,
+					plan,
+					price: amountTotal,
+					originalPrice,
+					discount: discount > 0 ? discount : null,
+					promoCode,
+					invoiceNumber,
+					purchaseDate,
+				}),
+				attachments: [
+					{
+						filename: `Facture-${invoiceNumber}.pdf`,
+						content: invoicePDF,
+					},
+				],
+			});
+
+			console.log(
+				`Email envoyé à ${license.email} avec facture ${invoiceNumber}`,
+			);
+		} catch (emailError) {
+			// Log l'erreur mais ne pas faire échouer la requête
+			console.error("Erreur lors de l'envoi de l'email:", emailError);
 		}
 
 		return NextResponse.json({
