@@ -206,12 +206,7 @@ export default function HeroSection({
 								className="hidden lg:flex flex-row gap-3 xl:gap-4 justify-start items-center mb-6 xl:mb-8"
 							>
 								<a
-									href={
-										latestVersion
-											? `/downloads/${latestVersion.fileName}`
-											: "/downloads/GameMasterOS_Setup.exe"
-									}
-									download
+									href={latestVersion?.downloadUrl || "#"}
 									className="btn-warm-gmos group flex items-center gap-2 text-base xl:text-lg px-6 xl:px-8 py-3 xl:py-4"
 								>
 									<Download className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
@@ -372,12 +367,7 @@ export default function HeroSection({
 							{/* Buttons row */}
 							<div className="flex flex-col sm:flex-row gap-3 justify-center items-center w-full">
 								<a
-									href={
-										latestVersion
-											? `/downloads/${latestVersion.fileName}`
-											: "/downloads/GameMasterOS_Setup.exe"
-									}
-									download
+									href={latestVersion?.downloadUrl || "#"}
 									className="btn-warm-gmos group flex items-center justify-center gap-2 text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 w-full sm:w-auto"
 								>
 									<Download className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:scale-110" />

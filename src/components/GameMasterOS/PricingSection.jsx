@@ -200,11 +200,7 @@ export default function PricingSection({
 						</ul>
 
 						<a
-							href={
-								latestVersion
-									? `/downloads/${latestVersion.fileName}`
-									: "/downloads/GameMasterOS_Setup.exe"
-							}
+							href={latestVersion?.downloadUrl || "#"}
 							download
 							className="block w-full py-4 bg-zinc-700 text-white rounded-xl font-semibold text-center transition-all duration-300 hover:bg-zinc-600 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 						>

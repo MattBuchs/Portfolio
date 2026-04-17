@@ -4,23 +4,26 @@ import {
 	Calendar,
 	CheckCircle,
 	Download,
+	ExternalLink,
 	FileCode,
+	Link,
 	Star,
 	Trash2,
-	Upload,
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function VersionManager() {
 	const [versions, setVersions] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [uploading, setUploading] = useState(false);
+	const [submitting, setSubmitting] = useState(false);
 
 	// Form state
 	const [version, setVersion] = useState("");
 	const [releaseNotes, setReleaseNotes] = useState("");
-	const [file, setFile] = useState(null);
+	const [downloadUrl, setDownloadUrl] = useState("");
+	const [fileSize, setFileSize] = useState("");
 
 	useEffect(() => {
 		fetchVersions();
@@ -40,42 +43,52 @@ export default function VersionManager() {
 		}
 	};
 
-	const handleUpload = async (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 
-		if (!file || !version || !releaseNotes) {
+		if (!downloadUrl || !version || !releaseNotes || !fileSize) {
 			alert("Tous les champs sont requis");
 			return;
 		}
 
-		setUploading(true);
+		// Convertir la taille en bytes (input en MB)
+		const fileSizeBytes = Math.round(parseFloat(fileSize) * 1024 * 1024);
+
+		if (isNaN(fileSizeBytes) || fileSizeBytes <= 0) {
+			alert("Taille de fichier invalide");
+			return;
+		}
+
+		setSubmitting(true);
 
 		try {
-			const formData = new FormData();
-			formData.append("file", file);
-			formData.append("version", version);
-			formData.append("releaseNotes", releaseNotes);
-
 			const res = await fetch("/api/admin/versions", {
 				method: "POST",
-				body: formData,
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					version,
+					releaseNotes,
+					downloadUrl,
+					fileSize: fileSizeBytes,
+				}),
 			});
 
 			if (res.ok) {
 				alert("Version ajoutée avec succès !");
 				setVersion("");
 				setReleaseNotes("");
-				setFile(null);
+				setDownloadUrl("");
+				setFileSize("");
 				fetchVersions();
 			} else {
 				const error = await res.json();
-				alert(error.error || "Erreur lors de l'upload");
+				alert(error.error || "Erreur lors de l'ajout");
 			}
 		} catch (error) {
-			console.error("Erreur upload:", error);
-			alert("Erreur lors de l'upload");
+			console.error("Erreur:", error);
+			alert("Erreur lors de l'ajout");
 		} finally {
-			setUploading(false);
+			setSubmitting(false);
 		}
 	};
 
@@ -163,11 +176,27 @@ export default function VersionManager() {
 			{/* Formulaire d'ajout */}
 			<div className="bg-zinc-800/50 rounded-2xl border border-zinc-700/50 p-6">
 				<h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-					<Upload className="w-6 h-6 text-amber-400" />
+					<Link className="w-6 h-6 text-amber-400" />
 					Ajouter une nouvelle version
 				</h3>
 
-				<form onSubmit={handleUpload} className="space-y-4">
+				<div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-6">
+					<p className="text-blue-300 text-sm">
+						<strong>Instructions :</strong> Uploadez d'abord votre
+						fichier .exe sur{" "}
+						<a
+							href="https://github.com/MattBuchs/Portfolio/releases/new"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-blue-400 hover:underline inline-flex items-center gap-1"
+						>
+							GitHub Releases <ExternalLink className="w-3 h-3" />
+						</a>
+						, puis copiez l'URL de téléchargement direct du fichier.
+					</p>
+				</div>
+
+				<form onSubmit={handleSubmit} className="space-y-4">
 					<div className="grid md:grid-cols-2 gap-4">
 						<div>
 							<label className="block text-sm font-semibold text-zinc-300 mb-2">
@@ -188,16 +217,39 @@ export default function VersionManager() {
 
 						<div>
 							<label className="block text-sm font-semibold text-zinc-300 mb-2">
-								Fichier .exe *
+								Taille du fichier (MB) *
 							</label>
 							<input
-								type="file"
-								accept=".exe"
-								onChange={(e) => setFile(e.target.files[0])}
-								className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-amber-500 file:text-white hover:file:bg-amber-600 focus:ring-2 focus:ring-amber-500/50 focus:outline-none cursor-pointer"
+								type="number"
+								step="0.01"
+								min="0"
+								value={fileSize}
+								onChange={(e) => setFileSize(e.target.value)}
+								placeholder="120.5"
+								className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 focus:outline-none"
 								required
 							/>
+							<p className="text-xs text-zinc-500 mt-1">
+								Taille en mégaoctets (ex: 120.5)
+							</p>
 						</div>
+					</div>
+
+					<div>
+						<label className="block text-sm font-semibold text-zinc-300 mb-2">
+							URL de téléchargement GitHub *
+						</label>
+						<input
+							type="url"
+							value={downloadUrl}
+							onChange={(e) => setDownloadUrl(e.target.value)}
+							placeholder="https://github.com/MattBuchs/Portfolio/releases/download/v1.0.0/GameMasterOS_v1.0.0_Setup.exe"
+							className="w-full px-4 py-2 bg-zinc-900/50 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500/50 focus:outline-none"
+							required
+						/>
+						<p className="text-xs text-zinc-500 mt-1">
+							Lien direct vers le fichier .exe sur GitHub Releases
+						</p>
 					</div>
 
 					<div>
@@ -221,17 +273,17 @@ export default function VersionManager() {
 
 					<button
 						type="submit"
-						disabled={uploading}
+						disabled={submitting}
 						className="w-full md:w-auto px-6 py-3 bg-linear-to-r from-amber-500 to-orange-600 disabled:bg-zinc-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-amber-500/20 transition-all cursor-pointer"
 					>
-						{uploading ? (
+						{submitting ? (
 							<>
 								<div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-								Upload en cours...
+								Ajout en cours...
 							</>
 						) : (
 							<>
-								<Upload className="w-5 h-5" />
+								<Link className="w-5 h-5" />
 								Ajouter cette version
 							</>
 						)}
@@ -298,12 +350,13 @@ export default function VersionManager() {
 											</button>
 										)}
 										<a
-											href={`/downloads/${v.fileName}`}
-											download
+											href={v.downloadUrl}
+											target="_blank"
+											rel="noopener noreferrer"
 											className="p-2 text-amber-400 hover:bg-amber-500/10 rounded-lg transition-colors cursor-pointer"
-											title="Télécharger"
+											title="Voir sur GitHub"
 										>
-											<Download className="w-5 h-5" />
+											<ExternalLink className="w-5 h-5" />
 										</a>
 										{!v.isLatest && (
 											<button
@@ -339,6 +392,7 @@ export default function VersionManager() {
 									</p>
 									<div>
 										<ReactMarkdown
+											remarkPlugins={[remarkGfm]}
 											components={{
 												h1: ({ node, ...props }) => (
 													<h1
@@ -425,6 +479,41 @@ export default function VersionManager() {
 												}) => (
 													<blockquote
 														className="border-l-4 border-amber-500/50 pl-3 italic text-zinc-400 my-3"
+														{...props}
+													/>
+												),
+												table: ({ node, ...props }) => (
+													<div className="overflow-x-auto my-3">
+														<table
+															className="w-full border-collapse text-xs"
+															{...props}
+														/>
+													</div>
+												),
+												thead: ({ node, ...props }) => (
+													<thead
+														className="bg-zinc-800"
+														{...props}
+													/>
+												),
+												tbody: ({ node, ...props }) => (
+													<tbody {...props} />
+												),
+												tr: ({ node, ...props }) => (
+													<tr
+														className="border-b border-zinc-700"
+														{...props}
+													/>
+												),
+												th: ({ node, ...props }) => (
+													<th
+														className="px-3 py-2 text-left font-semibold text-amber-400 border border-zinc-700"
+														{...props}
+													/>
+												),
+												td: ({ node, ...props }) => (
+													<td
+														className="px-3 py-2 text-zinc-300 border border-zinc-700"
 														{...props}
 													/>
 												),

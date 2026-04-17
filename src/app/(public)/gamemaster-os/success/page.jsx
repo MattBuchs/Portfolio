@@ -26,8 +26,23 @@ function SuccessContent() {
 	const [errorType, setErrorType] = useState(null); // 'expired', 'limitReached', 'notFound'
 	const [errorMessage, setErrorMessage] = useState("");
 	const [viewsRemaining, setViewsRemaining] = useState(null);
+	const [latestVersion, setLatestVersion] = useState(null);
 
 	useEffect(() => {
+		// Fetch latest version for download link
+		const fetchLatestVersion = async () => {
+			try {
+				const res = await fetch("/api/versions?latest=true");
+				if (res.ok) {
+					const data = await res.json();
+					setLatestVersion(data);
+				}
+			} catch (error) {
+				console.error("Erreur récupération version:", error);
+			}
+		};
+		fetchLatestVersion();
+
 		const sessionId = searchParams.get("session_id");
 
 		if (!sessionId) {
@@ -390,7 +405,7 @@ function SuccessContent() {
 
 						<div className="flex flex-col sm:flex-row gap-4">
 							<a
-								href="/downloads/GameMasterOS_Setup.exe"
+								href={latestVersion?.downloadUrl || "#"}
 								download
 								className="flex-1 px-6 py-3 bg-amber-500 hover:bg-amber-400 text-zinc-900 rounded-full font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 							>

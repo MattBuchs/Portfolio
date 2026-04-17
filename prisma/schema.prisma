@@ -79,6 +79,7 @@ model AppVersion {
   version       String   @unique // ex: "1.0.0"
   fileName      String   // ex: "GameMasterOS_Setup.exe"
   fileSize      BigInt   // Taille en bytes
+  downloadUrl   String?  // URL externe (GitHub Releases, etc.) - optionnel pour migration
   releaseDate   DateTime @default(now())
   releaseNotes  String   // Notes de version en Markdown
   isLatest      Boolean  @default(false) // Une seule version peut être latest

@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 export default function VersionsPage() {
 	const [versions, setVersions] = useState([]);
@@ -40,7 +41,7 @@ export default function VersionsPage() {
 		}
 	};
 
-	const handleDownload = async (versionId, fileName) => {
+	const handleDownload = async (versionId, downloadUrl) => {
 		try {
 			await fetch("/api/versions", {
 				method: "POST",
@@ -50,7 +51,7 @@ export default function VersionsPage() {
 		} catch (error) {
 			console.error("Erreur incrémentation téléchargements:", error);
 		}
-		window.location.href = `/downloads/${fileName}`;
+		window.location.href = downloadUrl;
 	};
 
 	const toggleExpanded = (versionId) => {
@@ -236,7 +237,7 @@ export default function VersionsPage() {
 													onClick={() =>
 														handleDownload(
 															version.id,
-															version.fileName,
+															version.downloadUrl,
 														)
 													}
 													className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-zinc-900 rounded-xl font-semibold flex items-center gap-2 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98] cursor-pointer"
@@ -283,6 +284,9 @@ export default function VersionsPage() {
 											>
 												<div className="bg-zinc-700/30 rounded-xl p-6">
 													<ReactMarkdown
+														remarkPlugins={[
+															remarkGfm,
+														]}
 														components={{
 															h1: ({
 																node,
@@ -396,6 +400,61 @@ export default function VersionsPage() {
 															}) => (
 																<blockquote
 																	className="border-l-4 border-amber-500/50 pl-4 italic text-zinc-400 my-4"
+																	{...props}
+																/>
+															),
+															table: ({
+																node,
+																...props
+															}) => (
+																<div className="overflow-x-auto my-4">
+																	<table
+																		className="w-full border-collapse text-sm"
+																		{...props}
+																	/>
+																</div>
+															),
+															thead: ({
+																node,
+																...props
+															}) => (
+																<thead
+																	className="bg-zinc-800"
+																	{...props}
+																/>
+															),
+															tbody: ({
+																node,
+																...props
+															}) => (
+																<tbody
+																	{...props}
+																/>
+															),
+															tr: ({
+																node,
+																...props
+															}) => (
+																<tr
+																	className="border-b border-zinc-700"
+																	{...props}
+																/>
+															),
+															th: ({
+																node,
+																...props
+															}) => (
+																<th
+																	className="px-4 py-2 text-left font-semibold text-amber-400 border border-zinc-700"
+																	{...props}
+																/>
+															),
+															td: ({
+																node,
+																...props
+															}) => (
+																<td
+																	className="px-4 py-2 text-zinc-300 border border-zinc-700"
 																	{...props}
 																/>
 															),

@@ -112,11 +112,7 @@ export default function FinalCTA({ latestVersion }) {
 							className="flex flex-col sm:flex-row gap-4 justify-center"
 						>
 							<a
-								href={
-									latestVersion
-										? `/downloads/${latestVersion.fileName}`
-										: "/downloads/GameMasterOS_Setup.exe"
-								}
+								href={latestVersion?.downloadUrl || "#"}
 								download
 								className="btn-warm-gmos group flex items-center justify-center gap-2 px-8 py-4 text-lg"
 							>
