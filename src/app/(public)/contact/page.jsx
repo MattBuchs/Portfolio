@@ -1,186 +1,195 @@
 "use client";
 
-import NavBar from "@/components/Header/NavBar";
-import Form from "@/components/Form";
-import BarLink from "@/components/utils/BarLink";
 import Footer from "@/components/Footer";
+import Form from "@/components/Form";
+import NavBar from "@/components/Header/NavBar";
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
+import { ArrowLeft, Clock, Mail, MapPin, Phone, Send } from "lucide-react";
+import Link from "next/link";
 
 export default function Contact() {
-    const contactInfo = [
-        {
-            icon: Mail,
-            label: "Email",
-            value: "mattbuchs25@gmail.com",
-            href: "mailto:mattbuchs25@gmail.com",
-            gradient: "from-blue-500 to-cyan-500",
-        },
-        {
-            icon: Phone,
-            label: "Téléphone",
-            value: "06 64 93 52 94",
-            href: "tel:0664935294",
-            gradient: "from-green-500 to-emerald-500",
-        },
-        {
-            icon: MapPin,
-            label: "Localisation",
-            value: "25300 Arçon, France",
-            href: null,
-            gradient: "from-purple-500 to-pink-500",
-        },
-        {
-            icon: Clock,
-            label: "Disponibilité",
-            value: "Lun - Ven : 9h - 18h",
-            href: null,
-            gradient: "from-orange-500 to-red-500",
-        },
-    ];
+	const contactInfo = [
+		{
+			icon: Mail,
+			label: "Email",
+			value: "mattbuchs25@gmail.com",
+			href: "mailto:mattbuchs25@gmail.com",
+		},
+		{
+			icon: Phone,
+			label: "Téléphone",
+			value: "06 64 93 52 94",
+			href: "tel:0664935294",
+		},
+		{
+			icon: MapPin,
+			label: "Localisation",
+			value: "25300 Arçon, France",
+			href: null,
+		},
+		{
+			icon: Clock,
+			label: "Disponibilité",
+			value: "Lun - Ven : 9h - 18h",
+			href: null,
+		},
+	];
 
-    return (
-        <>
-            <NavBar />
-            <main className="bg-gray-50 min-h-screen pt-28 pb-20">
-                <div className="max-w-312.5 mx-auto px-5 md:px-10">
-                    {/* Header */}
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center mb-12"
-                    >
-                        <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-br from-blue-500 to-purple-600 rounded-full mb-4">
-                            <Send className="text-white" size={32} />
-                        </div>
-                        <h1 className="text-4xl md:text-5xl font-bold mb-4">
-                            Contactez-moi
-                        </h1>
-                        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                            Un projet en tête ? N&apos;hésitez pas à me
-                            contacter. Je réponds généralement sous 24h.
-                        </p>
-                    </motion.div>
+	const containerVariants = {
+		hidden: { opacity: 0 },
+		visible: {
+			opacity: 1,
+			transition: { delayChildren: 0.1, staggerChildren: 0.08 },
+		},
+	};
 
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Contact Info Cards */}
-                        <motion.div
-                            initial={{ opacity: 0, x: -30 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6, delay: 0.2 }}
-                            className="lg:col-span-1 space-y-4"
-                        >
-                            {contactInfo.map((info, index) => {
-                                const Icon = info.icon;
-                                return (
-                                    <motion.div
-                                        key={info.label}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{
-                                            delay: 0.3 + index * 0.1,
-                                        }}
-                                        whileHover={{ scale: 1.02 }}
-                                        className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition-all duration-300"
-                                    >
-                                        <div className="flex items-start gap-4">
-                                            <div
-                                                className={`w-12 h-12 rounded-lg bg-linear-to-br ${info.gradient} flex items-center justify-center shrink-0`}
-                                            >
-                                                <Icon
-                                                    size={24}
-                                                    className="text-white"
-                                                />
-                                            </div>
-                                            <div className="flex-1 min-w-0">
-                                                <h3 className="font-semibold text-gray-900 mb-1">
-                                                    {info.label}
-                                                </h3>
-                                                {info.href ? (
-                                                    <a
-                                                        href={info.href}
-                                                        className="text-gray-600 hover:text-blue-600 transition-colors wrap-break-word"
-                                                    >
-                                                        {info.value}
-                                                    </a>
-                                                ) : (
-                                                    <p className="text-gray-600 wrap-break-word">
-                                                        {info.value}
-                                                    </p>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
+	const itemVariants = {
+		hidden: { y: 20, opacity: 0, filter: "blur(4px)" },
+		visible: {
+			y: 0,
+			opacity: 1,
+			filter: "blur(0px)",
+			transition: {
+				type: "spring",
+				stiffness: 100,
+				damping: 15,
+			},
+		},
+	};
 
-                            {/* Social Links */}
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.7 }}
-                                className="bg-linear-to-br from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-100"
-                            >
-                                <h3 className="font-semibold text-gray-900 mb-4">
-                                    Suivez-moi
-                                </h3>
-                                <div className="flex gap-3">
-                                    <a
-                                        href="https://github.com/MattBuchs"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="w-10 h-10 bg-white rounded-lg flex items-center justify-center hover:bg-gray-900 hover:text-white transition-all duration-300 shadow-sm"
-                                        aria-label="GitHub"
-                                    >
-                                        <svg
-                                            width="20"
-                                            height="20"
-                                            fill="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-                                        </svg>
-                                    </a>
-                                    <a
-                                        href="https://www.linkedin.com/in/matt-buchs/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="w-10 h-10 bg-white rounded-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm"
-                                        aria-label="LinkedIn"
-                                    >
-                                        <svg
-                                            width="20"
-                                            height="20"
-                                            fill="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </motion.div>
-                        </motion.div>
+	return (
+		<>
+			<NavBar />
+			<main className="min-h-screen py-24 overflow-hidden">
+				{/* Background */}
+				<div className="fixed inset-0 -z-10">
+					<div className="absolute inset-0 bg-linear-to-b from-zinc-900 via-zinc-900/95 to-zinc-900" />
+					<div
+						className="absolute inset-0 opacity-[0.02]"
+						style={{
+							backgroundImage: `linear-gradient(rgba(251,191,36,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,0.5) 1px, transparent 1px)`,
+							backgroundSize: "60px 60px",
+						}}
+					/>
+					{/* Ambient lights */}
+					<div className="absolute top-20 -right-40 w-125 h-125 bg-amber-500/10 rounded-full blur-3xl" />
+					<div className="absolute bottom-20 -left-40 w-100 h-100 bg-orange-500/10 rounded-full blur-3xl" />
+				</div>
 
-                        {/* Form */}
-                        <motion.div
-                            initial={{ opacity: 0, x: 30 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.6, delay: 0.4 }}
-                            className="lg:col-span-2"
-                        >
-                            <div className="bg-stone-100 rounded-2xl shadow-lg p-6 md:p-8">
-                                <h2 className="text-2xl font-bold mb-6">
-                                    Envoyez-moi un message
-                                </h2>
-                                <Form />
-                            </div>
-                        </motion.div>
-                    </div>
-                </div>
-                <BarLink isBarVisible={true} />
-            </main>
-            <Footer />
-        </>
-    );
+				<div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 lg:px-12">
+					<motion.div
+						variants={containerVariants}
+						initial="hidden"
+						animate="visible"
+					>
+						{/* Back Link */}
+						<motion.div variants={itemVariants} className="mb-8">
+							<Link
+								href="/"
+								className="inline-flex items-center gap-2 text-zinc-400 hover:text-amber-400 transition-colors group"
+							>
+								<ArrowLeft
+									size={18}
+									className="group-hover:-translate-x-1 transition-transform"
+								/>
+								Retour à l&apos;accueil
+							</Link>
+						</motion.div>
+
+						{/* Header */}
+						<motion.div
+							variants={itemVariants}
+							className="text-center mb-16"
+						>
+							<motion.div
+								className="inline-flex items-center justify-center w-16 h-16 bg-amber-500/10 rounded-2xl border border-amber-500/20 mb-6"
+								whileHover={{ scale: 1.05, rotate: 5 }}
+								transition={{
+									type: "spring",
+									stiffness: 400,
+									damping: 25,
+								}}
+							>
+								<Send className="text-amber-400" size={28} />
+							</motion.div>
+							<h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
+								Contactez
+								<span className="text-gradient-warm">-moi</span>
+							</h1>
+							<p className="text-lg text-zinc-400 max-w-2xl mx-auto">
+								Un projet en tête ? N&apos;hésitez pas à me
+								contacter. Je réponds généralement sous 24h.
+							</p>
+						</motion.div>
+
+						<div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+							{/* Contact Info Cards */}
+							<motion.div
+								variants={itemVariants}
+								className="lg:col-span-1 space-y-4"
+							>
+								{contactInfo.map((info, index) => {
+									const Icon = info.icon;
+									return (
+										<motion.div
+											key={info.label}
+											variants={itemVariants}
+											whileHover={{ scale: 1.02, y: -2 }}
+											transition={{
+												type: "spring",
+												stiffness: 400,
+												damping: 25,
+											}}
+											className="card-dark p-5 group"
+										>
+											<div className="flex items-start gap-4">
+												<div className="w-11 h-11 rounded-xl bg-amber-500/10 flex items-center justify-center shrink-0 group-hover:bg-amber-500/20 transition-colors">
+													<Icon
+														size={20}
+														className="text-amber-400"
+													/>
+												</div>
+												<div className="flex-1 min-w-0">
+													<h2 className="font-semibold text-white mb-1">
+														{info.label}
+													</h2>
+													{info.href ? (
+														<a
+															href={info.href}
+															className="text-zinc-400 hover:text-amber-400 transition-colors break-all"
+														>
+															{info.value}
+														</a>
+													) : (
+														<p className="text-zinc-400">
+															{info.value}
+														</p>
+													)}
+												</div>
+											</div>
+										</motion.div>
+									);
+								})}
+							</motion.div>
+
+							{/* Form */}
+							<motion.div
+								variants={itemVariants}
+								className="lg:col-span-2"
+							>
+								<div className="card-dark p-6 sm:p-8">
+									<h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+										<span className="w-1 h-6 bg-amber-500 rounded-full"></span>
+										Envoyez-moi un message
+									</h2>
+									<Form />
+								</div>
+							</motion.div>
+						</div>
+					</motion.div>
+				</div>
+			</main>
+			<Footer />
+		</>
+	);
 }
