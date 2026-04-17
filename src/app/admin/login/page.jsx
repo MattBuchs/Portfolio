@@ -29,7 +29,11 @@ export default function LoginPage() {
 			});
 
 			if (result?.error) {
-				setError("Identifiants incorrects");
+				if (result.error.includes("TooManyAttempts")) {
+					setError("Trop de tentatives. Réessayez dans 15 minutes.");
+				} else {
+					setError("Identifiants incorrects");
+				}
 				setLoading(false);
 			} else {
 				router.push("/admin/dashboard");
