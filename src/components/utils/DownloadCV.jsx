@@ -36,7 +36,7 @@ export default function DownloadCV() {
 			whileHover={{ scale: 1.02, y: -2 }}
 			whileTap={{ scale: 0.98 }}
 			transition={{ type: "spring", stiffness: 400, damping: 25 }}
-			className="group relative inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-3.5 bg-transparent border-2 border-amber-500/50 text-amber-400 font-semibold rounded-xl overflow-hidden hover:border-amber-400 hover:bg-amber-500/5 hover:shadow-[0_0_30px_-5px_rgba(251,191,36,0.3)] will-change-transform cursor-pointer"
+			className="group relative inline-flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-3 sm:py-2.5 md:py-3.5 bg-transparent border-2 border-amber-500/50 text-amber-400 font-semibold rounded-xl overflow-hidden hover:border-amber-400 hover:bg-amber-500/5 hover:shadow-[0_0_30px_-5px_rgba(251,191,36,0.3)] will-change-transform cursor-pointer w-full"
 			style={{
 				transition:
 					"border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease",

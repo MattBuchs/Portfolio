@@ -111,7 +111,7 @@ export default function NavBar({ isProjectPage }) {
 				<nav ref={navRef} className="h-full rounded-bl flex">
 					{disableParallax && (
 						<motion.button
-							className="md:hidden w-12 h-12 flex items-center justify-center bg-zinc-800/80 hover:bg-zinc-700/80 backdrop-blur-sm border border-zinc-700/50 rounded-xl transition-colors"
+							className="md:hidden w-12 h-12 flex items-center justify-center bg-zinc-800/80 hover:bg-zinc-700/80 backdrop-blur-sm border border-zinc-700/50 rounded-xl transition-colors cursor-pointer"
 							onClick={() => setToggle(!toggle)}
 							whileTap={{ scale: 0.95 }}
 							aria-label="Ouvrir le menu"
