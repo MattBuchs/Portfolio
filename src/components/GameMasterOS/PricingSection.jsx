@@ -34,6 +34,21 @@ export default function PricingSection({
 	loadingPricing,
 	latestVersion,
 }) {
+	// Fonction pour tracker le téléchargement
+	const handleDownload = async () => {
+		if (latestVersion?.id) {
+			try {
+				await fetch("/api/versions", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ versionId: latestVersion.id }),
+				});
+			} catch (error) {
+				console.error("Erreur tracking téléchargement:", error);
+			}
+		}
+	};
+
 	const getPlanPrice = (planName) => {
 		if (!pricing) return planName === "PRO" ? 119 : 199;
 		const plan = pricing.find((p) => p.plan === planName);
@@ -201,6 +216,7 @@ export default function PricingSection({
 
 						<a
 							href={latestVersion?.downloadUrl || "#"}
+							onClick={handleDownload}
 							download
 							className="block w-full py-4 bg-zinc-700 text-white rounded-xl font-semibold text-center transition-all duration-300 hover:bg-zinc-600 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 						>

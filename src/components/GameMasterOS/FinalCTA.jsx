@@ -19,6 +19,21 @@ export default function FinalCTA({ latestVersion }) {
 		[0.95, 1, 0.95],
 	);
 
+	// Fonction pour tracker le téléchargement
+	const handleDownload = async () => {
+		if (latestVersion?.id) {
+			try {
+				await fetch("/api/versions", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ versionId: latestVersion.id }),
+				});
+			} catch (error) {
+				console.error("Erreur tracking téléchargement:", error);
+			}
+		}
+	};
+
 	return (
 		<section
 			ref={sectionRef}
@@ -113,6 +128,7 @@ export default function FinalCTA({ latestVersion }) {
 						>
 							<a
 								href={latestVersion?.downloadUrl || "#"}
+								onClick={handleDownload}
 								download
 								className="btn-warm-gmos group flex items-center justify-center gap-2 px-8 py-4 text-lg"
 							>

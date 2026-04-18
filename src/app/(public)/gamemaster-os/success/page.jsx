@@ -28,6 +28,21 @@ function SuccessContent() {
 	const [viewsRemaining, setViewsRemaining] = useState(null);
 	const [latestVersion, setLatestVersion] = useState(null);
 
+	// Fonction pour tracker le téléchargement
+	const handleDownload = async () => {
+		if (latestVersion?.id) {
+			try {
+				await fetch("/api/versions", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ versionId: latestVersion.id }),
+				});
+			} catch (error) {
+				console.error("Erreur tracking téléchargement:", error);
+			}
+		}
+	};
+
 	useEffect(() => {
 		// Fetch latest version for download link
 		const fetchLatestVersion = async () => {
@@ -406,6 +421,7 @@ function SuccessContent() {
 						<div className="flex flex-col sm:flex-row gap-4">
 							<a
 								href={latestVersion?.downloadUrl || "#"}
+								onClick={handleDownload}
 								download
 								className="flex-1 px-6 py-3 bg-amber-500 hover:bg-amber-400 text-zinc-900 rounded-full font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-[1.02] hover:-translate-y-0.5 active:scale-[0.98]"
 							>

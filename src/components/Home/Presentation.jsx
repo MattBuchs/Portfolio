@@ -135,7 +135,7 @@ export default function Presentation() {
 						{/* CTA Buttons */}
 						<motion.div
 							variants={itemVariants}
-							className="flex flex-row gap-3 sm:gap-4 pt-4"
+							className="flex flex-col items-center sm:flex-row gap-3 sm:gap-4 pt-4"
 						>
 							<motion.div
 								whileHover={{ scale: 1.02, y: -2 }}
@@ -145,10 +145,11 @@ export default function Presentation() {
 									stiffness: 400,
 									damping: 25,
 								}}
+								className="w-full sm:w-auto"
 							>
 								<Link
 									href="/contact"
-									className="btn-warm inline-flex items-center justify-center gap-2 relative z-10 group"
+									className="btn-warm inline-flex items-center justify-center gap-2 relative z-10 group w-full"
 								>
 									<span className="relative z-10">
 										Démarrer un projet
@@ -167,6 +168,7 @@ export default function Presentation() {
 									stiffness: 400,
 									damping: 25,
 								}}
+								className="w-full sm:w-auto"
 							>
 								<DownloadCV />
 							</motion.div>

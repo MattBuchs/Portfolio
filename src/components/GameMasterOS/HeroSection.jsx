@@ -5,7 +5,6 @@ import {
 	ArrowRight,
 	Check,
 	Crown,
-	Download,
 	Shield,
 	Sparkles,
 	Timer,
@@ -20,6 +19,21 @@ export default function HeroSection({
 	latestVersion,
 	loadingVersion,
 }) {
+	// Fonction pour tracker le téléchargement
+	const handleDownload = async () => {
+		if (latestVersion?.id) {
+			try {
+				await fetch("/api/versions", {
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({ versionId: latestVersion.id }),
+				});
+			} catch (error) {
+				console.error("Erreur tracking téléchargement:", error);
+			}
+		}
+	};
+
 	return (
 		<section
 			ref={heroRef}
@@ -207,10 +221,9 @@ export default function HeroSection({
 							>
 								<a
 									href={latestVersion?.downloadUrl || "#"}
+									onClick={handleDownload}
 									className="btn-warm-gmos group flex items-center gap-2 text-base xl:text-lg px-6 xl:px-8 py-3 xl:py-4"
 								>
-									<Download className="w-5 h-5 transition-transform duration-300 group-hover:scale-110" />
-									Télécharger gratuitement
 									<ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
 								</a>
 
@@ -368,10 +381,9 @@ export default function HeroSection({
 							<div className="flex flex-col sm:flex-row gap-3 justify-center items-center w-full">
 								<a
 									href={latestVersion?.downloadUrl || "#"}
+									onClick={handleDownload}
 									className="btn-warm-gmos group flex items-center justify-center gap-2 text-sm sm:text-base px-5 sm:px-6 py-2.5 sm:py-3 w-full sm:w-auto"
 								>
-									<Download className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:scale-110" />
-									Télécharger gratuitement
 									<ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-300 group-hover:translate-x-1" />
 								</a>
 
