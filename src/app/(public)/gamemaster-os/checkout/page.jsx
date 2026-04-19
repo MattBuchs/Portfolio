@@ -265,11 +265,12 @@ function CheckoutForm() {
 						Retour
 					</Link>
 
-					<div className="grid lg:grid-cols-2 gap-8">
+					<div className="gap-8 flex flex-col-reverse md:flex-row">
 						{/* Formulaire */}
 						<motion.div
 							initial={{ opacity: 0, x: -20 }}
 							animate={{ opacity: 1, x: 0 }}
+							className="md:w-1/2"
 						>
 							<div className="bg-zinc-800/50 rounded-3xl p-8 border border-zinc-700/50">
 								<div className="flex items-center gap-3 mb-6">
@@ -443,6 +444,7 @@ function CheckoutForm() {
 						<motion.div
 							initial={{ opacity: 0, x: 20 }}
 							animate={{ opacity: 1, x: 0 }}
+							className="md:w-1/2"
 						>
 							<div className="bg-zinc-800/50 border border-amber-500/30 rounded-3xl p-8 sticky top-8">
 								<div className="flex justify-between items-start mb-6">

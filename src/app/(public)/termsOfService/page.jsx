@@ -193,9 +193,9 @@ export default function TermsOfService() {
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
 								Le formulaire de contact disponible sur le site
-								permet aux utilisateurs de nous transmettre
-								leurs demandes. Les informations collectées via
-								ce formulaire sont traitées conformément à notre{" "}
+								permet aux utilisateurs de me transmettre leurs
+								demandes. Les informations collectées via ce
+								formulaire sont traitées conformément à notre{" "}
 								<a
 									href="/privacyPolicy"
 									className="text-amber-400 hover:text-amber-300 hover:underline"
@@ -252,9 +252,8 @@ export default function TermsOfService() {
 										Paiement :
 									</strong>{" "}
 									Les paiements sont traités de manière
-									sécurisée par Stripe. Nous n&apos;avons pas
-									accès à vos informations bancaires
-									complètes.
+									sécurisée par Stripe. Je n&apos;ai pas accès
+									à vos informations bancaires complètes.
 								</p>
 								<p className="pt-2">
 									<strong className="text-white">
@@ -264,7 +263,7 @@ export default function TermsOfService() {
 									produits numériques, le droit de
 									rétractation ne s&apos;applique pas une fois
 									la clé de licence délivrée. Pour toute
-									réclamation, contactez-nous à{" "}
+									réclamation, contactez-moi à{" "}
 									<a
 										href="mailto:mattbuchs25@gmail.com"
 										className="text-amber-400 hover:text-amber-300 hover:underline"
@@ -347,7 +346,7 @@ export default function TermsOfService() {
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
 								Pour toute question concernant les présentes
-								CGU, vous pouvez nous contacter à :
+								CGU, vous pouvez me contacter à :
 								<br />
 								<a
 									href="mailto:mattbuchs25@gmail.com"

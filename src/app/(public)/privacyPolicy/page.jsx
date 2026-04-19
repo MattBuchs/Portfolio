@@ -94,10 +94,10 @@ export default function PrivacyPolicy() {
 								>
 									matt-buchs.me
 								</a>
-								. Nous accordons une importance capitale à la
-								protection de votre vie privée et nous nous
-								engageons à respecter le Règlement Général sur
-								la Protection des Données (RGPD).
+								. J&apos;accorde une importance capitale à la
+								protection de votre vie privée et je
+								m&apos;engage à respecter le Règlement Général
+								sur la Protection des Données (RGPD).
 							</p>
 						</section>
 
@@ -134,8 +134,8 @@ export default function PrivacyPolicy() {
 							</h2>
 							<div className="text-zinc-300 space-y-4">
 								<p>
-									Nous collectons les données personnelles
-									suivantes lorsque vous utilisez notre
+									Je collecte les données personnelles
+									suivantes lorsque vous utilisez mon
 									formulaire de contact :
 								</p>
 								<ul className="list-disc list-inside space-y-2 ml-4">
@@ -160,7 +160,7 @@ export default function PrivacyPolicy() {
 										:
 									</strong>{" "}
 									Lors de l&apos;achat d&apos;une licence
-									GameMaster OS, nous collectons :
+									GameMaster OS, les données collectées sont :
 								</p>
 								<ul className="list-disc list-inside space-y-2 ml-4 mt-2">
 									<li>Nom et prénom</li>
@@ -299,11 +299,11 @@ export default function PrivacyPolicy() {
 									<strong className="text-white">
 										Non-revente des données :
 									</strong>{" "}
-									Nous ne vendons, ne louons ni ne partageons
-									vos données avec des tiers à des fins
+									Aucune données n&apos;est vendue, louée ni
+									partagée avec des tiers à des fins
 									commerciales. Vos informations sont
 									uniquement utilisées pour le fonctionnement
-									de nos services.
+									de mes services.
 								</p>
 							</div>
 						</section>
@@ -363,7 +363,7 @@ export default function PrivacyPolicy() {
 									</li>
 								</ul>
 								<p className="pt-4">
-									Pour exercer ces droits, contactez-nous à :{" "}
+									Pour exercer ces droits, contactez-moi à :{" "}
 									<a
 										href="mailto:mattbuchs25@gmail.com"
 										className="text-amber-400 hover:text-amber-300 hover:underline"
@@ -379,7 +379,7 @@ export default function PrivacyPolicy() {
 								9. Sécurité des données
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
-								Nous mettons en œuvre des mesures techniques et
+								Je mets en œuvre des mesures techniques et
 								organisationnelles appropriées pour protéger vos
 								données personnelles contre tout accès non
 								autorisé, perte, destruction ou divulgation. Le
@@ -415,7 +415,7 @@ export default function PrivacyPolicy() {
 								11. Modifications
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
-								Nous nous réservons le droit de modifier cette
+								Je me réserve le droit de modifier cette
 								Politique de Confidentialité à tout moment.
 								Toute modification sera publiée sur cette page
 								avec une nouvelle date de mise à jour.
@@ -428,9 +428,8 @@ export default function PrivacyPolicy() {
 							</h2>
 							<p className="text-zinc-300 leading-relaxed">
 								Pour toute question concernant cette Politique
-								de Confidentialité, vous pouvez nous contacter à
-								:
-								<br />
+								de Confidentialité, vous pouvez me contacter à
+								l&apos;adresse suivante : <br />
 								<a
 									href="mailto:mattbuchs25@gmail.com"
 									className="text-amber-400 hover:text-amber-300 hover:underline"
