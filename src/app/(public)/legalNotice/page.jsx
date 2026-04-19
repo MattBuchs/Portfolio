@@ -194,7 +194,7 @@ export default function LegalNotice() {
 								vous disposez d&apos;un droit d&apos;accès, de
 								rectification et de suppression des données vous
 								concernant. Pour exercer ces droits,
-								contactez-nous à l&apos;adresse :{" "}
+								contactez-moi à l&apos;adresse :{" "}
 								<a
 									href="mailto:mattbuchs25@gmail.com"
 									className="text-amber-400 hover:text-amber-300 hover:underline"

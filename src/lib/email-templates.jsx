@@ -210,10 +210,11 @@ export function LicensePurchaseEmail({
 							,
 						</Text>
 						<Text style={baseStyles.text}>
-							Merci d'avoir choisi GameMaster OS ! Votre paiement
-							a été confirmé et votre licence est maintenant
-							active. Vous trouverez ci-dessous votre clé de
-							licence ainsi que votre facture en pièce jointe.
+							Merci d&apos;avoir choisi GameMaster OS ! Votre
+							paiement a été confirmé et votre licence est
+							maintenant active. Vous trouverez ci-dessous votre
+							clé de licence ainsi que votre facture en pièce
+							jointe.
 						</Text>
 
 						{/* License Key Box */}
@@ -383,14 +384,15 @@ export function LicensePurchaseEmail({
 								textAlign: "left",
 							}}
 						>
-							Besoin d'aide pour l'installation ? Consultez notre{" "}
+							Besoin d&apos;aide pour l&apos;installation ?
+							Consultez notre{" "}
 							<Link
 								href="https://matt-buchs.me/gamemaster-os#installation"
 								style={baseStyles.link}
 							>
-								guide d'installation
+								guide d&apos;installation
 							</Link>{" "}
-							ou contactez-nous à{" "}
+							ou contactez-moi à l&apos;adresse suivante :{" "}
 							<Link
 								href="mailto:mattbuchs25@gmail.com"
 								style={baseStyles.link}
@@ -714,9 +716,10 @@ export function LicenseTransferEmail({
 										margin: 0,
 									}}
 								>
-									⚠️ Attention : Il ne vous reste plus qu'un
-									seul transfert. Après cela, vous devrez nous
-									contacter pour réinitialiser votre licence.
+									⚠️ Attention : Il ne vous reste plus
+									qu&apos;un seul transfert. Après cela, vous
+									devrez me contacter pour réinitialiser votre
+									licence.
 								</Text>
 							</Section>
 						)}
@@ -724,8 +727,8 @@ export function LicenseTransferEmail({
 						<Hr style={baseStyles.hr} />
 
 						<Text style={baseStyles.footerText}>
-							Si vous n'avez pas effectué ce transfert, veuillez
-							nous contacter immédiatement à{" "}
+							Si vous n&apos;avez pas effectué ce transfert,
+							veuillez me contacter immédiatement à{" "}
 							<Link
 								href="mailto:mattbuchs25@gmail.com"
 								style={baseStyles.link}
@@ -918,7 +921,8 @@ export function AdminCreatedLicenseEmail({
 						<Hr style={baseStyles.hr} />
 
 						<Text style={baseStyles.footerText}>
-							Besoin d'aide ? Contactez-nous à{" "}
+							Besoin d&apos;aide ? Contactez-moi à l&apos;adresse
+							suivante :{" "}
 							<Link
 								href="mailto:mattbuchs25@gmail.com"
 								style={baseStyles.link}

@@ -149,7 +149,7 @@ function SuccessContent() {
 				icon: <span className="text-4xl">❌</span>,
 				title: "Paiement non trouvé",
 				description:
-					"Nous n'avons pas pu vérifier votre paiement. Si vous pensez qu'il s'agit d'une erreur, contactez-nous.",
+					"Le paiement n'a pas pu être vérifié. Si vous pensez qu'il s'agit d'une erreur, contactez-moi via le formulaire de contact.",
 				bgGradient: "from-red-900/20",
 				borderColor: "border-red-500/20",
 				bgColor: "bg-red-500/10",
@@ -445,7 +445,7 @@ function SuccessContent() {
 								href="/contact"
 								className="text-amber-500 hover:text-amber-400 font-semibold"
 							>
-								Contactez-nous
+								Contactez-moi
 							</Link>
 						</p>
 					</div>
