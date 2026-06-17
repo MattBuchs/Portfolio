@@ -90,3 +90,182 @@ model AppVersion {
   @@index([isLatest])
   @@index([releaseDate])
 }
+
+enum FoodTruckRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+model FoodTruckUser {
+  id           String                @id @default(cuid())
+  email        String                @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  memberships  FoodTruckMembership[]
+  sessions     FoodTruckSession[]
+  invitesSent  FoodTruckInvite[]     @relation("FoodTruckInvitedBy")
+}
+
+model FoodTruckWorkspace {
+  id             String                    @id @default(cuid())
+  name           String
+  slug           String                    @unique
+  createdAt      DateTime                  @default(now())
+  updatedAt      DateTime                  @updatedAt
+  memberships    FoodTruckMembership[]
+  invites        FoodTruckInvite[]
+  products       FoodTruckProduct[]        @relation("FoodTruckProducts")
+  orders         FoodTruckOrder[]          @relation("FoodTruckOrders")
+  stockItems     FoodTruckStockItem[]      @relation("FoodTruckStockItems")
+  checklistItems FoodTruckChecklistItem[]  @relation("FoodTruckChecklistItems")
+  finances       FoodTruckFinance[]        @relation("FoodTruckFinances")
+}
+
+model FoodTruckMembership {
+  id          String            @id @default(cuid())
+  role        FoodTruckRole     @default(STAFF)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  userId      String
+  workspaceId String
+  user        FoodTruckUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   FoodTruckWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+  @@index([workspaceId])
+  @@index([userId])
+}
+
+model FoodTruckSession {
+  id         String       @id @default(cuid())
+  tokenHash  String       @unique
+  expiresAt  DateTime
+  createdAt  DateTime     @default(now())
+  revokedAt  DateTime?
+  userId     String
+  user       FoodTruckUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model FoodTruckInvite {
+  id          String            @id @default(cuid())
+  email       String
+  role        FoodTruckRole     @default(STAFF)
+  tokenHash   String            @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime          @default(now())
+  workspaceId String
+  invitedById String
+  workspace   FoodTruckWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  invitedBy   FoodTruckUser      @relation("FoodTruckInvitedBy", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([email])
+}
+
+model FoodTruckProduct {
+  id          String             @id @default(cuid())
+  workspaceId String
+  name        String
+  category    String             @default("Général")
+  price       Float
+  description String?            // Description optionnelle
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  workspace   FoodTruckWorkspace @relation("FoodTruckProducts", fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+}
+
+model FoodTruckOrder {
+  id            String             @id
+  workspaceId   String
+  client        String
+  status        String             @default("attente")
+  orderDate     DateTime           @db.Date
+  scheduledTime String?            // Format: HH:MM (optionnel)
+  total         Float
+  lines         FoodTruckOrderLine[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  workspace     FoodTruckWorkspace @relation("FoodTruckOrders", fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([orderDate])
+}
+
+model FoodTruckOrderLine {
+  id          String        @id @default(cuid())
+  orderId     String
+  productId   String?
+  productName String
+  qty         Int
+  unitPrice   Float
+  order       FoodTruckOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+model FoodTruckStockItem {
+  id                   String                       @id @default(cuid())
+  workspaceId          String
+  name                 String
+  category             String?
+  dlcEntries           Json                         @default("[]")  // Array of { dlc: string (ISO date), qty: number }
+  unit                 String                       @default("pcs")
+  minQty               Float
+  alertDaysThreshold   Int                          @default(3)  // Nombre de jours avant DLC pour alerter (défaut: 3 jours = 72h)
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  movements            FoodTruckStockMovement[]
+  workspace            FoodTruckWorkspace           @relation("FoodTruckStockItems", fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+}
+
+model FoodTruckStockMovement {
+  id           String             @id @default(cuid())
+  stockItemId  String
+  type         String             // "add" | "remove" | "adjustment"
+  quantity     Float
+  reason       String?            // "restock", "damaged", "expired", "manual_adjustment", etc.
+  notes        String?
+  createdAt    DateTime           @default(now())
+  stockItem    FoodTruckStockItem @relation(fields: [stockItemId], references: [id], onDelete: Cascade)
+
+  @@index([stockItemId])
+}
+
+model FoodTruckChecklistItem {
+  id          String             @id @default(cuid())
+  workspaceId String
+  label       String
+  done        Boolean            @default(false)
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  workspace   FoodTruckWorkspace @relation("FoodTruckChecklistItems", fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+}
+
+model FoodTruckFinance {
+  id           String             @id @default(cuid())
+  workspaceId  String
+  financeDate  DateTime           @db.Date
+  cash         Float              @default(0)
+  card         Float              @default(0)
+  deliveryApps Float              @default(0)
+  expenses     Float              @default(0)
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+  workspace    FoodTruckWorkspace @relation("FoodTruckFinances", fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, financeDate])
+  @@index([workspaceId])
+}
