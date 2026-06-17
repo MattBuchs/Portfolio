@@ -90,3 +90,86 @@ model AppVersion {
   @@index([isLatest])
   @@index([releaseDate])
 }
+
+enum FoodTruckRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+model FoodTruckUser {
+  id           String                @id @default(cuid())
+  email        String                @unique
+  passwordHash String
+  name         String
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  memberships  FoodTruckMembership[]
+  sessions     FoodTruckSession[]
+  invitesSent  FoodTruckInvite[]     @relation("FoodTruckInvitedBy")
+}
+
+model FoodTruckWorkspace {
+  id          String                @id @default(cuid())
+  name        String
+  slug        String                @unique
+  createdAt   DateTime              @default(now())
+  updatedAt   DateTime              @updatedAt
+  memberships FoodTruckMembership[]
+  invites     FoodTruckInvite[]
+  state       FoodTruckState?
+}
+
+model FoodTruckMembership {
+  id          String            @id @default(cuid())
+  role        FoodTruckRole     @default(STAFF)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+  userId      String
+  workspaceId String
+  user        FoodTruckUser     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workspace   FoodTruckWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, workspaceId])
+  @@index([workspaceId])
+  @@index([userId])
+}
+
+model FoodTruckSession {
+  id         String       @id @default(cuid())
+  tokenHash  String       @unique
+  expiresAt  DateTime
+  createdAt  DateTime     @default(now())
+  revokedAt  DateTime?
+  userId     String
+  user       FoodTruckUser @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model FoodTruckInvite {
+  id          String            @id @default(cuid())
+  email       String
+  role        FoodTruckRole     @default(STAFF)
+  tokenHash   String            @unique
+  expiresAt   DateTime
+  acceptedAt  DateTime?
+  createdAt   DateTime          @default(now())
+  workspaceId String
+  invitedById String
+  workspace   FoodTruckWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  invitedBy   FoodTruckUser      @relation("FoodTruckInvitedBy", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([email])
+}
+
+model FoodTruckState {
+  id          String             @id @default(cuid())
+  workspaceId String             @unique
+  data        Json
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  workspace   FoodTruckWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+}
