@@ -69,13 +69,6 @@ export async function POST(request) {
 				},
 			});
 
-			await tx.foodTruckState.create({
-				data: {
-					workspaceId: workspace.id,
-					data: emptyState,
-				},
-			});
-
 			return { user, workspace };
 		});
 

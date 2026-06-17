@@ -80,6 +80,7 @@ export async function GET(request) {
 		const ordersWithDateString = orders.map((order) => ({
 			...order,
 			orderDate: order.orderDate.toISOString().split("T")[0],
+			createdAt: order.createdAt.toISOString(),
 		}));
 
 		return NextResponse.json(ordersWithDateString, {
@@ -117,11 +118,11 @@ export async function POST(request) {
 	}
 
 	try {
-		const { client, status, orderDate, lines } = await request.json();
+		const { id, client, status, orderDate, lines } = await request.json();
 
-		if (!client || !lines || !Array.isArray(lines)) {
+		if (!id || !client || !lines || !Array.isArray(lines)) {
 			return NextResponse.json(
-				{ error: "Champs requis: client, lines" },
+				{ error: "Champs requis: id, client, lines" },
 				{ status: 400, headers: corsHeaders() },
 			);
 		}
@@ -132,6 +133,7 @@ export async function POST(request) {
 
 		const order = await prisma.foodTruckOrder.create({
 			data: {
+				id: String(id).trim(),
 				workspaceId,
 				client: String(client).trim(),
 				status: status || "attente",
@@ -152,10 +154,17 @@ export async function POST(request) {
 			include: { lines: true },
 		});
 
-		return NextResponse.json(order, {
-			status: 201,
-			headers: corsHeaders(),
-		});
+		return NextResponse.json(
+			{
+				...order,
+				orderDate: order.orderDate.toISOString().split("T")[0],
+				createdAt: order.createdAt.toISOString(),
+			},
+			{
+				status: 201,
+				headers: corsHeaders(),
+			},
+		);
 	} catch (error) {
 		console.error("Food truck orders POST error:", error);
 		return NextResponse.json(

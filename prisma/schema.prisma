@@ -122,7 +122,6 @@ model FoodTruckWorkspace {
   stockItems     FoodTruckStockItem[]      @relation("FoodTruckStockItems")
   checklistItems FoodTruckChecklistItem[]  @relation("FoodTruckChecklistItems")
   finances       FoodTruckFinance[]        @relation("FoodTruckFinances")
-  state          FoodTruckState?
 }
 
 model FoodTruckMembership {
@@ -184,7 +183,7 @@ model FoodTruckProduct {
 }
 
 model FoodTruckOrder {
-  id          String             @id @default(cuid())
+  id          String             @id
   workspaceId String
   client      String
   status      String             @default("attente")
@@ -253,13 +252,4 @@ model FoodTruckFinance {
 
   @@unique([workspaceId, financeDate])
   @@index([workspaceId])
-}
-
-model FoodTruckState {
-  id          String             @id @default(cuid())
-  workspaceId String             @unique
-  data        Json               @default("{}")
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  workspace   FoodTruckWorkspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
 }
