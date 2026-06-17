@@ -213,19 +213,33 @@ model FoodTruckOrderLine {
 }
 
 model FoodTruckStockItem {
-  id          String             @id @default(cuid())
-  workspaceId String
-  name        String
-  category    String             @default("Général")
-  qty         Float
-  unit        String             @default("pcs")
-  minQty      Float
-  dlc         DateTime?          @db.Date
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  workspace   FoodTruckWorkspace @relation("FoodTruckStockItems", fields: [workspaceId], references: [id], onDelete: Cascade)
+  id                   String                       @id @default(cuid())
+  workspaceId          String
+  name                 String
+  category             String?
+  dlcEntries           Json                         @default("[]")  // Array of { dlc: string (ISO date), qty: number }
+  unit                 String                       @default("pcs")
+  minQty               Float
+  alertDaysThreshold   Int                          @default(3)  // Nombre de jours avant DLC pour alerter (défaut: 3 jours = 72h)
+  createdAt            DateTime                     @default(now())
+  updatedAt            DateTime                     @updatedAt
+  movements            FoodTruckStockMovement[]
+  workspace            FoodTruckWorkspace           @relation("FoodTruckStockItems", fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@index([workspaceId])
+}
+
+model FoodTruckStockMovement {
+  id           String             @id @default(cuid())
+  stockItemId  String
+  type         String             // "add" | "remove" | "adjustment"
+  quantity     Float
+  reason       String?            // "restock", "damaged", "expired", "manual_adjustment", etc.
+  notes        String?
+  createdAt    DateTime           @default(now())
+  stockItem    FoodTruckStockItem @relation(fields: [stockItemId], references: [id], onDelete: Cascade)
+
+  @@index([stockItemId])
 }
 
 model FoodTruckChecklistItem {

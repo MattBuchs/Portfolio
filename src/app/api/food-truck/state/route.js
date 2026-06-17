@@ -85,7 +85,9 @@ export async function GET(request) {
 					})),
 					stockItems: stockItems.map((s) => ({
 						...s,
-						dlc: s.dlc.toISOString().split("T")[0],
+						dlcEntries: Array.isArray(s.dlcEntries)
+							? s.dlcEntries
+							: [],
 					})),
 					checklist: checklistItems,
 					finance: finances,

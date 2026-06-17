@@ -98,7 +98,8 @@ export async function POST(request) {
 	}
 
 	try {
-		const { name, category, qty, unit, minQty, dlc } = await request.json();
+		const { name, category, dlcEntries, unit, minQty, alertDaysThreshold } =
+			await request.json();
 
 		if (!name) {
 			return NextResponse.json(
@@ -107,15 +108,28 @@ export async function POST(request) {
 			);
 		}
 
+		// Validate dlcEntries format
+		const validDlcEntries = Array.isArray(dlcEntries)
+			? dlcEntries.filter(
+					(entry) =>
+						entry &&
+						typeof entry.dlc === "string" &&
+						typeof entry.qty === "number" &&
+						entry.qty >= 0,
+				)
+			: [];
+
 		const item = await prisma.foodTruckStockItem.create({
 			data: {
 				workspaceId,
 				name: String(name).trim(),
 				category: category ? String(category).trim() : "Général",
-				qty: Number(qty) || 0,
+				dlcEntries: validDlcEntries,
 				unit: unit ? String(unit).trim() : "pcs",
 				minQty: Number(minQty) || 0,
-				dlc: dlc ? new Date(`${dlc}T12:00:00`) : null,
+				alertDaysThreshold: alertDaysThreshold
+					? Math.max(1, Number(alertDaysThreshold))
+					: 3,
 			},
 		});
 
