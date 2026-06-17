@@ -175,6 +175,7 @@ model FoodTruckProduct {
   name        String
   category    String             @default("Général")
   price       Float
+  description String?            // Description optionnelle
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
   workspace   FoodTruckWorkspace @relation("FoodTruckProducts", fields: [workspaceId], references: [id], onDelete: Cascade)
@@ -183,16 +184,17 @@ model FoodTruckProduct {
 }
 
 model FoodTruckOrder {
-  id          String             @id
-  workspaceId String
-  client      String
-  status      String             @default("attente")
-  orderDate   DateTime           @db.Date
-  total       Float
-  lines       FoodTruckOrderLine[]
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  workspace   FoodTruckWorkspace @relation("FoodTruckOrders", fields: [workspaceId], references: [id], onDelete: Cascade)
+  id            String             @id
+  workspaceId   String
+  client        String
+  status        String             @default("attente")
+  orderDate     DateTime           @db.Date
+  scheduledTime String?            // Format: HH:MM (optionnel)
+  total         Float
+  lines         FoodTruckOrderLine[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  workspace     FoodTruckWorkspace @relation("FoodTruckOrders", fields: [workspaceId], references: [id], onDelete: Cascade)
 
   @@index([workspaceId])
   @@index([orderDate])

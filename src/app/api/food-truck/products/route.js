@@ -91,7 +91,7 @@ export async function POST(request) {
 	}
 
 	try {
-		const { name, category, price } = await request.json();
+		const { name, category, price, description } = await request.json();
 
 		if (!name || price === undefined) {
 			return NextResponse.json(
@@ -106,6 +106,7 @@ export async function POST(request) {
 				name: String(name).trim(),
 				category: category ? String(category).trim() : "Général",
 				price: Number(price),
+				description: description ? String(description).trim() : null,
 			},
 		});
 

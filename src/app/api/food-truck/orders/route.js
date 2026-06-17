@@ -118,7 +118,8 @@ export async function POST(request) {
 	}
 
 	try {
-		const { id, client, status, orderDate, lines } = await request.json();
+		const { id, client, status, orderDate, scheduledTime, lines } =
+			await request.json();
 
 		if (!id || !client || !lines || !Array.isArray(lines)) {
 			return NextResponse.json(
@@ -138,6 +139,9 @@ export async function POST(request) {
 				client: String(client).trim(),
 				status: status || "attente",
 				orderDate: parsedDate,
+				scheduledTime: scheduledTime
+					? String(scheduledTime).trim()
+					: null,
 				total: lines.reduce(
 					(sum, line) => sum + line.unitPrice * line.qty,
 					0,
