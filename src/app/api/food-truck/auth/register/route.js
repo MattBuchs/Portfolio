@@ -4,6 +4,7 @@ import {
 	createSession,
 	createSlug,
 	hashPassword,
+	hashToken,
 	normalizeEmail,
 } from "@/lib/foodTruckAuth";
 import { prisma } from "@/lib/prisma";
@@ -23,10 +24,21 @@ export async function POST(request) {
 		const password = String(body?.password || "");
 		const name = String(body?.name || "").trim();
 		const workspaceName = String(body?.workspaceName || "").trim();
+		const inviteToken = String(body?.inviteToken || "").trim();
 
-		if (!email || password.length < 8 || !name || !workspaceName) {
+		if (!email || password.length < 8 || !name) {
 			return NextResponse.json(
 				{ error: "Données invalides" },
+				{ status: 400 },
+			);
+		}
+
+		// Either creating a workspace OR joining via invitation (or neither for skip mode)
+		if (workspaceName && inviteToken) {
+			return NextResponse.json(
+				{
+					error: "Veuillez fournir soit un nom d'espace soit un code d'invitation, pas les deux",
+				},
 				{ status: 400 },
 			);
 		}
@@ -54,25 +66,99 @@ export async function POST(request) {
 				},
 			});
 
-			const workspace = await tx.foodTruckWorkspace.create({
-				data: {
-					name: workspaceName,
-					slug: createSlug(workspaceName),
-				},
-			});
+			let workspace = null;
+			let role = "OWNER";
 
-			await tx.foodTruckMembership.create({
-				data: {
-					userId: user.id,
-					workspaceId: workspace.id,
-					role: "OWNER",
-				},
-			});
+			// If creating a new workspace
+			if (workspaceName) {
+				workspace = await tx.foodTruckWorkspace.create({
+					data: {
+						name: workspaceName,
+						slug: createSlug(workspaceName),
+					},
+				});
 
-			return { user, workspace };
+				await tx.foodTruckMembership.create({
+					data: {
+						userId: user.id,
+						workspaceId: workspace.id,
+						role: "OWNER",
+					},
+				});
+			}
+
+			// If joining via invitation
+			if (inviteToken) {
+				const tokenHash = hashToken(inviteToken);
+				const invite = await tx.foodTruckInvite.findUnique({
+					where: { tokenHash },
+				});
+
+				if (!invite) {
+					throw new Error("Code d'invitation invalide");
+				}
+
+				if (invite.acceptedAt) {
+					throw new Error("Cette invitation a déjà été acceptée");
+				}
+
+				const now = new Date();
+				if (invite.expiresAt < now) {
+					throw new Error("Cette invitation a expiré");
+				}
+
+				if (normalizeEmail(email) !== normalizeEmail(invite.email)) {
+					throw new Error(
+						"Cette invitation ne correspond pas à votre adresse email",
+					);
+				}
+
+				// Join the workspace with the role from invitation
+				await tx.foodTruckMembership.upsert({
+					where: {
+						userId_workspaceId: {
+							userId: user.id,
+							workspaceId: invite.workspaceId,
+						},
+					},
+					create: {
+						userId: user.id,
+						workspaceId: invite.workspaceId,
+						role: invite.role,
+					},
+					update: {
+						role: invite.role,
+					},
+				});
+
+				// Mark invitation as accepted
+				await tx.foodTruckInvite.update({
+					where: { id: invite.id },
+					data: { acceptedAt: new Date() },
+				});
+
+				workspace = await tx.foodTruckWorkspace.findUnique({
+					where: { id: invite.workspaceId },
+				});
+				role = invite.role;
+			}
+
+			return { user, workspace, role };
 		});
 
 		const session = await createSession(result.user.id);
+
+		// Fetch all workspaces for this user
+		const memberships = await prisma.foodTruckMembership.findMany({
+			where: { userId: result.user.id },
+			include: { workspace: true },
+		});
+
+		const workspaces = memberships.map((m) => ({
+			id: m.workspace.id,
+			name: m.workspace.name,
+			role: m.role,
+		}));
 
 		return NextResponse.json({
 			token: session.token,
@@ -82,19 +168,18 @@ export async function POST(request) {
 				email: result.user.email,
 				name: result.user.name,
 			},
-			workspaces: [
-				{
-					id: result.workspace.id,
-					name: result.workspace.name,
-					role: "OWNER",
-				},
-			],
-			activeWorkspaceId: result.workspace.id,
+			workspaces,
+			activeWorkspaceId: result.workspace?.id || null,
 		});
 	} catch (error) {
 		console.error("Food truck register error:", error);
 		return NextResponse.json(
-			{ error: "Erreur lors de la création du compte" },
+			{
+				error:
+					error instanceof Error
+						? error.message
+						: "Erreur lors de la création du compte",
+			},
 			{ status: 500 },
 		);
 	}
