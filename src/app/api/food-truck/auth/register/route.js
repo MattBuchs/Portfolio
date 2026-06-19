@@ -33,11 +33,11 @@ export async function POST(request) {
 			);
 		}
 
-		// Either creating a workspace OR joining via invitation
-		if (!workspaceName && !inviteToken) {
+		// Either creating a workspace OR joining via invitation (or neither for skip mode)
+		if (workspaceName && inviteToken) {
 			return NextResponse.json(
 				{
-					error: "Veuillez créer un espace ou fournir un code d'invitation",
+					error: "Veuillez fournir soit un nom d'espace soit un code d'invitation, pas les deux",
 				},
 				{ status: 400 },
 			);
