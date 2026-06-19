@@ -39,7 +39,7 @@ export async function GET(request) {
 
 	return NextResponse.json({
 		members: members.map((item) => ({
-			id: item.id,
+			id: item.userId,
 			role: item.role,
 			user: item.user,
 		})),

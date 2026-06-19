@@ -28,3 +28,14 @@ export function getRecipientEmail(email) {
 	}
 	return email;
 }
+
+/**
+ * Retourne l'email destinataire pour les invitations (ne redirige pas en dev)
+ * @param {string} email - Email original
+ * @returns {string} Email à utiliser
+ */
+export function getInviteRecipientEmail(email) {
+	// For invitations, always send to the provided email address
+	// even in dev mode, since we want the invitee to receive it
+	return email;
+}
