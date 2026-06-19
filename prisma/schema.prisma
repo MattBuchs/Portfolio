@@ -191,6 +191,7 @@ model FoodTruckOrder {
   orderDate     DateTime           @db.Date
   scheduledTime String?            // Format: HH:MM (optionnel)
   total         Float
+  paymentMethods String[]          @default([])  // Array of payment method types
   lines         FoodTruckOrderLine[]
   createdAt     DateTime           @default(now())
   updatedAt     DateTime           @updatedAt

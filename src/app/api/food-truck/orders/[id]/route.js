@@ -117,7 +117,8 @@ export async function PUT(request, { params }) {
 
 	try {
 		const resolvedParams = await params;
-		const { client, lines, status, scheduledTime } = await request.json();
+		const { client, lines, status, scheduledTime, paymentMethods } =
+			await request.json();
 
 		if (!client || !lines || !status) {
 			return NextResponse.json(
@@ -143,6 +144,9 @@ export async function PUT(request, { params }) {
 				client,
 				status,
 				total: Math.max(0, total),
+				paymentMethods: Array.isArray(paymentMethods)
+					? paymentMethods.filter((m) => typeof m === "string")
+					: undefined,
 				...(scheduledTime !== undefined && {
 					scheduledTime: scheduledTime
 						? String(scheduledTime).trim()

@@ -118,8 +118,26 @@ export async function POST(request) {
 	}
 
 	try {
-		const { id, client, status, orderDate, scheduledTime, lines } =
-			await request.json();
+		let body;
+		try {
+			body = await request.json();
+		} catch (parseError) {
+			console.error("JSON parse error:", parseError);
+			return NextResponse.json(
+				{ error: "Corps de la requête invalide" },
+				{ status: 400, headers: corsHeaders() },
+			);
+		}
+
+		const {
+			id,
+			client,
+			status,
+			orderDate,
+			scheduledTime,
+			lines,
+			paymentMethods,
+		} = body;
 
 		if (!id || !client || !lines || !Array.isArray(lines)) {
 			return NextResponse.json(
@@ -146,6 +164,9 @@ export async function POST(request) {
 					(sum, line) => sum + line.unitPrice * line.qty,
 					0,
 				),
+				paymentMethods: Array.isArray(paymentMethods)
+					? paymentMethods.filter((m) => typeof m === "string")
+					: [],
 				lines: {
 					create: lines.map((line) => ({
 						productId: line.productId || null,
