@@ -82,35 +82,44 @@ export async function revokeSession(token) {
 }
 
 export async function getAuthContext(request) {
+	let token = null;
+
+	// Try to get token from Authorization header (standard)
 	const authHeader = request.headers.get("authorization") || "";
-	
-	// Debug: log all headers
-	const allHeaders = {};
-	for (const [key, value] of request.headers.entries()) {
-		allHeaders[key] = value;
+	if (authHeader.toLowerCase().startsWith("bearer ")) {
+		token = authHeader.slice(7).trim();
+		console.log("[AUTH] Token from Authorization header", {
+			method: "Authorization",
+			tokenLength: token.length,
+		});
 	}
-	
-	if (!authHeader) {
+
+	// Fallback: try custom header if Authorization didn't work
+	if (!token) {
+		const customTokenHeader =
+			request.headers.get("x-food-truck-token") || "";
+		if (customTokenHeader) {
+			token = customTokenHeader.trim();
+			console.log("[AUTH] Token from x-food-truck-token header", {
+				method: "custom-header",
+				tokenLength: token.length,
+			});
+		}
+	}
+
+	if (!token) {
+		// Debug: log all headers to understand what's being sent
+		const allHeaders = {};
+		for (const [key, value] of request.headers.entries()) {
+			allHeaders[key] = value;
+		}
+
 		console.error("Auth failed: no authorization header", {
 			timestamp: new Date().toISOString(),
 			hasAuthHeader: false,
+			hasCustomHeader: !!request.headers.get("x-food-truck-token"),
 			allHeaders: Object.keys(allHeaders),
 		});
-		return null;
-	}
-
-	if (!authHeader.toLowerCase().startsWith("bearer ")) {
-		console.error("Auth failed: invalid auth header format", {
-			timestamp: new Date().toISOString(),
-			hasAuthHeader: !!authHeader,
-			headerStart: authHeader.substring(0, 20),
-		});
-		return null;
-	}
-
-	const token = authHeader.slice(7).trim();
-	if (!token) {
-		console.error("Auth failed: empty token after Bearer");
 		return null;
 	}
 
