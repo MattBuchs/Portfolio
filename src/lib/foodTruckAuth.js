@@ -84,35 +84,48 @@ export async function revokeSession(token) {
 export async function getAuthContext(request) {
 	const authHeader = request.headers.get("authorization") || "";
 	if (!authHeader.toLowerCase().startsWith("bearer ")) {
+		console.error("Auth failed: invalid auth header format", {
+			hasAuthHeader: !!authHeader,
+		});
 		return null;
 	}
 
 	const token = authHeader.slice(7).trim();
 	if (!token) {
+		console.error("Auth failed: empty token");
 		return null;
 	}
 
 	const tokenHash = hashToken(token);
-	const session = await prisma.foodTruckSession.findFirst({
-		where: {
-			tokenHash,
-			revokedAt: null,
-			expiresAt: { gt: new Date() },
-		},
-		include: {
-			user: {
-				include: {
-					memberships: {
-						include: {
-							workspace: true,
+	let session;
+	try {
+		session = await prisma.foodTruckSession.findFirst({
+			where: {
+				tokenHash,
+				revokedAt: null,
+				expiresAt: { gt: new Date() },
+			},
+			include: {
+				user: {
+					include: {
+						memberships: {
+							include: {
+								workspace: true,
+							},
 						},
 					},
 				},
 			},
-		},
-	});
+		});
+	} catch (error) {
+		console.error("Database query error in getAuthContext:", error);
+		return null;
+	}
 
 	if (!session) {
+		console.error("Auth failed: session not found or expired", {
+			tokenHashPrefix: tokenHash.slice(0, 10),
+		});
 		return null;
 	}
 
