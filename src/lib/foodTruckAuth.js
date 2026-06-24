@@ -83,16 +83,34 @@ export async function revokeSession(token) {
 
 export async function getAuthContext(request) {
 	const authHeader = request.headers.get("authorization") || "";
+	
+	// Debug: log all headers
+	const allHeaders = {};
+	for (const [key, value] of request.headers.entries()) {
+		allHeaders[key] = value;
+	}
+	
+	if (!authHeader) {
+		console.error("Auth failed: no authorization header", {
+			timestamp: new Date().toISOString(),
+			hasAuthHeader: false,
+			allHeaders: Object.keys(allHeaders),
+		});
+		return null;
+	}
+
 	if (!authHeader.toLowerCase().startsWith("bearer ")) {
 		console.error("Auth failed: invalid auth header format", {
+			timestamp: new Date().toISOString(),
 			hasAuthHeader: !!authHeader,
+			headerStart: authHeader.substring(0, 20),
 		});
 		return null;
 	}
 
 	const token = authHeader.slice(7).trim();
 	if (!token) {
-		console.error("Auth failed: empty token");
+		console.error("Auth failed: empty token after Bearer");
 		return null;
 	}
 
