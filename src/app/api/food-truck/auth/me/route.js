@@ -18,15 +18,7 @@ export async function GET(request) {
 	try {
 		const auth = await getAuthContext(request);
 		if (!auth) {
-			const authHeader = request.headers.get("authorization") || "";
-			console.error("Auth failed", {
-				timestamp: new Date().toISOString(),
-				hasAuthHeader: !!authHeader,
-				headerLength: authHeader.length,
-				reason: authHeader
-					? "Invalid token or session not found"
-					: "No authorization header",
-			});
+			// getAuthContext already logs the error details
 			return NextResponse.json(
 				{ error: "Unauthorized" },
 				{ status: 401, headers: corsHeaders },
@@ -55,6 +47,7 @@ export async function GET(request) {
 			timestamp: new Date().toISOString(),
 			error: error.message,
 			type: error.constructor.name,
+			stack: error.stack,
 		});
 		return NextResponse.json(
 			{ error: "Internal server error" },
