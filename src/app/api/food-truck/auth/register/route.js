@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { getCorsHeaders } from "@/lib/cors";
 import {
 	createSession,
 	createSlug,
@@ -8,6 +9,11 @@ import {
 	normalizeEmail,
 } from "@/lib/foodTruckAuth";
 import { prisma } from "@/lib/prisma";
+import {
+	validateEmail,
+	validateName,
+	validatePassword,
+} from "@/lib/validation";
 
 const emptyState = {
 	products: [],
@@ -17,7 +23,14 @@ const emptyState = {
 	finance: { cash: 0, card: 0, deliveryApps: 0, expenses: 0 },
 };
 
+export async function OPTIONS(request) {
+	const corsHeaders = getCorsHeaders(request.headers.get("origin"));
+	return new Response(null, { status: 200, headers: corsHeaders });
+}
+
 export async function POST(request) {
+	const corsHeaders = getCorsHeaders(request.headers.get("origin"));
+
 	try {
 		const body = await request.json();
 		const email = normalizeEmail(body?.email);
@@ -26,10 +39,28 @@ export async function POST(request) {
 		const workspaceName = String(body?.workspaceName || "").trim();
 		const inviteToken = String(body?.inviteToken || "").trim();
 
-		if (!email || password.length < 8 || !name) {
+		// Validate email format
+		if (!email || !validateEmail(email)) {
 			return NextResponse.json(
-				{ error: "Données invalides" },
-				{ status: 400 },
+				{ error: "Invalid email format" },
+				{ status: 400, headers: corsHeaders },
+			);
+		}
+
+		// Validate password strength (12 chars min, mixed case, number)
+		const pwdValidation = validatePassword(password);
+		if (!pwdValidation.valid) {
+			return NextResponse.json(
+				{ error: pwdValidation.error },
+				{ status: 400, headers: corsHeaders },
+			);
+		}
+
+		// Validate name
+		if (!name || !validateName(name)) {
+			return NextResponse.json(
+				{ error: "Invalid name" },
+				{ status: 400, headers: corsHeaders },
 			);
 		}
 
@@ -37,9 +68,16 @@ export async function POST(request) {
 		if (workspaceName && inviteToken) {
 			return NextResponse.json(
 				{
-					error: "Veuillez fournir soit un nom d'espace soit un code d'invitation, pas les deux",
+					error: "Provide either workspace name or invitation code, not both",
 				},
-				{ status: 400 },
+				{ status: 400, headers: corsHeaders },
+			);
+		}
+
+		if (workspaceName && !validateName(workspaceName)) {
+			return NextResponse.json(
+				{ error: "Invalid workspace name" },
+				{ status: 400, headers: corsHeaders },
 			);
 		}
 
@@ -50,8 +88,8 @@ export async function POST(request) {
 
 		if (existing) {
 			return NextResponse.json(
-				{ error: "Cet email est déjà utilisé" },
-				{ status: 409 },
+				{ error: "Email already in use" },
+				{ status: 409, headers: corsHeaders },
 			);
 		}
 
@@ -95,22 +133,20 @@ export async function POST(request) {
 				});
 
 				if (!invite) {
-					throw new Error("Code d'invitation invalide");
+					throw new Error("Invalid invitation code");
 				}
 
 				if (invite.acceptedAt) {
-					throw new Error("Cette invitation a déjà été acceptée");
+					throw new Error("Invitation already accepted");
 				}
 
 				const now = new Date();
 				if (invite.expiresAt < now) {
-					throw new Error("Cette invitation a expiré");
+					throw new Error("Invitation expired");
 				}
 
 				if (normalizeEmail(email) !== normalizeEmail(invite.email)) {
-					throw new Error(
-						"Cette invitation ne correspond pas à votre adresse email",
-					);
+					throw new Error("Invitation email does not match");
 				}
 
 				// Join the workspace with the role from invitation
