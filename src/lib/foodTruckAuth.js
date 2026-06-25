@@ -129,10 +129,6 @@ export async function getAuthContext(request) {
 	const authHeader = request.headers.get("authorization") || "";
 	if (authHeader.toLowerCase().startsWith("bearer ")) {
 		token = authHeader.slice(7).trim();
-		console.log("[AUTH] Token from Authorization header", {
-			method: "Authorization",
-			tokenLength: token.length,
-		});
 	}
 
 	// Fallback: try custom header if Authorization didn't work
@@ -141,10 +137,6 @@ export async function getAuthContext(request) {
 			request.headers.get("x-food-truck-token") || "";
 		if (customTokenHeader) {
 			token = customTokenHeader.trim();
-			console.log("[AUTH] Token from x-food-truck-token header", {
-				method: "custom-header",
-				tokenLength: token.length,
-			});
 		}
 	}
 

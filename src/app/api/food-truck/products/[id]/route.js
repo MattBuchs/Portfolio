@@ -126,14 +126,6 @@ export async function PUT(request, { params }) {
 			data: updateData,
 		});
 
-		console.log({
-			timestamp: new Date().toISOString(),
-			action: "UPDATE_PRODUCT",
-			userId: auth.user.id,
-			workspaceId,
-			productId: id,
-		});
-
 		return NextResponse.json(product, { headers: corsHeaders });
 	} catch (error) {
 		console.error("Product PUT error:", {
@@ -197,15 +189,6 @@ export async function DELETE(request, { params }) {
 
 		await prisma.foodTruckProduct.delete({
 			where: { id },
-		});
-
-		console.log({
-			timestamp: new Date().toISOString(),
-			action: "DELETE_PRODUCT",
-			userId: auth.user.id,
-			workspaceId,
-			productId: id,
-			status: "success",
 		});
 
 		return NextResponse.json({ success: true }, { headers: corsHeaders });

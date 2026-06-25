@@ -64,7 +64,6 @@ export async function POST(request) {
 					maxUsages: parseInt(maxUsages),
 				}),
 			});
-			console.log(`Email de licence envoyé à ${email}`);
 		} catch (emailError) {
 			console.error("Erreur lors de l'envoi de l'email:", emailError);
 		}
