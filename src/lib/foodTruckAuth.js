@@ -69,9 +69,7 @@ async function cleanupStaleSessions(now = new Date()) {
 
 async function touchSession(session, now = new Date()) {
 	const nextTouch = new Date(session.lastUsedAt);
-	nextTouch.setHours(
-		nextTouch.getHours() + SESSION_TOUCH_INTERVAL_HOURS,
-	);
+	nextTouch.setHours(nextTouch.getHours() + SESSION_TOUCH_INTERVAL_HOURS);
 
 	if (nextTouch > now) {
 		return;
