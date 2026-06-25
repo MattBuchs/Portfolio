@@ -8,6 +8,8 @@ import { hashToken } from "@/lib/foodTruckAuth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 
+const SESSION_INACTIVITY_DAYS = 14;
+
 export async function OPTIONS(request) {
 	const corsHeaders = getCorsHeaders(request.headers.get("origin"));
 	return new Response(null, {
@@ -44,13 +46,19 @@ export async function GET(request) {
 
 	try {
 		const tokenHash = hashToken(token);
+		const now = new Date();
+		const inactiveCutoff = new Date(now);
+		inactiveCutoff.setDate(
+			inactiveCutoff.getDate() - SESSION_INACTIVITY_DAYS,
+		);
 
 		// Try to find the session EXACTLY as getAuthContext does
 		const session = await prisma.foodTruckSession.findFirst({
 			where: {
 				tokenHash,
 				revokedAt: null,
-				expiresAt: { gt: new Date() },
+				expiresAt: { gt: now },
+				lastUsedAt: { gt: inactiveCutoff },
 			},
 			include: {
 				user: {
@@ -94,12 +102,14 @@ export async function GET(request) {
 					message: "Session found but doesn't match criteria",
 					debug: {
 						isRevoked: !!firstSession.revokedAt,
-						isExpired: firstSession.expiresAt < new Date(),
+						isExpired: firstSession.expiresAt < now,
+						isInactive: firstSession.lastUsedAt < inactiveCutoff,
 						expiresAt: firstSession.expiresAt.toISOString(),
+						lastUsedAt: firstSession.lastUsedAt.toISOString(),
 						revokedAt:
 							firstSession.revokedAt?.toISOString() || null,
 						userEmail: firstSession.user.email,
-						now: new Date().toISOString(),
+						now: now.toISOString(),
 					},
 				},
 				{ status: 400, headers: corsHeaders },
@@ -116,6 +126,7 @@ export async function GET(request) {
 					userId: session.user.id,
 					email: session.user.email,
 					expiresAt: session.expiresAt.toISOString(),
+					lastUsedAt: session.lastUsedAt.toISOString(),
 					expiresInDays: Math.floor(
 						(session.expiresAt.getTime() - Date.now()) /
 							(24 * 60 * 60 * 1000),

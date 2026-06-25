@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { hashToken } from "@/lib/foodTruckAuth";
 import { prisma } from "@/lib/prisma";
 
+const SESSION_INACTIVITY_DAYS = 14;
+
 export async function GET(request) {
 	const authHeader = request.headers.get("authorization") || "";
 
@@ -41,6 +43,9 @@ export async function GET(request) {
 	}
 
 	const tokenHash = hashToken(token);
+	const now = new Date();
+	const inactiveCutoff = new Date(now);
+	inactiveCutoff.setDate(inactiveCutoff.getDate() - SESSION_INACTIVITY_DAYS);
 
 	try {
 		const session = await prisma.foodTruckSession.findFirst({
@@ -71,19 +76,22 @@ export async function GET(request) {
 			);
 		}
 
-		const isExpired = session.expiresAt < new Date();
+		const isExpired = session.expiresAt < now;
 		const isRevoked = !!session.revokedAt;
+		const isInactive = session.lastUsedAt < inactiveCutoff;
 
 		return NextResponse.json(
 			{
 				status: "found",
 				message: "Token found in database",
-				valid: !isExpired && !isRevoked,
+				valid: !isExpired && !isRevoked && !isInactive,
 				debug: {
 					tokenHashPrefix: tokenHash.slice(0, 10),
 					isExpired,
 					isRevoked,
+					isInactive,
 					expiresAt: session.expiresAt.toISOString(),
+					lastUsedAt: session.lastUsedAt.toISOString(),
 					user: {
 						id: session.user.id,
 						email: session.user.email,

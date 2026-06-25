@@ -144,12 +144,14 @@ model FoodTruckSession {
   tokenHash  String       @unique
   expiresAt  DateTime
   createdAt  DateTime     @default(now())
+  lastUsedAt DateTime     @default(now())
   revokedAt  DateTime?
   userId     String
   user       FoodTruckUser @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([expiresAt])
+  @@index([lastUsedAt])
 }
 
 model FoodTruckInvite {
