@@ -139,16 +139,6 @@ export async function POST(request) {
 			},
 		});
 
-		// Log product creation
-		console.log({
-			timestamp: new Date().toISOString(),
-			action: "CREATE_PRODUCT",
-			userId: auth.user.id,
-			workspaceId,
-			productId: product.id,
-			price: product.price,
-		});
-
 		return NextResponse.json(product, {
 			status: 201,
 			headers: corsHeaders,
